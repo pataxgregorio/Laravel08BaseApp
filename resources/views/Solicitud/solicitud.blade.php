@@ -82,21 +82,13 @@ Componentes para los Módulos del Sistema, (New,Print,Download and Upload)
             {
                 data: 'id', name: 'id',
                 "render": function ( data, type, row ) { 
-
                     return '<div style="text-align:center;"><b>'+data+'</b></div>';
                 }
             },
             {data: 'name', name: 'name'},
-            {data: 'rol', name: 'rol'},
-            {
-                data: 'avatar',name: 'avatar',
-                "render": function ( data, type, row ) {                    
-                    return '<div style="text-align:center;"><img src="{{ url('storage/avatars/') }}/'+data+'" class="img-circle" alt="User Image" style="width:30px; height:30px;"></div>';
-                }
-            },
-            {data: 'email', name: 'email'},
-          
-          
+            {data: 'fecha', name: 'fecha'},
+            {data: 'cedula', name: 'cedula'},
+            {data: 'asunto', name: 'asunto'},
             {
                 data: 'edit', name: 'edit', orderable: false, searchable: false,
                 "render": function ( data, type, row ) {                    

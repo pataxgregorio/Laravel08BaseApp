@@ -19,9 +19,9 @@ class UsersSeeder extends Seeder
          \DB::table('users')->insert([
             [
                 'rols_id'           => 1,
-                'name'              => 'Jose Carrasco',                
+                'name'              => 'Tarsicio Carrizales',                
                 'avatar'            => 'default.jpg',
-                'email'             => 'pataxjose@gmail.com',
+                'email'             => 'telecom.com.ve@gmail.com',
                 'email_verified_at' => null,
                 'password'          => \Hash::make('123456789'), // Password de entrada -> 123456789
                 'activo'            => 'ALLOW', 

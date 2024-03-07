@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Solicitud;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User\User;
-use App\Models\ControlDiario\Solicitud;
+use App\Models\Solicitud\Solicitud;
 use App\Http\Requests\User\StoreUser;
 use App\Http\Requests\User\UpdateUser;
 use App\Models\Security\Rol;
@@ -41,45 +41,20 @@ class SolicitudController extends Controller
     }
 
     public function getSolicitud(Request $request){
-        try{
-           
+        try{ 
             if ($request->ajax()) {                
                 $data =  (new Solicitud)-> getSolicitudList_DataTable();                
                 return datatables()->of($data)
-                ->editColumn('activo', function($data){
-                    if($data->activo == 'DENY'){
-                        $data->activo = trans('message.permisos_rol.deny');
-                        return $data->activo;
-                    }else{
-                        $data->activo = trans('message.permisos_rol.allow');
-                        return $data->activo;
-                    }                
-                })
-                ->editColumn('confirmed_at', function($data){
-                    if($data->confirmed_at == null){
-                        return  $data->confirmed_at = trans('message.permisos_rol.confirmado');
-                    }else{
-                        return date('d-m-Y', strtotime($data->confirmed_at));
-                    }                
-                })                
                 ->addColumn('edit', function ($data) {
-                    $user = Auth::user();                    
-                    if(($user->id != 1 && $data->id == 1)|| $data->confirmed_at == null){
-                        $edit ='<a href="'.route('users.edit', $data->id).'" id="edit_'.$data->id.'" class="btn btn-xs btn-primary disabled" style="background-color: #2962ff;"><b><i class="fa fa-pencil"></i>&nbsp;' .trans('message.botones.edit').'</b></a>';
-                    }else{
-                        $edit ='<a href="'.route('users.edit', $data->id).'" id="edit_'.$data->id.'" class="btn btn-xs btn-primary" style="background-color: #2962ff;"><b><i class="fa fa-pencil"></i>&nbsp;' .trans('message.botones.edit').'</b></a>';
-                    }
+                    $edit ='<a href="'.route('solicitud.edit', $data->id).'" id="edit_'.$data->id.'" class="btn btn-xs btn-primary" style="background-color: #2962ff;"><b><i class="fa fa-pencil"></i>&nbsp;' .trans('message.botones.edit').'</b></a>';
+                    
                     return $edit;
                 })
                 ->addColumn('view', function ($data) {
-                    return '<a style="background-color: #5333ed;" href="'.route('users.view', $data->id).'" id="view_'.$data->id.'" class="btn btn-xs btn-primary"><b><i class="fa fa-eye"></i>&nbsp;' .trans('message.botones.view').'</b></a>';
+                    return '<a style="background-color: #5333ed;" href="'.route('colicitud.view', $data->id).'" id="view_'.$data->id.'" class="btn btn-xs btn-primary"><b><i class="fa fa-eye"></i>&nbsp;' .trans('message.botones.view').'</b></a>';
                 })
                 ->addColumn('del', function ($data) {
-                    if($data->id == 1){
-                        $del ='<a href="javascript:void(0)" action=""><button type="submit" class="btn btn-danger btn-xs" data-toggle="tooltip" data-title="Eliminar" data-container="body" style="background-color: #900C3F;" disabled><b><i class="fa fa-trash"></i>&nbsp;' .trans('message.botones.delete').'</b>';
-                    }else{
-                        $del ='<a href="javascript:void(0)" action="'.route('users.destroy', $data->id).'" onclick="deleteData(this)"><button type="submit" class="btn btn-danger btn-xs" data-toggle="tooltip" data-title="Eliminar" data-container="body" style="background-color: #900C3F;"><b><i class="fa fa-trash"></i>&nbsp;' .trans('message.botones.delete').'</b>';
-                    }
+                    $del ='<a href="javascript:void(0)" action="'.route('solicitud.destroy', $data->id).'" onclick="deleteData(this)"><button type="submit" class="btn btn-danger btn-xs" data-toggle="tooltip" data-title="Eliminar" data-container="body" style="background-color: #900C3F;"><b><i class="fa fa-trash"></i>&nbsp;' .trans('message.botones.delete').'</b>';
                     return $del;
                 })                
                 ->rawColumns(['edit','view','del'])->toJson();  

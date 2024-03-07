@@ -15,7 +15,7 @@ class CreateTipoSolicitudTable extends Migration
     {
         Schema::create('tipo_solicitud', function (Blueprint $table) {
             $table->id();
-            $table->string('Nombre');
+            $table->string('nombre');
             $table->timestamps();
         });
     }

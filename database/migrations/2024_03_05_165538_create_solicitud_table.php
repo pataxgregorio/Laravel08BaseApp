@@ -26,12 +26,12 @@ class CreateSolicitudTable extends Migration
             $table->unsignedBigInteger('comuna_id')->nullable();
             $table->unsignedBigInteger('comunidad_id')->nullable();
             $table->unsignedBigInteger('codigo_control')->nullable();
-            $table->string('Nombre');
-            $table->string('Cedula');
-            $table->string('Sexo');
+            $table->string('nombre');
+            $table->string('cedula');
+            $table->string('sexo');
             $table->string('email');
-            $table->dateTime('Fecha');
-            $table->string('Telefono');
+            $table->dateTime('fecha');
+            $table->string('telefono');
             $table->string('organismo');
             $table->string('edocivil');
             $table->string('fechaNacimiento');

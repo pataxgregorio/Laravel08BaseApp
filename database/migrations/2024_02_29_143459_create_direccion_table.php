@@ -16,7 +16,7 @@ class CreateDireccionTable extends Migration
         Schema::create('direccion', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('despacho_id');
-            $table->string('Nombre');
+            $table->string('nombre');
             $table->timestamps();
             $table->foreign('despacho_id')->references('id')->on('despacho');
         });

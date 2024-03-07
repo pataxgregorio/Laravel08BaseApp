@@ -21,12 +21,12 @@ class Solicitud extends Model
         'comunidad_id',
         'comuna_id',
         'codigo_control',
-        'Nombre',
-        'Cedula',
-        'Sexo',
+        'nombre',
+        'cedula',
+        'sexo',
         'email',
-        'Fecha',
-        'Telefono',
+        'fecha',
+        'telefono',
         'organismo',
         'edocivil',
         'fechaNacimiento',
@@ -46,7 +46,7 @@ class Solicitud extends Model
             $solicitud = DB::table('solicitud')
             ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
             ->join('direccion', 'solicitud.direccion_id', '=', 'direccion.id')
-            ->select('solicitud.id','solicitud.Nombre AS Solicitante','tipo_solicitud.Nombre AS Nombretipo','direccion.Nombre AS direccionNombre','solicitud.status')->get();
+            ->select('solicitud.id','solicitud.nombre AS Solicitante','tipo_solicitud.nombre AS Nombretipo','direccion.nombre AS direccionNombre','solicitud.status')->get();
             return $solicitud;
         }catch(Throwable $e){
             $solicitud = [];
