@@ -34,8 +34,6 @@
                     </ul>
                     </div>
                 @endif
-                {!! Form::open(array('route' => array('solicitud.update',$solicitud_edit->id),
-                'method'=>'POST','id' => 'form_users_id','enctype' =>'multipart/form-data')) !!}
                 <div class="form-group">
                     <div style="justify-content: center; font-size:42px;padding-left:380px">
                             <h3 >Datos de la Solicitud</h3>
@@ -200,55 +198,59 @@
                         ?> 
                 
                     </div>  
-                  <div col-lg-12 col-xs-12>
-                    <div style="text-align:left;">
-       
-                        <h3 style="justify-content: center; font-size:20px;padding-left:100px;">Actividades del Seguimiento</h3>
-                         <div  style="padding-left:980px">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">+Seguimiento</button>
-                         </div>
+                  <div class="container col-lg-12 col-xs-12">
+                            <div style="text-align:center;">
+                                 <h3 style="justify-content: center; font-size:20px;">Actividades del Seguimiento</h3>
+                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" style="margin-bottom: 10px;">+Seguimiento</button>
 
-                       <table class="table table-bordered solicitud_all">
-                          <thead>
-                              <tr>
-                                <th>ITEM</th>
-                                 <th  style="text-align:center;">FECHA</th>
-                                 <th style="text-align:center;">ASUNTO</th>
-                                 <th style="text-align:center;">EVIDENCIA</th>
-                              </tr>
-                         </thead>
-                          <tbody>
-                          </tbody>
-                      </table>   
+                            <table class="table table-bordered solicitud_all">
+                                <thead>
+                                    <tr>
+                                     <th>ITEM</th>
+                                     <th  style="text-align:center;">FECHA</th>
+                                        <th style="text-align:center;">ASUNTO</th>
+                                         <th style="text-align:center;">EVIDENCIA</th>
+                                     </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>   
                      
-                    </div><!--div que contiene la tabla -->
-                    <div class="modal" id="myModal">
-                        
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                 <div class="modal-header">
-                                    <h5 class="modal-title">Agregar Seguimiento</h5>
-                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                 </div>
-                                  <div class="modal-body">
-                                      <div style="text-align:left;">
-                                             {!! Form::label('asunto','Asunto del Caso', ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
-                                            {!! Form::textarea('asunto',old('asunto'),['placeholder' => 'Asunto del Caso','class' => 'form-control','id' => 'asunto']) !!}
-                                      </div>     
-                                      <div style="text-align:left;"> 
-                                        {!! Form::label('asunto','Evidencia', ['class' => 'control-label']) !!}
-                                            <input type="file" name="image" id="image">
-                                      </div>
-                                  </div>
-                                 <div class="modal-footer">
-                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                     <button type="button" class="btn btn-primary" id ="agregar" >Agregar</button>
-                                 </div>
-                                </div>
-                          </div>
-                        </div>
-                    </div>
-                 </div>   
+                        </div><!--div que contiene la tabla -->
+                        <div class="modal" id="myModal">
+
+<div class="modal-dialog">
+    <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Agregar Seguimiento</h5>
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+         </div>
+         <div class="modal-body">
+             <div style="text-align:left;">
+                  {!! Form::label('asunto','Asunto del Caso', ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
+                 {!! Form::textarea('asunto',old('asunto'),['placeholder' => 'Asunto del Caso','class' => 'form-control','id' => 'asunto']) !!}
+             </div>
+             <div style="text-align:left;">
+               {!! Form::label('asunto','Evidencia', ['class' => 'control-label']) !!}
+                   <input type="file" name="image" id="image">
+             </div>
+         </div>
+         <div class="modal-footer">
+             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+             <form id="addSeguimientoForm" method="POST" action="{{ route('seguimiento.addSeguimiento') }}">
+                 <button type="submit" class="btn btn-primary" id="agregar" data-dismiss="modal">Agregar</button>
+                 <input type="text" hidden value="{{$solicitud_edit->id}}" name="solicitud_id">
+             </form>
+         </div>
+     </div>
+</div>
+</div>
+
+                    <?php
+                         $phpValue = $solicitud_edit;
+                             echo "<script> var jsValue = '" . $phpValue . "'; </script>";
+                            ?>
+                 </div>    <!--div col-lg-12 col-xs-12-->
                 </div><!--form-group -->
             </div><!--col-lg-12 col-xs-12 -->
      </div> <!--card-body -->
@@ -256,7 +258,6 @@
 </div><!-- container-fluid -->
 @endsection
 @section('script_datatable')
-    <script src="{{ url ('/js_users/js_users.min.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
         
     $(document).ready(function(){
@@ -273,22 +274,32 @@
  $('#myModal').on('shown.bs.modal', function () {
     // Do something when the modal is shown
 });
-
+  var valueFromPHP = jsValue;
+//   alert(valueFromPHP['tipo_solicitud_id']);
  $("#boton").hide();
  $('#agregar').click(function() {
         var inputData = $('#asunto').val();
         var formData = new FormData();
-            formData.append('image', $('#image')[0].files[0]);
+           formData.append('image', $('#image')[0].files[0]);
             var registro = {
                 asunto : inputData,
-                evidencia :formData
+                evidencia :formData,
+                tipo_solicitud_id:1,
+                relato:"dszfsagerg",
+                observacion:"dfsgesge",
+                explique:"dfcsaefweaf",
+                explique2:"dfcsaefweaf",
+                ceduladenunciado:"5456655788787",
+                _token: "{{ csrf_token() }}",
             }
-        alert (formData);
-
+          //  
+          var var1 = JSON.stringify(registro);
        $.ajax({
+          url: '/seguimiento/addSeguimiento',  // Replace with the actual URL where the data will be processed
           type: 'POST',
-          url: '/seguimiento/add',  // Replace with the actual URL where the data will be processed
-          data: { data: registro },
+            data:  var1,
+            contentType: 'application/json',
+            processData: false,
           success: function(response) {
             $('#output').text('Data added successfully: ' + response);
           },

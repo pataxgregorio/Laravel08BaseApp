@@ -34,10 +34,10 @@
                     </ul>
                     </div>
                 @endif
-                {!! Form::open(array('route' => array('solicitud.update',$solicitud_edit->id),
-                'method'=>'POST','id' => 'form_users_id','enctype' =>'multipart/form-data')) !!}
-              
-
+                
+                <?php 
+                    $usuario = Auth::user()->name;
+                ?>
             
                 <div class="form-group">
                     <div style="text-align:left;">
@@ -61,7 +61,7 @@
                             {!! Form::email('email',$solicitud_edit->email,['placeholder' => trans('message.users_action.mail_ejemplo'),'class' => 'form-control','id' => 'email_user','disabled' => true]) !!}
                      </div>   
                      <div style="text-align:left;">
-                     {!! Form::label('estado_id',trans('message.solicitud_action.estado'), ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
+                     {!! Form::label('sexo_id',trans('message.solicitud_action.sexo'), ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
                     {!! Form::select('sexo',$sexo, $solicitud_edit->sexo, ['placeholder' => trans('message.solicitud_action.sexo'),'class' => 'form-control','id' => 'sexo','disabled' => true]) !!}
                     </div> 
                          <div style="text-align:left;">
@@ -178,7 +178,7 @@
                                  {!! Form::label('explique2',trans('message.solicitud_action.explique'), ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
                                 {!! Form::text('explique2',isset($valores[0]["explique competencia"]) ?$valores[0]["explique competencia"]: '',['placeholder' => trans('message.solicitud_action.explique'),'class' => 'form-control','id' => 'explique_user','disabled' => true]) !!}
                              </div> 
-                            <h3>Recuados de la Solicitud</h3>
+                            <h3>Recaudos de la Solicitud</h3>
                             <br>
                             <div class ="col">
                             <div style="text-align:left;"> 
@@ -282,7 +282,7 @@
                                  }   
                                   ?>
 
-                                 {!! Form::checkbox('checkresidencia',  $valor,array('disabled')) !!}
+                                 {!! Form::checkbox('checkresidencia', 'off',  $valor,array('disabled'))!!}
                                  {!! Form::label('checkresidencia', 'Carta Residencia') !!}
                                   
                                  </div>
@@ -308,7 +308,7 @@
                                  {!! Form::label('observacion2',trans('message.solicitud_action.observacion'), ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
                                 {!! Form::text('observacion2',isset($valores[0]["observacion"]) ?$valores[0]["observacion"]: '',['placeholder' => trans('message.solicitud_action.observacion'),'class' => 'form-control','id' => 'observacion_user','disabled' => true]) !!}
                                  </div> 
-                             <h3>Recuados de la Solicitud</h3>
+                             <h3>Recaudos de la Solicitud</h3>
                              <br>
                              <div style="text-align:left;">
                              <?php 
@@ -320,7 +320,7 @@
                                  }   
                                   ?>
 
-                                 {!! Form::checkbox('checkmotivo2',  $valor,array('disabled')) !!}
+                                 {!! Form::checkbox('checkmotivo2', 'on', $valor,array('disabled')) !!}
                                  {!! Form::label('checkmotivo2', 'Exposicion de Motivo') !!}
                                  </div>
                         </div> 
@@ -350,7 +350,7 @@
                                         {!! Form::label('direccionbeneficiario',trans('message.solicitud_action.direccionbeneficiario'), ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
                                          {!! Form::text('direccionbeneficiario',isset($valores[0]["direccion"]) ?$valores[0]["direccion"]: '',['placeholder' => trans('message.solicitud_action.direccionbeneficiario'),'class' => 'form-control','id' => 'direccionbeneficiario_user','disabled' => true]) !!}
                                      </div> 
-                                     <h3>Recuados de la Peticion</h3>
+                                     <h3>Recaudos de la Peticion</h3>
                                     <br>
                                     <div style="text-align:left;">
                                     <?php 
@@ -430,8 +430,8 @@
                         <div style="text-align:left;">
                          {!! Form::label('enter_id',trans('message.solicitud_action.enter'), ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
                          {!! Form::select('enter_descentralizados_id', $enter,$solicitud_edit->enter_descentralizados_id, ['placeholder' => trans('message.solicitud_action.enter'),'class' => 'form-control','id' => 'enter_descentralizados_id','disabled' => true]) !!}
-                         </div> 
-                    </div>                   
+                         </div>
+                    </div>              
                     <?php  
                     $variable =$solicitud_edit->tipo_solicitud_id;
                     $variable2 =$solicitud_edit->asignacion;
@@ -466,11 +466,12 @@
                     echo '<script>document.getElementById("direccion").style.display = "none";</script>';
                 }
                    ?>
-                           
+                </div>
+                <a href="{{ route('imprimir', ['idsolicitud' => $solicitud_edit->id, 'usuario' => $usuario]) }}">
+                    {!! Form::submit('IMPRIMIR',['class'=> 'form-control btn btn-primary','IMPRIMIR','data-toggle' => 'tooltip','style' => 'background-color:'.$array_color['group_button_color'].';']) !!}                     
+                    {!!  Form::close() !!}
+                </a>    
                 </div>   
-
-                </div>   
-              
             </div>     
         </div>
     </div>

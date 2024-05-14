@@ -34,8 +34,15 @@
                     </ul>
                     </div>
                 @endif
+                <?php 
+                    $rols_id = auth()->user()->rols_id;
+                    $phpValue = $rols_id;
+                    echo "<script> var rolsJS = '" . $phpValue . "'; </script>";
+                ?>
                 {!! Form::open(array('route' => array('solicitud.store'),
                 'method'=>'POST','id' => 'form_solicitud_id','enctype' =>'multipart/form-data')) !!}
+
+                {{ csrf_field() }}  
                 <div class="form-group ">
                     <h3>Datos del Solicitante </h3>
                         <br>
@@ -175,10 +182,13 @@
                             {!! Form::label('direccion',trans('message.solicitud_action.direccion'), ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
                              {!! Form::text('direccion',old('direccion'),['placeholder' => trans('message.solicitud_action.direccion'),'class' => 'form-control','id' => 'direccion_user']) !!}
                         </div>    
-                        
+                            
                         <div style="text-align:left;">
                             {!! Form::label('tipo_solicitud_id',trans('message.solicitud_action.tipo_solicitud'), ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
-                            {!! Form::select('tipo_solicitud_id', $tipo_solicitud, old('comunidad_id'), ['placeholder' => trans('message.solicitud_action.tipo_solicitud'),'class' => 'form-control','id' => 'tipo_solicitud_id']) !!}
+                            {!! Form::select('tipo_solicitud_id', $tipo_solicitud, $rols_id == 10 ? 6 : old('tipo_solicitud_id'), ['placeholder' => trans('message.solicitud_action.tipo_solicitud'),'class' => 'form-control','id' => 'tipo_solicitud_id', $rols_id == 10 ? 'disabled' : '']) !!}
+                            @if($rols_id == 10)
+                                <input type="hidden" name="tipo_solicitud_id" id="tipo_solicitud_id" value="6">
+                            @endif
                         </div>  
 
                         <div id = "denunciado">
@@ -362,8 +372,8 @@
     
     <script type="text/javascript">
 
-
     $(document).ready(function(){
+        var rolID  = rolsJS;
         // $("#comuna_id").empty()
         $("#comuna_id").html('<option value="">COMUNA<option/>')
 
@@ -374,10 +384,17 @@
    $("#comunidad_id").prop('disabled', true);
    $("#denunciado").hide();
    $("#sugerencia").hide();
-   $("#beneficiario").hide();
+   if(rolID == 10){
+    x =  $("#tipo_solicitud_id").val();
+    $("#direccion").show();
+    $("#beneficiario").show();
+   }
+   else{
+     $("#beneficiario").hide();
+     $("#direccion").hide();
+   }
    $("#sinasignar").hide();
    $("#enter").hide();
-   $("#direccion").hide();
    $('#municipio_id').change(function(){
     $("#parroquia_id").prop('disabled', false);
    
@@ -393,19 +410,17 @@
         $("#comuna_id").prop('disabled', false);
         $.ajax({
 
-            url:"{{ route('getComunas') }}",
+            url:"{{ route('getComunas2') }}",
             type:"GET",
             data:{parroquia:parroquia}
 
             }).done(function(data){
                 // alert(JSON.stringify(data));
-                
                 $("#comuna_id").empty();
                 $("#comuna_id").html('<option value="">COMUNA<option/>');
+                console.log(data);
             for (let c in data){
-               
                 $("#comuna_id").append(`<option value="${c}">${data[c]}<option/>`);
-            
             }
           //  $("#comuna_id").find("option[value='']").remove();
            // $("#comuna_id").change();
@@ -434,7 +449,7 @@
         $("#comunidad_id").prop('disabled', false);
         $.ajax({
 
-            url:"{{ route('getComunidad') }}",
+            url:"{{ route('getComunidad2') }}",
             type:"GET",
             data:{comuna:comuna}
 
@@ -460,7 +475,7 @@
       
         $.ajax({
 
-            url:"{{ route('getCoodinacion') }}",
+            url:"{{ route('getCoodinacion2') }}",
             type:"GET",
             data:{direccion:direccion}
 
@@ -480,10 +495,8 @@
         })   
    
     });
-
-
+    
     $('#tipo_solicitud_id').change(function(){ 
-
         var tipo = $('#tipo_solicitud_id').val();
         if (tipo == 0){
             $("#denunciado").hide();

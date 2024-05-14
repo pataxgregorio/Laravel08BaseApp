@@ -469,11 +469,9 @@
                      <hr>
                 {!! Form::submit('ACT. SOLIC',['class'=> 'form-control btn btn-primary','title' => 'ACT. SOLIC','data-toggle' => 'tooltip','style' => 'background-color:'.$array_color['group_button_color'].';']) !!}                     
                 <input type="hidden" name="id_solicitud" value="{{$solicitud_edit->id}}">
-                {!!  Form::close() !!}       
+                {!!  Form::close() !!}
                 </div>   
-
                 </div>   
-              
             </div>     
         </div>
     </div>

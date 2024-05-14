@@ -45,7 +45,7 @@ Componentes para los Módulos del Sistema, (New,Print,Download and Upload)
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
-                                <th  style="text-align:center;">Tipo Solicitud</th>
+                                <th style="text-align:center;">Tipo Solicitud</th>
                                 <th style="text-align:center;">Direccion</th>
                                 <th style="text-align:center;">Status</th>
                                 <th style="text-align:center;">{{ trans('message.botones.edit') }}</th>
@@ -75,21 +75,19 @@ Componentes para los Módulos del Sistema, (New,Print,Download and Upload)
         serverSide: true,
         responsive: true,
         autoWidth : false,        
-        ajax: "{{ route('solicitud.list') }}",    
+        ajax: "{{ route('solicitud.list') }}",
         
         columns: [          
             {
                 data: 'id', name: 'id',
-                "render": function ( data, type, row ) { 
-
+                "render": function ( data, type, row ) {
                     return '<div style="text-align:center;"><b>'+data+'</b></div>';
                 }
             },
             {data: 'solicitante', name: 'solicitante'}, 
             {data: 'nombretipo', name: 'nombretipo'}, 
             {data: 'direccionnombre', name: 'direccionnombre'}, 
-            {data: 'nombrestatus', name: 'nombrestatus'}, 
-          
+            {data: 'nombrestatus', name: 'nombrestatus'},          
           
           
             {
@@ -104,7 +102,6 @@ Componentes para los Módulos del Sistema, (New,Print,Download and Upload)
                     return '<div style="text-align:center;">'+data+'</div>';
                 }
             },
-            
         ],
         "language": {
             "lengthMenu": "Mostrar _MENU_ registros por página",
@@ -117,8 +114,8 @@ Componentes para los Módulos del Sistema, (New,Print,Download and Upload)
                 "next": "Siguiente",
                 "previous": "Anterior",
             }            
-        }       
-    });    
+        }
+    });        
   });
 </script>
 <script src="{{ url ('/js_delete/delete_confirm.min.js') }}"></script>

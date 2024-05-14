@@ -46,10 +46,9 @@
           </div>
         </div>
         <hr/>
-     
 @endsection
 
 @section('script_Chart')
-<script src="{{ url ('/js_Chart/Chart.min.js') }}" type="text/javascript"></script>
-<script src="{{ url ('/js_dashboard/graficos_dashboard.min.js') }}" type="text/javascript"></script>
+<script src="{{ url('/js_Chart/Chart.min.js') }}" type="text/javascript"></script>
+<script src="{{ url('/js_dashboard/graficos_dashboard.min.js') }}" type="text/javascript"></script>
 @endsection

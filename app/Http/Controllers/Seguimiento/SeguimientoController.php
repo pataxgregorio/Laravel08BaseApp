@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\Seguimiento;
-
+use DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User\User;
 use App\Models\Solicitud\Solicitud;
+use App\Models\Seguimiento\Seguimiento;
 use App\Http\Requests\User\StoreUser;
 use App\Http\Requests\User\UpdateUser;
 use App\Models\Security\Rol;
@@ -58,7 +59,7 @@ class SeguimientoController extends Controller
                 ->addColumn('edit', function ($data) {
                     $user = Auth::user();                    
                     if(($user->id != 1)){
-                        $edit ='<a href="'.route('seguimiento.edit', $data->id).'" id="edit_'.$data->id.'" class="btn btn-xs btn-primary disabled" style="background-color: #2962ff;"><b><i class="fa fa-pencil"></i>&nbsp;' .trans('message.botones.go').'</b></a>';
+                        $edit ='<a href="'.route('seguimiento.edit', $data->id).'" id="edit_'.$data->id.'" class="btn btn-xs btn-primary" style="background-color: #2962ff;"><b><i class="fa fa-pencil"></i>&nbsp;' .trans('message.botones.go').'</b></a>';
                     }else{
                         $edit ='<a href="'.route('seguimiento.edit', $data->id).'" id="edit_'.$data->id.'" class="btn btn-xs btn-primary" style="background-color: #2962ff;"><b><i class="fa fa-pencil"></i>&nbsp;' .trans('message.botones.go').'</b></a>';
                     }
@@ -451,9 +452,35 @@ class SeguimientoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    
     public function edit($id){
 
+      
+      //  $seguimiento_edit = Seguimiento::find('solicitud_id',$id);
+        $seguimiento_edit = DB::table("seguimiento")->where("solicitud_id",$id)->get();
+        foreach( $seguimiento_edit as  $seguimiento_edit_2);
         $solicitud_edit = Solicitud::find($id);
+       // $input2 =$seguimiento_edit->all();
+     //   var_dump(isset($seguimiento_edit_2));
+    //    var_dump(isset($seguimiento_edit_2->solicitud_id));
+      //  var_dump(isset($seguimiento_edit['solicitud_id']));
+      //  exit();
+        if (isset($seguimiento_edit_2->solicitud_id)) {
+            $entro = true;
+
+        }else{
+            $seguimiento = new Seguimiento([
+                'solicitud_id' =>$id,
+                'seguimiento' => NULL]);
+            $seguimiento->save();
+         
+             $solicitud_Update = Solicitud::find( $id);
+             
+            $solicitud_Update['status_id'] = 2;
+            $solicitud_Update->save();
+       
+        }
+
         $valores = $solicitud_edit->all();
 
         $denuncia = NULL;
@@ -816,6 +843,8 @@ public function getCoodinacion(Request $request){
         return view('User.color_view',compact('count_notification','titulo_modulo','array_color'));
     }
 
+
+    
     public function colorChange(Request $request){
         $id = auth()->user()->id;            
         $user = User::find($id);            
@@ -878,5 +907,8 @@ public function getCoodinacion(Request $request){
         }    
         return redirect('/dashboard');    
     }
-
+    public function addSeguimiento(Request $request){
+        var_dump($request->all());
+        exit();
+    }
 }
