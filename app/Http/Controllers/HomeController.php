@@ -81,7 +81,10 @@ class HomeController extends Controller
             $user_total_activos = (new User)->userTotalActivo();
             $total_roles = (new User)->totalRoles();
             $user_total_Deny = (new User)->userTotalDeny();
-            $array_color = (new Colores)->getColores();            
+            $array_color = (new Colores)->getColores();      //
+            //funcion que retorna todas las solicitudes en estado en registradas
+            //funcion que retorna todas las solicitudes en estado en proceso
+            //funcion que retorna todas las solicitudes en estado en terminadas
             return view('adminlte::home',compact('count_notification','user_total_activos',
                                                   'total_roles','user_total_Deny','array_color'));
         }else{

@@ -16,7 +16,7 @@
 		<x-box titulo="Total Solicitudes Registrada" cantidad="{{$user_total_activos}}" name="Solitudes Registradas"  color="bg-yellow"></x-box>		
 	</div>
 	<div class="col-lg-4 col-md-6 col-xs-12">            		
-		<x-box titulo="Total Solicitudes Procesadas" cantidad="{{$total_roles}}" name="Solitudes Procesada" ></x-box>
+		<x-box titulo="Total Solicitudes en Proceso" cantidad="{{$total_roles}}" name="Solitudes en Proceso" ></x-box>
 	</div>
 	<div class="col-lg-4 col-md-6 col-xs-12">            		
 		<x-box titulo="Total Solicitudes Terminadas" cantidad="{{$user_total_Deny}}" name="Solitudes Terminadas" color="bg-red"></x-box>
