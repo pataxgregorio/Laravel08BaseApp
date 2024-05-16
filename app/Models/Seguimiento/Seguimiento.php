@@ -10,6 +10,7 @@ class Seguimiento extends Model
     use HasFactory;
     protected $table = 'seguimiento';
     protected $fillable = [
+        'id',
         'solicitud_id',
         'seguimiento',
         
@@ -29,6 +30,7 @@ class Seguimiento extends Model
         }
         
     }
+
     public function getSolicitudList_DataTable2(){
         try {
             $solicitud = DB::table('solicitud')

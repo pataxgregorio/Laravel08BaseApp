@@ -200,14 +200,14 @@ Route::post('/seguimiento', 'Seguimiento\SeguimientoController@store')->name('se
 Route::get('/seguimiento/{seguimiento}/view', 'Seguimiento\SeguimientoController@view')->name('seguimiento.view')->middleware('permiso:seguimiento,view');
 Route::get('/seguimiento/{seguimiento}/edit', 'Seguimiento\SeguimientoController@edit')->name('seguimiento.edit')->middleware('permiso:seguimiento,edit');
 Route::post('/seguimiento/{seguimiento}', 'Seguimiento\SeguimientoController@update')->name('seguimiento.update')->middleware('permiso:seguimiento,update');
+Route::get('/seguimiento/update2', 'Seguimiento\SeguimientoController@update2')->name('update2')->middleware('permiso:seguimiento,update');
 Route::get('/seguimiento/{seguimiento}/delete', 'Seguimiento\SeguimientoController@destroy')->name('seguimiento.destroy')->middleware('permiso:seguimiento,delete');
 Route::get('/seguimiento/getComunas', 'Seguimiento\SeguimientoController@getComunas')->name('getComunas')->middleware('permiso:seguimiento,view');
 Route::get('/seguimiento/getComunidad', 'Seguimiento\SeguimientoController@getComunidad')->name('getComunidad')->middleware('permiso:seguimiento,view');
 Route::get('/seguimiento/getCoodinacion', 'Seguimiento\SeguimientoController@getCoodinacion')->name('getCoodinacion')->middleware('permiso:seguimiento,view');
 Route::get('/seguimiento/list', 'Seguimiento\SeguimientoController@getSeguimiento')->name('seguimiento.list')->middleware('permiso:seguimiento,view');
-Route::post('/seguimiento/addSeguimiento', 'Seguimiento\SeguimientoController@addSeguimiento')->name('addSeguimiento')->middleware('permiso:seguimiento,view');
 Route::get('/seguimiento/print', 'Seguimiento\SeguimientoController@solicitudPrint')->name('seguimiento.solicitudPrint')->middleware('permiso:seguimiento,print');
 Route::get('/seguimiento/solicitudTipo', 'Seguimiento\SeguimientoController@solicitudTipo')->name('seguimiento.solicitudTipo');
 Route::get('/seguimiento/solicitudTotalTipo', 'Seguimiento\SeguimientoController@solicitudTotalTipo')->name('seguimiento.solicitudTotalTipo');
-Route::post('/seguimiento/addSeguimiento', 'Seguimiento\SeguimientoController@addSeguimiento')->name('seguimiento.addSeguimiento')->middleware('permiso:seguimiento,view');
+Route::post('/seguimiento/addSeguimiento', 'Seguimiento\SeguimientoController@addSeguimiento')->name('addSeguimiento')->middleware('permiso:seguimiento,view');
 // *********************************************************************************************************

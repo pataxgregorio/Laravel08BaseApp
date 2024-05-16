@@ -17,7 +17,7 @@ jQuery.ajax({
     });
     var ctx = document.getElementById('countUserRol').getContext('2d');
     var countUserRol = new Chart(ctx, {
-      type: 'bar',
+      type: 'pie',
       data: {
         labels: array_NAME_ROLS,
         datasets: [{
@@ -81,7 +81,7 @@ jQuery.ajax({
     });    
     var ctx = document.getElementById('notificationsUser').getContext('2d');
     var notificationsUser = new Chart(ctx, {
-      type: 'bar',
+      type: 'pie',
       data: {
         labels: array_NAME_USER,
         datasets: [{
@@ -126,10 +126,12 @@ jQuery.ajax({
     });
   },
 });
+// First AJAX request
 jQuery.ajax({
   url: "/solicitud/solicitudTipo",
   type: 'GET',
   error: function() {
+    // Handle error if needed
   },
   dataType: 'json',
   success: function(data) {
@@ -141,107 +143,72 @@ jQuery.ajax({
     });    
     var ctx = document.getElementById('solicitudTipo').getContext('2d');
     var solicitudTipo = new Chart(ctx, {
-      type: 'bar',
+      type: 'pie', // Change the type to 'pie'
       data: {
         labels: array_NAME_USER,
         datasets: [{
           label: 'Total de Solicitudes por tipo',
           data: array_TOTAL_NOTIFICATIONS,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(180, 60, 132, 0.2)',
-            'rgba(103, 162, 46, 0.2)',
-            'rgba(175, 206, 86, 0.2)',
-            'rgba(22, 40, 60, 0.2)'
+          backgroundColor: [ // Include appropriate colors for the pie chart
+            'rgba(255, 99, 132, 0.8)',
+            'rgba(54, 162, 235, 0.8)',
+            'rgba(255, 206, 86, 0.8)',
+            // Add more colors as needed
           ],
-          borderColor: [
+          borderColor: [ // Include corresponding border colors
             'rgba(255, 99, 132, 1)',
             'rgba(54, 162, 235, 1)',
             'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(180, 60, 132, 1)',
-            'rgba(103, 162, 46, 1)',
-            'rgba(175, 206, 86, 1)',
-            'rgba(22, 40, 60, 1)'
+            // Add more colors as needed
           ],
           borderWidth: 1
         }]
       },
       options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
+        // No need for 'yAxes' configuration in pie charts
       }
     });
   },
 });
+
+// Second AJAX request
 jQuery.ajax({
   url: "/solicitud/solicitudTotalTipo",
   type: 'GET',
   error: function() {
+    // Handle error if needed
   },
   dataType: 'json',
   success: function(data) {
-    var array_NAME_USER = [];
     var array_TOTAL_NOTIFICATIONS = [];    
-    jQuery.each(data, function(index, value) {      
-      array_NAME_USER.push("TOTAL SOLICITUDES");
+    jQuery.each(data, function(index, value) {
       array_TOTAL_NOTIFICATIONS.push(value.TOTAL_SOLICITUD);      
     });    
     var ctx = document.getElementById('solicitudTotalTipo').getContext('2d');
-    var solicitudTipo = new Chart(ctx, {
-      type: 'bar',
+    var solicitudTotalTipo = new Chart(ctx, {
+      type: 'pie', // Change the type to 'pie'
       data: {
-        labels: array_NAME_USER,
+        labels: ["TOTAL SOLICITUDES"], // Set the label for the single dataset
         datasets: [{
           label: 'Total de Solicitudes',
           data: array_TOTAL_NOTIFICATIONS,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(180, 60, 132, 0.2)',
-            'rgba(103, 162, 46, 0.2)',
-            'rgba(175, 206, 86, 0.2)',
-            'rgba(22, 40, 60, 0.2)'
+          backgroundColor: [ // Include appropriate colors for the pie chart
+            'rgba(255, 99, 132, 0.8)',
+            'rgba(54, 162, 235, 0.8)',
+            'rgba(255, 206, 86, 0.8)',
+            // Add more colors as needed
           ],
-          borderColor: [
+          borderColor: [ // Include corresponding border colors
             'rgba(255, 99, 132, 1)',
             'rgba(54, 162, 235, 1)',
             'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(180, 60, 132, 1)',
-            'rgba(103, 162, 46, 1)',
-            'rgba(175, 206, 86, 1)',
-            'rgba(22, 40, 60, 1)'
+            // Add more colors as needed
           ],
           borderWidth: 1
         }]
       },
       options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
+        // No need for 'yAxes' configuration in pie charts
       }
     });
   },

@@ -13,13 +13,13 @@
  
 <div class="row">        
     <div class="col-lg-4 col-md-6 col-xs-12">            
-		<x-box titulo="Total Solicitudes Registrada" cantidad="{{$user_total_activos}}" name="Solitudes Registradas"  color="bg-yellow"></x-box>		
+		<x-box titulo="Total Solicitudes Registrada" cantidad="{{$total_solicitudes_registradas2}}" name="Solitudes Registradas"  color="bg-yellow"></x-box>		
 	</div>
 	<div class="col-lg-4 col-md-6 col-xs-12">            		
-		<x-box titulo="Total Solicitudes en Proceso" cantidad="{{$total_roles}}" name="Solitudes en Proceso" ></x-box>
+		<x-box titulo="Total Solicitudes en Proceso" cantidad="{{$total_solicitudes_procesadas2}}" name="Solitudes en Proceso" ></x-box>
 	</div>
 	<div class="col-lg-4 col-md-6 col-xs-12">            		
-		<x-box titulo="Total Solicitudes Terminadas" cantidad="{{$user_total_Deny}}" name="Solitudes Terminadas" color="bg-red"></x-box>
+		<x-box titulo="Total Solicitudes Terminadas" cantidad="{{$total_solicitudes_finalizadas2}}" name="Solitudes Terminadas" color="bg-red"></x-box>
 	</div>
 </div>
 	<!--  CANVAS de las Metricas Para User, Rol y Notificaciones, para View-->

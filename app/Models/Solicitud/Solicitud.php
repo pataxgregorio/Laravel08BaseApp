@@ -47,6 +47,17 @@ class Solicitud extends Model
         
     ];
 
+    public function verificarJSON($id){
+        return DB::table('seguimiento')->where('solicitud_id', $id)->get();
+    }
+    public function SolicitudRegistradas($status){
+        $rols_id = auth()->user()->rols_id;
+        $user_id = auth()->user()->id;
+        return DB::table('solicitud')
+        ->Where('solicitud.users_id', $user_id)
+        ->Where('status_id',$status)
+        ->get();
+    }
     public function getSolicitudList_DataTable(){
         try {
             $rols_id = auth()->user()->rols_id;
@@ -95,18 +106,23 @@ class Solicitud extends Model
         }
         
     }
-    public function count_solictud(){        
+    public function count_solictud(){    
+        $rols_id = auth()->user()->rols_id;
         return DB::table('solicitud')
             ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
-            ->select('tipo_solicitud.nombre AS SOLICITUD_NOMBRE',
-                DB::raw('COUNT(solicitud.tipo_solicitud_id) AS TOTAL_SOLICITUD'))
+            ->join('users', 'solicitud.users_id', '=', 'users.id')
+            ->select('tipo_solicitud.nombre AS SOLICITUD_NOMBRE', DB::raw('COUNT(solicitud.tipo_solicitud_id) AS TOTAL_SOLICITUD'))
+            ->where('users.rols_id', $rols_id)
             ->groupBy('tipo_solicitud.id')
             ->orderByDesc('TOTAL_SOLICITUD')->get();
     }
     
-    public function count_total_solictud(){        
+    public function count_total_solictud(){      
+        $rols_id = auth()->user()->rols_id;
         return DB::table('solicitud')
+        ->join('users', 'solicitud.users_id', '=', 'users.id')
             ->select(DB::raw('COUNT(solicitud.tipo_solicitud_id) AS TOTAL_SOLICITUD'))
+            ->where('users.rols_id', $rols_id)
             ->orderByDesc('TOTAL_SOLICITUD')->get();
     }
     public function nombreestado($idestado, $idmunicipio, $idparroquia, $idcomuna, $idcomunidad){

@@ -39,7 +39,6 @@
                                 <th style="text-align:center;">Direccion</th>
                                 <th style="text-align:center;">Status</th>
                                 <th style="text-align:center;">{{ trans('message.botones.edit') }}</th>
-                                
                             </tr>
                         </thead>
                     <tbody>
@@ -79,9 +78,6 @@
             {data: 'nombretipo', name: 'nombretipo'}, 
             {data: 'direccionnombre', name: 'direccionnombre'}, 
             {data: 'nombrestatus', name: 'nombrestatus'}, 
-          
-          
-          
             {
                 data: 'edit', name: 'edit', orderable: false, searchable: false,
                 "render": function ( data, type, row ) {                    

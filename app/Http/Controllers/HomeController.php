@@ -13,6 +13,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Http\Controllers\User\Colores;
+use App\Models\Solicitud\Solicitud;
 
 /**
  * Class HomeController
@@ -81,12 +82,14 @@ class HomeController extends Controller
             $user_total_activos = (new User)->userTotalActivo();
             $total_roles = (new User)->totalRoles();
             $user_total_Deny = (new User)->userTotalDeny();
-            $array_color = (new Colores)->getColores();      //
-            //funcion que retorna todas las solicitudes en estado en registradas
-            //funcion que retorna todas las solicitudes en estado en proceso
-            //funcion que retorna todas las solicitudes en estado en terminadas
-            return view('adminlte::home',compact('count_notification','user_total_activos',
-                                                  'total_roles','user_total_Deny','array_color'));
+            $array_color = (new Colores)->getColores();
+            $total_solicitudes_registradas = (new Solicitud)->SolicitudRegistradas(1);
+            $total_solicitudes_procesadas = (new Solicitud)->SolicitudRegistradas(2);
+            $total_solicitudes_finalizadas = (new Solicitud)->SolicitudRegistradas(5);
+            $total_solicitudes_registradas2 = count($total_solicitudes_registradas);
+            $total_solicitudes_procesadas2 = count($total_solicitudes_procesadas);
+            $total_solicitudes_finalizadas2 = count($total_solicitudes_finalizadas);
+            return view('adminlte::home',compact('count_notification','user_total_activos','total_roles','user_total_Deny','array_color', 'total_solicitudes_registradas2', 'total_solicitudes_procesadas2', 'total_solicitudes_finalizadas2'));
         }else{
             auth()->logout();
             alert()->info(trans('message.mensajes_alert.view_mail'),trans('message.mensajes_alert.view_mail_02'));
