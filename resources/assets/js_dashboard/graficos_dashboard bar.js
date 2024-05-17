@@ -122,15 +122,16 @@ jQuery.ajax({
   success: function(data) {
     var array_TOTAL_NOTIFICATIONS = [];    
     jQuery.each(data, function(index, value) {
+      array_NAME_USER.push(value.SOLICITUD_NOMBRE);
       array_TOTAL_NOTIFICATIONS.push(value.TOTAL_SOLICITUD);      
     });    
     var ctx = document.getElementById('solicitudTotalTipo').getContext('2d');
     var solicitudTipo = new Chart(ctx, {
       type: 'pie', // Change the type to 'pie'
       data: {
-        labels: ["TOTAL SOLICITUDES"], // Set the label for the single dataset
+        labels: ["TOTAL SOLICITUDES TERMINADAS"], // Set the label for the single dataset
         datasets: [{
-          label: 'Total de Solicitudes',
+          label: 'Total de Solicitudes Terminadas',
           data: array_TOTAL_NOTIFICATIONS,
           backgroundColor: [ // Include appropriate colors for the pie chart
             'rgba(255, 99, 132, 0.8)',

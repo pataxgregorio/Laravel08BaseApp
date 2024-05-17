@@ -119,11 +119,27 @@ class Solicitud extends Model
     
     public function count_total_solictud(){      
         $rols_id = auth()->user()->rols_id;
-        return DB::table('solicitud')
-        ->join('users', 'solicitud.users_id', '=', 'users.id')
-            ->select(DB::raw('COUNT(solicitud.tipo_solicitud_id) AS TOTAL_SOLICITUD'))
-            ->where('users.rols_id', $rols_id)
+        if($rols_id === 1){
+            $resultado = DB::table('solicitud')
+            ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
+            ->join('users', 'solicitud.users_id', '=', 'users.id')
+            ->join('status', 'solicitud.status_id','=','status.id')
+            ->select('tipo_solicitud.nombre AS SOLICITUD_NOMBRE', DB::raw('COUNT(tipo_solicitud.id) AS TOTAL_SOLICITUD'))
+            ->where('solicitud.status_id', 5)
+            ->groupBy('tipo_solicitud.id')
             ->orderByDesc('TOTAL_SOLICITUD')->get();
+            return $resultado;
+        }else{
+            $resultado = DB::table('solicitud')
+            ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
+            ->join('users', 'solicitud.users_id', '=', 'users.id')
+            ->join('status', 'solicitud.status_id','=','status.id')
+            ->select('tipo_solicitud.nombre AS SOLICITUD_NOMBRE', DB::raw('COUNT(tipo_solicitud.id) AS TOTAL_SOLICITUD'))
+            ->where('solicitud.status_id', 5)
+            ->groupBy('tipo_solicitud.id')
+            ->orderByDesc('TOTAL_SOLICITUD')->get();
+            return $resultado;}
+        
     }
     public function nombreestado($idestado, $idmunicipio, $idparroquia, $idcomuna, $idcomunidad){
         $resultado = DB::table('solicitud')->join('estado', 'solicitud.estado_id', '=', 'estado.id')

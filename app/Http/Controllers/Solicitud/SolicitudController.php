@@ -828,8 +828,7 @@ class SolicitudController extends Controller
     {
         if ($request->ajax()) {
             $countTotalSolicitud = (new Solicitud)->count_total_solictud();
-
-            return response()->json($countTotalSolicitud);
+            return response($countTotalSolicitud);
         }
     }
     public function colorView()

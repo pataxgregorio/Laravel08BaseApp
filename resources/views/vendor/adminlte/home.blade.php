@@ -28,7 +28,7 @@
             <div class="row">
               <div class="col-lg-6">
                 <div class="panel panel-default">
-                  <div class="panel-heading"><b>Total de Solicitudes</b></div>
+                  <div class="panel-heading"><b>Solicitudes Terminadas</b></div>
                   <div class="panel-body" id="contenedor_01">
                     <canvas style="width: 684px; height: 400px;" id="solicitudTotalTipo"></canvas>
                   </div>
