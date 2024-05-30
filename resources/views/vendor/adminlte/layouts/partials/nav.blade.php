@@ -29,7 +29,6 @@
                     @endif
                     @if (Auth::guest())
                         <li><a href="{{ url('/login') }}">{{ trans('message.login') }}</a></li>
-                        <li><a href="{{ url('/register') }}">{{ trans('message.register') }}</a></li>
                     @else
                         <li><a href="{{ url('/dashboard') }}">{{ Auth::user()->name }}</a></li>
                     @endif

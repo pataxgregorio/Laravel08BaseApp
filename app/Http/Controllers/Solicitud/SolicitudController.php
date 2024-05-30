@@ -2634,6 +2634,7 @@ class SolicitudController extends Controller
         }
 
         if ($solicitud["tipo_solicitud_id"] === 6) {
+            $urlActual = $_SERVER['HTTP_HOST'];            
             $beneficiario = $solicitud->beneficiario;
             $beneficiario = json_decode($beneficiario, true);
             $cedulabeneficiario = $beneficiario[0]["cedula"];
@@ -2645,6 +2646,7 @@ class SolicitudController extends Controller
             $motivorecaudos = $recaudos[0]["motivo"];
             $informerecaudos = $recaudos[0]["informe"];
             $beneficiariorecaudos = $recaudos[0]["beneficiario"];
+            $imagen = $urlActual.'assets/img/cintillo.png';
             if($cedularecaudos === "on"){
                 $activarrecaudoCedula = "checked";
             }
@@ -2690,7 +2692,6 @@ class SolicitudController extends Controller
                 </style>
             </head>
             <body>
-            <!-- <img src="/images/icons/unnamed.png" alt="" srcset=""> -->
                 <table>
                     <tr>
                         <th>Numero de Registro $idsolicitud</th>
