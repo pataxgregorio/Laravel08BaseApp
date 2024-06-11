@@ -43,6 +43,9 @@ class UserController extends Controller
         return view('User.users',compact('count_notification','tipo_alert','array_color'));
     }
 
+    public function obtenerusuario(Request $request){
+        
+    }
     public function getUsers(Request $request){
         try{
             if ($request->ajax()) {                

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -90,4 +91,76 @@ class LoginController extends Controller
             $request->has('remember')
         );
     }
+
+    protected function sendLoginResponse(Request $request)
+    {
+        // Existing code from AuthenticatesUsers trait
+        $request->session()->regenerate();
+        $this->clearLoginAttempts($request);
+
+        // Add CSRF token generation and response
+        $csrfToken = csrf_token();
+
+        // Check if this is an API request and respond accordingly.
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => 'Inicio de sesión exitoso',
+                'user' => $this->guard()->user(),
+                'csrf_token' => $csrfToken,
+            ]);
+        }
+
+        // If it's not an API request, use the default redirect.
+        return $this->authenticated($request, $this->guard()->user())
+            ?: redirect()->intended($this->redirectPath());
+    }
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            // Generate a new CSRF token after successful login
+            $csrfToken = csrf_token();
+
+            return response()->json([
+                'message' => 'Inicio de sesión exitoso',
+                'user' => Auth::user(),
+                'csrf_token' => $csrfToken // Include CSRF token in response
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Credenciales incorrectas',
+        ], 401);
+    }
+    public function login2(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            // Generate a new CSRF token after successful login
+            $csrfToken = csrf_token();
+
+            return response()->json([
+                'message' => 'Inicio de sesión exitoso',
+                'user' => Auth::user(),
+                'csrf_token' => $csrfToken // Include CSRF token in response
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Credenciales incorrectas',
+        ], 401);
+    }
 }
+

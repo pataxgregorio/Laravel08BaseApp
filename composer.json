@@ -7,9 +7,10 @@
     "require": {
         "php": "^7.4|^8.0",
         "acacha/admin-lte-template-laravel": "^8.0",
+        "barryvdh/laravel-cors": "^2.2",
         "consoletvs/charts": "6.*",
         "dompdf/dompdf": "^1.0",
-        "fruitcake/laravel-cors": "^2.0",
+        "fruitcake/laravel-cors": "^2.2",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.6",
         "laravel/framework": "^8.54",

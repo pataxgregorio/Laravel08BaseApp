@@ -6,6 +6,7 @@
 use App\Http\Controllers\NotificarController;
 use Illuminate\Support\Facades\Route;
 use App\Models\User\User;
+use App\Http\Controllers\Auth\LoginController;
 //use App\Http\Controllers\User\UserController;
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,7 @@ Auth::routes();
 Route::get('idioma/{lang}', 'Lenguaje\LenguajeController@cambioLenguaje')
             ->name('idioma.cambioLenguaje');
 
-Route::get('/deny', function () {    
+Route::get('/deny', function () {
     return view('deny');
 });
 
@@ -35,10 +36,10 @@ Route::get('/', function () {
 });
 
 /**
- * Se creó un middleware('permiso:user,view') el cual verifica antes de 
+ * Se creó un middleware('permiso:user,view') el cual verifica antes de
  * acceder al recurso solicitado si el usuario tiene permiso de ver dicho recurso.
  * Este middleware es parte de la seguridad de la aplicación en conjunto cn los permisos
- * asignados a cada rol. 
+ * asignados a cada rol.
  * /
  // *********************************************************************************************************
     /*
@@ -64,6 +65,8 @@ Route::group(['middleware' => 'auth'], function () {
     /*
     * Rutas de Usuarios, para todas las operaciones, con el Middleware (permiso) Integrado, para cada caso.
     */
+    // Route::post('/login', 'Auth\LoginController@login')->name('login');
+    // Route::post('/login2', 'Auth\LoginController@login2')->name('login2');
     Route::get('/users', 'User\UserController@index')->name('users.index')->middleware('permiso:user,view');
     Route::get('/users/create', 'User\UserController@create')->name('users.create')->middleware('permiso:user,add');
     Route::post('/users', 'User\UserController@store')->name('users.store')->middleware('permiso:user,add');
@@ -118,12 +121,12 @@ Route::group(['middleware' => 'auth'], function () {
     ->name('permisos.destroy')->middleware('permiso:permiso,delete');
 
     Route::get('/permisos/print', 'Permiso\PermisoController@permisoPrint')
-    ->name('permisos.permisoPrint')->middleware('permiso:permiso,print');    
+    ->name('permisos.permisoPrint')->middleware('permiso:permiso,print');
     /*
     * Fin de las Rutas de Permiso, para todas las operaciones
     */
     // *********************************************************************************************************
-    // *********************************************************************************************************    
+    // *********************************************************************************************************
     /*
     * Rutas de Roles, para todas las operaciones, con el Middleware (permiso) Integrado, para cada caso.
     */
@@ -135,7 +138,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/rols/{rol}', 'Rol\RolController@update')->name('rols.update')->middleware('permiso:rol,update');
     Route::get('/rols/{rol}/delete', 'Rol\RolController@destroy')->name('rols.destroy')->middleware('permiso:rol,delete');
     Route::get('/rols/list', 'Rol\RolController@getRols')->name('rols.list')->middleware('permiso:rol,view');
-    Route::get('/rols/print', 'Rol\RolController@rolsPrint')->name('rols.rolsPrint')->middleware('permiso:rol,print');        
+    Route::get('/rols/print', 'Rol\RolController@rolsPrint')->name('rols.rolsPrint')->middleware('permiso:rol,print');
     /*
     * Fin de las Rutas de Usuarios, para todas las operaciones
     */
@@ -152,7 +155,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/modulos/{modulo}', 'Modulo\ModuloController@update')->name('modulos.update')->middleware('permiso:modulo,update');
     Route::get('/modulos/{modulo}/delete', 'Modulo\ModuloController@destroy')->name('modulos.destroy')->middleware('permiso:modulo,delete');
     Route::get('/modulos/list', 'Modulo\ModuloController@getModulos')->name('modulos.list')->middleware('permiso:modulo,view');
-    Route::get('/modulos/print', 'Modulo\ModuloController@modulosPrint')->name('modulos.modulosPrint')->middleware('permiso:modulo,print');               
+    Route::get('/modulos/print', 'Modulo\ModuloController@modulosPrint')->name('modulos.modulosPrint')->middleware('permiso:modulo,print');
     /*
     * Fin de las Rutas de Usuarios, para todas las operaciones
     */
@@ -188,6 +191,9 @@ Route::get('/solicitud/getCoodinacion', 'Solicitud\SolicitudController@getCoodin
 Route::get('/solicitud/list', 'Solicitud\SolicitudController@getSolicitud')->name('solicitud.list')->middleware('permiso:solicitud,view, edit');
 Route::get('/solicitud/print', 'Solicitud\SolicitudController@solicitudPrint')->name('solicitud.solicitudPrint')->middleware('permiso:solicitud,print');
 Route::get('/solicitud/solicitudTipo', 'Solicitud\SolicitudController@solicitudTipo')->name('solicitud.solicitudTipo');
+Route::get('/solicitud/solicitudTipo2', 'Solicitud\SolicitudController@solicitudTipo2')->name('solicitud.solicitudTipo2');
+Route::get('/solicitud/solicitudTipo3', 'Solicitud\SolicitudController@solicitudTipo3')->name('solicitud.solicitudTipo3');
+Route::get('/solicitud/solicitudTipo4', 'Solicitud\SolicitudController@solicitudTipo4')->name('solicitud.solicitudTipo4');
 Route::get('/solicitud/solicitudTotalTipo', 'Solicitud\SolicitudController@solicitudTotalTipo')->name('solicitud.solicitudTotalTipo');
 
 Route::get('/imprimir', 'Solicitud\SolicitudController@imprimir')->name('imprimir');
@@ -210,4 +216,5 @@ Route::get('/seguimiento/print', 'Seguimiento\SeguimientoController@solicitudPri
 Route::get('/seguimiento/solicitudTipo', 'Seguimiento\SeguimientoController@solicitudTipo')->name('seguimiento.solicitudTipo');
 Route::get('/seguimiento/solicitudTotalTipo', 'Seguimiento\SeguimientoController@solicitudTotalTipo')->name('seguimiento.solicitudTotalTipo');
 Route::post('/seguimiento/addSeguimiento', 'Seguimiento\SeguimientoController@addSeguimiento')->name('addSeguimiento')->middleware('permiso:seguimiento,view');
+Route::get('/seguimientoapi', 'Seguimiento\SeguimientoController@segumientoJson')->name('seguimiento.segumientoapi');
 // *********************************************************************************************************

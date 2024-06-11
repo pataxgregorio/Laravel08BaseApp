@@ -824,7 +824,33 @@ class SolicitudController extends Controller
             return response()->json($countSolicitud);
         }
     }
-    public function solicitudTotalTipo(Request $request)
+    public function solicitudTipo2(Request $request)
+    {
+      
+            $countSolicitud = (new Solicitud)->count_solictud2();
+
+            return response()->json($countSolicitud);
+       
+    }
+
+    public function solicitudTipo3(Request $request)
+    {
+      
+            $countSolicitud = (new Solicitud)->count_solictud3();
+
+            return response()->json($countSolicitud);
+       
+    }
+
+    public function solicitudTipo4(Request $request)
+    {
+      
+            $countSolicitud = (new Solicitud)->count_solictud4();
+
+            return response()->json($countSolicitud);
+       
+    }
+        public function solicitudTotalTipo(Request $request)
     {
         if ($request->ajax()) {
             $countTotalSolicitud = (new Solicitud)->count_total_solictud();

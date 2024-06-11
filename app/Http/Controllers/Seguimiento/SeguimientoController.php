@@ -139,7 +139,11 @@ class SeguimientoController extends Controller
         $comunidad = [];
         return view('Solicitud.solicitud_create', compact('count_notification', 'titulo_modulo', 'roles', 'municipio', 'comuna', 'comunidad', 'direcciones', 'parroquia', 'estado', 'coordinacion', 'enter', 'tipo_solicitud', 'array_color'));
     }
-
+public function segumientoJson (){   
+    
+    $seguimiento ="Esto esta retornando";
+    return   response()->json($seguimiento);
+}
     /**
      * Store a newly created resource in storage.
      *
