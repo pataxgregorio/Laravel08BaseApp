@@ -189,7 +189,12 @@
                                             <td>{{$data['item']}}</td>
                                             <td>{{$data['fecha']}}</td>
                                             <td>{{$data['asunto']}}</td>
+                                            @if($data['imagen'] == 'Undefined')
+                                            <td>Sin evidencia</td>
+                                            @endif
+                                            @if($data['imagen'] != NULL)
                                             <td><img src="{{ asset($data['imagen']) }}" style="width: 120px;"></td>
+                                            @endif
                                         </tr>
                                         @endforeach
                                     </tbody>

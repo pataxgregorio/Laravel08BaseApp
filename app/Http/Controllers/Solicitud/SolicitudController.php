@@ -20,6 +20,7 @@ use App\Models\Coordinacion\Coordinacion;
 use App\Models\Tipo_Solicitud\Tipo_Solicitud;
 use Auth;
 use Dompdf\Dompdf;
+use Dompdf\Options;
 use App\Notifications\WelcomeUser;
 use App\Notifications\RegisterConfirm;
 use App\Notifications\NotificarEventos;
@@ -76,6 +77,10 @@ class SolicitudController extends Controller
         }
     }
 
+    public function getSolicitud2(Request $request){
+        $data = (new Solicitud)->getSolicitudList_DataTable3($request['params']);
+        return response()->json($data);
+    }
     public function profile()
     {
         $count_notification = (new User)->count_noficaciones_user();
@@ -850,6 +855,14 @@ class SolicitudController extends Controller
             return response()->json($countSolicitud);
        
     }
+    public function solicitudTipo5(Request $request)
+    {
+      
+            $countSolicitud = (new Solicitud)->count_solictud5();
+            $array = [$countSolicitud];
+            return $array;
+       
+    }
         public function solicitudTotalTipo(Request $request)
     {
         if ($request->ajax()) {
@@ -1050,7 +1063,7 @@ class SolicitudController extends Controller
                 </style>
             </head>
             <body>
-            <!-- <img src="/images/icons/unnamed.png" alt="" srcset=""> -->
+            <img src="https://prensa.alcaldiapaez.gob.ve/wp-content/uploads/sites/2/2024/06/cintillo.png" alt="" srcset="" width="100%">
                 <table>
                     <tr>
                         <th>Numero de Registro $idsolicitud</th>
@@ -1421,7 +1434,7 @@ class SolicitudController extends Controller
                 </style>
             </head>
             <body>
-            <!-- <img src="/images/icons/unnamed.png" alt="" srcset=""> -->
+            <img src="https://prensa.alcaldiapaez.gob.ve/wp-content/uploads/sites/2/2024/06/cintillo.png" alt="" srcset="" width="100%">
                 <table>
                     <tr>
                         <th>Numero de Registro $idsolicitud</th>
@@ -1793,7 +1806,7 @@ class SolicitudController extends Controller
                 </style>
             </head>
             <body>
-            <!-- <img src="/images/icons/unnamed.png" alt="" srcset=""> -->
+            <img src="https://prensa.alcaldiapaez.gob.ve/wp-content/uploads/sites/2/2024/06/cintillo.png" alt="" srcset="" width="100%">
                 <table>
                     <tr>
                         <th>Numero de Registro $idsolicitud</th>
@@ -2123,7 +2136,7 @@ class SolicitudController extends Controller
                 </style>
             </head>
             <body>
-            <!-- <img src="/images/icons/unnamed.png" alt="" srcset=""> -->
+            <img src="https://prensa.alcaldiapaez.gob.ve/wp-content/uploads/sites/2/2024/06/cintillo.png" alt="" srcset="" width="100%">
                 <table>
                     <tr>
                         <th>Numero de Registro $idsolicitud</th>
@@ -2410,7 +2423,7 @@ class SolicitudController extends Controller
                 </style>
             </head>
             <body>
-            <!-- <img src="/images/icons/unnamed.png" alt="" srcset=""> -->
+            <img src="https://prensa.alcaldiapaez.gob.ve/wp-content/uploads/sites/2/2024/06/cintillo.png" alt="" srcset="" width="100%">
                 <table>
                     <tr>
                         <th>Numero de Registro $idsolicitud</th>
@@ -2718,6 +2731,7 @@ class SolicitudController extends Controller
                 </style>
             </head>
             <body>
+            <img src="https://prensa.alcaldiapaez.gob.ve/wp-content/uploads/sites/2/2024/06/cintillo.png" alt="" srcset="" width="100%">
                 <table>
                     <tr>
                         <th>Numero de Registro $idsolicitud</th>
@@ -3020,6 +3034,9 @@ class SolicitudController extends Controller
         }
 
         $html = $htmlsolicitud;
+        $options = new Options;
+        $options->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html);
         $dompdf->setPaper('legal', 'portrait');
         $dompdf->render();

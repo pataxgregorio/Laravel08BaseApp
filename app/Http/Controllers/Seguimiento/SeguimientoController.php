@@ -80,6 +80,17 @@ class SeguimientoController extends Controller
         }
     }
 
+    public function getSeguimiento2(Request $request){
+        try {
+                $data = (new Seguimiento)->getSolicitudList_DataTable3($request['params']);
+                datatables()->of($data);
+                return response()->json($data);
+            }catch (Throwable $e) {
+            echo "Captured Throwable: " . $e->getMessage(), "\n";
+        }
+    }
+
+
     public function profile()
     {
         $count_notification = (new User)->count_noficaciones_user();
@@ -476,7 +487,6 @@ public function segumientoJson (){
         $seguimiento_edit = DB::table("seguimiento")->where("solicitud_id", $id)->get();
         foreach ($seguimiento_edit as $seguimiento_edit_2)
             ;
-
         $solicitud_edit = Solicitud::find($id);
         // $input2 =$seguimiento_edit->all();
         //   var_dump(isset($seguimiento_edit_2));
@@ -571,7 +581,8 @@ public function segumientoJson (){
 
         $comunidad = (new Comunidad)->datos_comunidad($solicitud_edit->comuna_id);
         $coordinacion = (new Coordinacion)->datos_coordinacion($solicitud_edit->direccion_id);
-
+        var_dump($seguimiento_edit);
+        exit();
         return view('Seguimiento.seguimiento_edit', compact('count_notification', 'status_solicitud', 'seguimiento_edit', 'titulo_modulo', 'solicitud_edit', 'estado', 'municipio', 'parroquia', 'asignacion', 'comuna', 'comunidad', 'tipo_solicitud', 'direcciones', 'enter', 'sexo', 'edocivil', 'nivelestudio', 'coordinacion', 'denuncia', 'beneficiario', 'quejas', 'sugerecia', 'asesoria', 'reclamo', 'profesion', 'recaudos', 'denunciado', 'array_color'));
     }
     public function getComunas(Request $request)

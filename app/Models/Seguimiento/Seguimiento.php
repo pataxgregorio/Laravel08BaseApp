@@ -48,6 +48,23 @@ class Seguimiento extends Model
         }
         
     }
+    public function getSolicitudList_DataTable3($params){
+        try {
+            $solicitud = DB::table('seguimiento')
+            ->join('solicitud', 'seguimiento.solicitud_id', '=', 'solicitud.id')
+            ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
+            ->join('direccion', 'solicitud.direccion_id', '=', 'direccion.id')
+            ->join('status', 'solicitud.status_id', '=', 'status.id')
+            ->join('users', 'solicitud.users_id', '=', 'users.id')
+            ->select('solicitud.id AS NumeroSolicitud','solicitud.nombre AS solicitante','tipo_solicitud.nombre AS tipoSolicitud','users.name AS analista','seguimiento.seguimiento as Seguimiento','direccion.nombre AS direccionnombre','status.nombre AS estatus')
+            ->where ('seguimiento.solicitud_id', $params)->get();
+            return $solicitud;
+        }catch(Throwable $e){
+            $solicitud = [];
+            return $solicitud;
+        }
+        
+    }
     public function count_solictud(){        
         return DB::table('solicitud')
             ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')

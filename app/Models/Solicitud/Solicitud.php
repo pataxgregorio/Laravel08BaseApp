@@ -47,6 +47,26 @@ class Solicitud extends Model
         
     ];
 
+    public function encasodeemergencia()
+    {
+        $resultados = DB::table('solicitud')
+        ->leftJoin('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
+        ->leftJoin('users', 'solicitud.users_id', '=', 'users.id')
+        ->leftJoin('status', 'solicitud.status_id', '=', 'status.id')
+        ->select(
+            'tipo_solicitud.id AS SOLICITUD_ID',
+            'tipo_solicitud.nombre AS SOLICITUD_NOMBRE',
+            DB::raw('COUNT(*) AS TOTAL_SOLICITUD'),
+            DB::raw('COUNT(CASE WHEN solicitud.status_id = 1 THEN 1 END) AS TOTAL_REGISTRADAS'),
+            DB::raw('COUNT(CASE WHEN solicitud.status_id = 2 THEN 1 END) AS TOTAL_PROCESADAS'),
+            DB::raw('COUNT(CASE WHEN solicitud.status_id = 5 THEN 1 END) AS TOTAL_FINALIZADAS')
+        )
+        ->groupBy('tipo_solicitud.id', 'tipo_solicitud.nombre')
+        ->orderByDesc('TOTAL_SOLICITUD')
+        ->get();
+
+    return $resultados;
+    }
     public function verificarJSON($id){
         return DB::table('seguimiento')->where('solicitud_id', $id)->get();
     }
@@ -122,6 +142,22 @@ class Solicitud extends Model
         }
         
     }
+    public function getSolicitudList_DataTable3($params){
+        try {
+            return $solicitud = DB::table('solicitud')
+            ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
+            ->join('direccion', 'solicitud.direccion_id', '=', 'direccion.id')
+            ->join('status', 'solicitud.status_id', '=', 'status.id')
+            ->join('users', 'solicitud.users_id', '=', 'users.id')
+            ->select('solicitud.id','solicitud.nombre AS solicitante','tipo_solicitud.nombre AS nombretipo','users.name AS analista','direccion.nombre AS direccionnombre','status.nombre AS nombrestatus')
+            ->orWhere('solicitud.id', $params)
+            ->orWhere('solicitud.cedula', $params)->get();
+        }catch(Throwable $e){
+            $solicitud = [];
+            return $solicitud;
+        }
+        
+    }
     public function count_solictud(){    
         $rols_id = auth()->user()->rols_id;
         return DB::table('solicitud')
@@ -167,6 +203,22 @@ class Solicitud extends Model
             ->groupBy('tipo_solicitud.id')
             ->orderByDesc('TOTAL_SOLICITUD')->get();
     }
+
+    public function count_solictud5()
+    {
+        $resultados = DB::table('solicitud')
+        ->leftJoin('status', 'solicitud.status_id', '=', 'status.id')
+        ->select(
+            DB::raw('COUNT(*) AS TOTAL_SOLICITUD'),
+            DB::raw('COUNT(CASE WHEN solicitud.status_id = 1 THEN 1 END) AS TOTAL_REGISTRADAS'),
+            DB::raw('COUNT(CASE WHEN solicitud.status_id = 2 THEN 1 END) AS TOTAL_PROCESADAS'),
+            DB::raw('COUNT(CASE WHEN solicitud.status_id = 5 THEN 1 END) AS TOTAL_FINALIZADAS')
+        )
+        ->first();
+
+    return $resultados;
+    }
+
     public function count_total_solictud(){      
         $rols_id = auth()->user()->rols_id;
         if($rols_id === 1){

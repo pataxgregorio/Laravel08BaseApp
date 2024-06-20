@@ -194,8 +194,10 @@ Route::get('/solicitud/solicitudTipo', 'Solicitud\SolicitudController@solicitudT
 Route::get('/solicitud/solicitudTipo2', 'Solicitud\SolicitudController@solicitudTipo2')->name('solicitud.solicitudTipo2');
 Route::get('/solicitud/solicitudTipo3', 'Solicitud\SolicitudController@solicitudTipo3')->name('solicitud.solicitudTipo3');
 Route::get('/solicitud/solicitudTipo4', 'Solicitud\SolicitudController@solicitudTipo4')->name('solicitud.solicitudTipo4');
+Route::get('/solicitud/solicitudTipo5', 'Solicitud\SolicitudController@solicitudTipo5')->name('solicitud.solicitudTipo5');
 Route::get('/solicitud/solicitudTotalTipo', 'Solicitud\SolicitudController@solicitudTotalTipo')->name('solicitud.solicitudTotalTipo');
 
+Route::get('/solicitud/list2', 'Solicitud\SolicitudController@getSolicitud2')->name('solicitud.list2');
 Route::get('/imprimir', 'Solicitud\SolicitudController@imprimir')->name('imprimir');
 
 // ##############################rutas del seguimiento de la solicitud
@@ -217,4 +219,6 @@ Route::get('/seguimiento/solicitudTipo', 'Seguimiento\SeguimientoController@soli
 Route::get('/seguimiento/solicitudTotalTipo', 'Seguimiento\SeguimientoController@solicitudTotalTipo')->name('seguimiento.solicitudTotalTipo');
 Route::post('/seguimiento/addSeguimiento', 'Seguimiento\SeguimientoController@addSeguimiento')->name('addSeguimiento')->middleware('permiso:seguimiento,view');
 Route::get('/seguimientoapi', 'Seguimiento\SeguimientoController@segumientoJson')->name('seguimiento.segumientoapi');
+
+Route::get('/seguimiento/list2', 'Seguimiento\SeguimientoController@getSeguimiento2')->name('seguimiento.list2');
 // *********************************************************************************************************
