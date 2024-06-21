@@ -315,7 +315,8 @@ class SolicitudController extends Controller
                 [
                     "cedula" => isset($input['cedulabeneficiario']) ? $input['cedulabeneficiario'] : NULL,
                     "nombre" => isset($input['nombrebeneficiario']) ? $input['nombrebeneficiario'] : NULL,
-                    "direccion" => isset($input['direccionbeneficiario']) ? $input['direccionbeneficiario'] : NULL
+                    "direccion" => isset($input['direccionbeneficiario']) ? $input['direccionbeneficiario'] : NULL,
+                    "solicita" => isset($input['solicita']) ? $input['solicita'] : NULL
                 ]
             ];
             $recaudos = [
@@ -1662,7 +1663,7 @@ class SolicitudController extends Controller
                         <td></td>
                     </tr>
                 </table>
-
+                <p>----------------------------------------------------------------------------------------------------------------------------------------</p>
                 <table style="margin-top: 20px">
                     <tr>
                         <th>Oficina de Atencion Ciudadana <span style="text-align: right">Numero de Registro $idsolicitud</span></th>
@@ -2034,7 +2035,7 @@ class SolicitudController extends Controller
                         <td></td>
                     </tr>
                 </table>
-
+                <p>----------------------------------------------------------------------------------------------------------------------------------------</p>
                 <table style="margin-top: 20px">
                     <tr>
                         <th>Oficina de Atencion Ciudadana <span style="text-align: right">Numero de Registro $idsolicitud</span></th>
@@ -2320,7 +2321,7 @@ class SolicitudController extends Controller
                         <td></td>
                     </tr>
                 </table>
-
+                <p>----------------------------------------------------------------------------------------------------------------------------------------</p>
                 <table style="margin-top: 20px">
                     <tr>
                         <th>Oficina de Atencion Ciudadana <span style="text-align: right">Numero de Registro $idsolicitud</span></th>
@@ -2607,7 +2608,8 @@ class SolicitudController extends Controller
                         <td></td>
                     </tr>
                 </table>
-
+                <p>----------------------------------------------------------------------------------------------------------------------------------------</p>
+                
                 <table style="margin-top: 20px">
                     <tr>
                         <th>Oficina de Atencion Ciudadana <span style="text-align: right">Numero de Registro $idsolicitud</span></th>
@@ -2679,6 +2681,7 @@ class SolicitudController extends Controller
             $cedulabeneficiario = $beneficiario[0]["cedula"];
             $nombrebeneficiario = $beneficiario[0]["nombre"];
             $direccionbeneficiario = $beneficiario[0]["direccion"];
+            $solicita = $beneficiario[0]["solicita"];
             $recaudos = $solicitud->recaudos;
             $recaudos = json_decode($recaudos, true);
             $cedularecaudos = $recaudos[0]["cedula"];
@@ -2844,6 +2847,7 @@ class SolicitudController extends Controller
                         <!-- <th>Tipo de Registro</th> -->
                         <th>Apellido y Nombre</th>
                         <th>Direccion de Benificiario</th>
+                        <th>Solicita</th>
                         <!-- <th>Edad</th>
                         <th>Estado Civil</th>
                         <th>Fecha de nacimiento</th>
@@ -2856,6 +2860,7 @@ class SolicitudController extends Controller
                         <!-- <td></td> -->
                         <td>$nombrebeneficiario</td>
                         <td>$direccionbeneficiario</td>
+                        <td>$solicita</td>
                         <!-- <td></td>
                         <td></td>
                         <td></td>
@@ -2928,7 +2933,6 @@ class SolicitudController extends Controller
                         <td></td>
                     </tr>
                 </table>
-
                 <table>
                     <tr>
                         <th>Solo para ser llenado por la Unidad Receptora</th>
@@ -2968,7 +2972,7 @@ class SolicitudController extends Controller
                         <td></td>
                     </tr>
                 </table>
-
+                <p>----------------------------------------------------------------------------------------------------------------------------------------</p>
                 <table style="margin-top: 20px">
                     <tr>
                         <th>Oficina de Atencion Ciudadana <span style="text-align: right">Numero de Registro $idsolicitud</span></th>
@@ -3006,13 +3010,15 @@ class SolicitudController extends Controller
                         <tr>
                             <th>Fecha de Solicitud</th>
                             <th>Hora</th>
-                        <th>Nombre y Apellido del Ciudadano Solicitante</th>                    
+                        <th>Nombre y Apellido del Ciudadano Solicitante</th>      
+                        <th>Solicita</th>                    
                         <th>Nombre del Funcionario Receptor</th>                    
                     </tr>
                     <tr>
                         <td>$fecha</td>
                         <td>$hora</td>
                         <td>$solicitud->nombre</td>
+                        <td>$solicita</td>
                         <td>$nombreUsuario</td>
                     </tr>
                 </table>

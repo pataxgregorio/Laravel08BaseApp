@@ -302,6 +302,10 @@
                                         {!! Form::label('direccionbeneficiario',trans('message.solicitud_action.direccionbeneficiario'), ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
                                          {!! Form::text('direccionbeneficiario',old('direccionbeneficiario'),['placeholder' => trans('message.solicitud_action.direccionbeneficiario'),'class' => 'form-control','id' => 'direccionbeneficiario_user']) !!}
                                      </div> 
+                                     <div style="text-align:left;">
+                                        {!! Form::label('solicita', 'Solicita' , ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
+                                         {!! Form::text('solicita',old('solicita'),['placeholder' => 'Solicita','class' => 'form-control','id' => 'solicita_user']) !!}
+                                     </div> 
                                     <h3>Recuados de la Peticion</h3>
                                     <br>
                                     <div style="text-align:left;">
@@ -319,7 +323,7 @@
                                  <div style="text-align:left;">
                                      <input  type="checkbox" id="checkcedulabeneficiario" name ="checkcedulabeneficiario">
                                      <label class="form-check-label" for="defaultCheck1">Cedula Beneficiario</label>
-                                 </div>
+                                 </div>                                 
                              </div>
                              
 
