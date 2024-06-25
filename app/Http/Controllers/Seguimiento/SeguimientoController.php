@@ -580,9 +580,7 @@ public function segumientoJson (){
         $comuna = (new Comuna)->datos_comuna($solicitud_edit->parroquia_id);
 
         $comunidad = (new Comunidad)->datos_comunidad($solicitud_edit->comuna_id);
-        $coordinacion = (new Coordinacion)->datos_coordinacion($solicitud_edit->direccion_id);
-        var_dump($seguimiento_edit);
-        exit();
+        $coordinacion = (new Coordinacion)->datos_coordinacion($solicitud_edit->direccion_id);        
         return view('Seguimiento.seguimiento_edit', compact('count_notification', 'status_solicitud', 'seguimiento_edit', 'titulo_modulo', 'solicitud_edit', 'estado', 'municipio', 'parroquia', 'asignacion', 'comuna', 'comunidad', 'tipo_solicitud', 'direcciones', 'enter', 'sexo', 'edocivil', 'nivelestudio', 'coordinacion', 'denuncia', 'beneficiario', 'quejas', 'sugerecia', 'asesoria', 'reclamo', 'profesion', 'recaudos', 'denunciado', 'array_color'));
     }
     public function getComunas(Request $request)

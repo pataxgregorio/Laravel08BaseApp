@@ -150,7 +150,7 @@ class Solicitud extends Model
             ->join('status', 'solicitud.status_id', '=', 'status.id')
             ->join('users', 'solicitud.users_id', '=', 'users.id')
             ->join('comuna', 'solicitud.comuna_id', '=', 'comuna.id')
-            ->select('solicitud.id','solicitud.nombre AS solicitante','comuna.codigo AS comuna','tipo_solicitud.nombre AS nombretipo','users.name AS analista','solicitud.beneficiario as beneficiario','solicitud.quejas AS quejas','solicitud.reclamo AS reclamo','solicitud.denuncia as denuncia','direccion.nombre AS direccionnombre','status.nombre AS nombrestatus')
+            ->select('solicitud.id','solicitud.nombre AS solicitante','comuna.codigo AS comuna','tipo_solicitud.nombre AS nombretipo','users.name AS analista','solicitud.beneficiario as beneficiario','solicitud.quejas AS quejas','solicitud.reclamo AS reclamo','solicitud.denuncia as denuncia','solicitud.denunciado as denunciado','direccion.nombre AS direccionnombre','status.nombre AS nombrestatus')
             ->orWhere('solicitud.id', $params)
             ->orWhere('solicitud.cedula', $params)->get();
         }catch(Throwable $e){

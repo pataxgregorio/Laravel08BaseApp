@@ -175,16 +175,16 @@
                                     <tbody>
                                         <?php
                                             foreach ($seguimiento_edit as $seguimiento_edit_2);
-                                            $arrayData = $seguimiento_edit_2->seguimiento;
+                                            $arrayData = isset($seguimiento_edit_2->seguimiento) ?$seguimiento_edit_2->seguimiento: NULL;
                                             
                                             if ($arrayData == NULL) {
                                                 $seguimientoPrueba = [];
                                                 $arrayData = [];
                                             }else{
                                                 $seguimientoPrueba = json_decode($arrayData, true);
-                                            }
+                                            }                                            
                                         ?>
-                                        @foreach ($seguimientoPrueba as $data)
+                                        @foreach ($seguimientoPrueba as $data)                                                                         
                                         <tr>
                                             <td>{{$data['item']}}</td>
                                             <td>{{$data['fecha']}}</td>
@@ -205,10 +205,10 @@
                 </div>
             </div>
             <?php 
-                foreach ($seguimiento_edit as $seguimiento_edit2){
+                foreach ($seguimiento_edit as $seguimiento_edit_2){
                 }
             ?>
-            {!! Form::open(array('route' => array('seguimiento.update',$seguimiento_edit2->id), 'method'=>'POST','id' =>
+            {!! Form::open(array('route' => array('seguimiento.update',isset($seguimiento_edit_2->id) ?$seguimiento_edit_2->id: ''), 'method'=>'POST','id' =>
             'form_users_id','enctype' =>'multipart/form-data')) !!}
             <div class="-dialog">
                 <div class="-content">
@@ -245,22 +245,33 @@
                 'status_id']) !!}
             </div>
 
-            <?php
-                foreach($seguimiento_edit as $seguimientoID)
-                echo '<script> var id = ' . $seguimientoID->id . ';</script>';
-                echo '<script> var idsolicitud = ' . $seguimientoID->solicitud_id . ';</script>';
+            <?php                
+                foreach ($seguimiento_edit as $index => $seguimientoID) {
+                    if ($seguimientoID->id !== null) {  // Verificar si el ID existe
+                        echo '<script> var id = ' . $seguimientoID->id . ';</script>';
+                        echo '<script> var idsolicitud = ' . $seguimientoID->solicitud_id . ';</script>';
+                        break; // Salir del bucle después de encontrar el primer ID válido
+                    } else {
+                        // Manejo del error si el primer ID es nulo
+                        if ($index === 0) { // Solo manejar el error en la primera iteración
+                            echo '<script>
+                                console.error("Error: El primer seguimientoID no tiene un valor válido.");
+                                alert("Ha ocurrido un error al cargar los datos. Por favor, inténtelo de nuevo.");
+                            </script>';
+                        }
+                    }
+                }
             ?>
             @endsection
             @section('script_datatable')
-            <script type="text/javascript">
-
-
+            <script type="text/javascript">        
                 $(document).ready(function() {
-                    $('#status_id').on('change', function() {
-                    if (confirm('¿Desea ejecutar el cambio?')) {
+                    $('#status_id').on('change', function() {                        
+                    if(seguimientoID !== NULL){
                         var nuevoValor = $(this).val();
                         var seguimientoID = id;
                         var solicitudID = idsolicitud;
+                        if (confirm('¿Desea ejecutar el cambio?')) {                        
                         $.ajax({
                             url: '{{ route('update2') }}',
                             method: 'GET',
@@ -280,8 +291,8 @@
                     } else {
                         
                     }
+                    }
                 });
-
                 })
             </script>
             @endsection
