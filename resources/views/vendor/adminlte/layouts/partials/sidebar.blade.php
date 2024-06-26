@@ -40,9 +40,12 @@
             <!-- Optionally, you can add icons to the links -->
             <li><a href="{{ url('/dashboard') }}"><i class='fa fa-link'></i> <span>{{ trans('message.dashboard') }}</span></a></li>            
             <!-- Optionally, you can add icons to the links -->
+            @if(Auth::user()->rols_id === 1 )
             <li><a href="{{ url('/users') }}"><i class='fa fa-link'></i> <span>{{ trans('message.users') }}</span></a></li>
+            @endif
             <li><a href="{{ url('/solicitud') }}"><i class='fa fa-link'></i> <span>{{ trans('message.request') }}</span></a></li>
             <li><a href="{{ url('/seguimiento') }}"><i class='fa fa-link'></i> <span>Seguimiento</span></a></li>
+            @if(Auth::user()->rols_id === 1 )
             <li><a href="{{ url('/notificaciones') }}"><i class='fa fa-link'></i> <span>{{ trans('message.menu_notificaciones') }}</span></a></li>
             <li class="treeview">
                 <a href="#"><i class='fa fa-link'></i> <span>{{ trans('message.menu_seguridad') }}</span> <i class="fa fa-angle-left pull-right"></i></a>
@@ -52,6 +55,7 @@
                     <li><a href="{{ url('/permisos') }}">{{ trans('message.menu_permiso') }}</a></li>
                 </ul>
             </li>
+            @endif
             <li><a href="{{ url('/users/color_view') }}"><i class='fa fa-link'></i> <span>{{ trans('message.menu_color') }}</span></a></li>
         </ul><!-- /.sidebar-menu -->
     </section>

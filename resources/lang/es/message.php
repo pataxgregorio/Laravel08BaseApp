@@ -140,7 +140,7 @@ return [
     'perfil_user'             => 'Perfil Usuarios', 
     'update_profile'          => 'Actualizar perfil usuario',
     'profile'                 => ' Perfil',   
-    'dashboard'               => 'Dashboard',
+    'dashboard'               => 'Inicio',
     'menu_seguridad'          => 'Seguridad',
     'menu_rol'                => 'Roles',
     'menu_modulo'             => 'Módulos',

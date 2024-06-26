@@ -27,6 +27,9 @@ use App\Notifications\NotificarEventos;
 use Carbon\Carbon;
 use App\Http\Controllers\User\Colores;
 
+use DB;
+use App\Models\Seguimiento\Seguimiento;
+
 
 class SolicitudController extends Controller
 {
@@ -330,6 +333,7 @@ class SolicitudController extends Controller
             $input['beneficiario'] = json_encode($beneficiario);
             $input['recaudos'] = json_encode($recaudos);
         }
+        
         $solicitud = new Solicitud([
             'users_id' => $input['users_id'],
             'direccion_id' => $input['direcciones_id'],
@@ -368,11 +372,28 @@ class SolicitudController extends Controller
 
             'created_at' => \Carbon\Carbon::now(),
             'updated_at' => \Carbon\Carbon::now(),
-        ]);
+        ]);               
+
         $solicitud->save();
+
         $count_notification = (new User)->count_noficaciones_user();
         $tipo_alert = "Create";
         $array_color = (new Colores)->getColores();
+
+        $conseguirID = Solicitud::latest()->value('id');
+        $seguimiento_edit = DB::table("seguimiento")->where("solicitud_id", $conseguirID)->get();
+        $solicitud_edit = Solicitud::find($conseguirID);      
+        
+        $seguimiento = new Seguimiento([
+            'solicitud_id' => $conseguirID,
+            'seguimiento' => NULL
+        ]);
+        $seguimiento->save();
+
+        $solicitud_Update = Solicitud::find($conseguirID);
+
+        $solicitud_Update->save();
+
         return view('Solicitud.solicitud', compact('count_notification', 'tipo_alert', 'array_color'));
     }
 
@@ -2676,12 +2697,12 @@ class SolicitudController extends Controller
 
         if ($solicitud["tipo_solicitud_id"] === 6) {
             $urlActual = $_SERVER['HTTP_HOST'];            
-            $beneficiario = $solicitud->beneficiario;
+            $beneficiario = $solicitud->beneficiario;      
             $beneficiario = json_decode($beneficiario, true);
             $cedulabeneficiario = $beneficiario[0]["cedula"];
             $nombrebeneficiario = $beneficiario[0]["nombre"];
             $direccionbeneficiario = $beneficiario[0]["direccion"];
-            $solicita = $beneficiario[0]["solicita"];
+            $solicita = isset($beneficiario[0]["solicita"]) ? $beneficiario[0]["solicita"]: 'N/A';
             $recaudos = $solicitud->recaudos;
             $recaudos = json_decode($recaudos, true);
             $cedularecaudos = $recaudos[0]["cedula"];
@@ -2929,7 +2950,7 @@ class SolicitudController extends Controller
                         <th>Huella Dactilar</th>
                     </tr>
                     <tr>
-                        <td style="padding:2rem;"></td>
+                        <td style="padding:1.7rem;"></td>
                         <td></td>
                     </tr>
                 </table>
@@ -2957,7 +2978,7 @@ class SolicitudController extends Controller
                         <th>Descripcion de el tramite</th>
                     </tr>
                     <tr>
-                        <td style="padding: 2rem"></td>
+                        <td style="padding: 1.7rem"></td>
                     </tr>
                 </table>
                 <table>
@@ -3028,7 +3049,7 @@ class SolicitudController extends Controller
                         <th>Sello</th>
                     </tr>
                     <tr>
-                        <td style="padding: 2rem"></td>
+                        <td style="padding: 1.7rem"></td>
                         <td></td>
                     </tr>
                 </table>

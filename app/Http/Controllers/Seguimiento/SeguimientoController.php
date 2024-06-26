@@ -54,10 +54,10 @@ class SeguimientoController extends Controller
 
     public function getSeguimiento(Request $request)
     {
-        try {
-
+        try {            
             if ($request->ajax()) {
                 $data = (new Solicitud)->getSolicitudList_DataTable2();
+                
                 return datatables()->of($data)
 
                     ->addColumn('edit', function ($data) {
@@ -182,10 +182,6 @@ public function segumientoJson (){
 
         $input = $request->all();
         $input['users_id'] = Auth::user()->id;
-        //  $data['is_deleted'] = false;
-        // var_dump ($input);
-        //   exit();
-
 
         $recaudos = NULL;
         $input['quejas'] = NULL;
@@ -197,6 +193,7 @@ public function segumientoJson (){
         $input['denunciado'] = NULL;
         $input['recaudos'] = $recaudos;
         $input['codigocontrol'] = "001";
+
         if ($input['tipo_solicitud_id'] == 1) {
             $denuncia = [
                 [
@@ -346,31 +343,6 @@ public function segumientoJson (){
         }
         $solicitud = new Solicitud([
             'users_id' => $input['users_id'],
-            'direccion_id' => $input['direcciones_id'],
-            'coordinacion_id' => $input['coordinacion_id'],
-            'tipo_solicitud_id' => $input['tipo_solicitud_id'],
-            'enter_descentralizados_id' => $input['enter_id'],
-            'estado_id' => $input['estado_id'],
-            'municipio_id' => $input['municipio_id'],
-            'parroquia_id' => $input['parroquia_id'],
-            'comuna_id' => $input['comuna_id'],
-            'comunidad_id' => $input['comunidad_id'],
-            'codigo_control' => $input['codigocontrol'],
-            'status_id' => 1,
-            'nombre' => $input['nombre'],
-            'cedula' => $input['cedula'],
-            'sexo' => $input['sexo'],
-            'email' => $input['email'],
-            'direccion' => $input['direccion'],
-            'fecha' => \Carbon\Carbon::now(),
-            'telefono' => $input['telefono'],
-            'telefono2' => $input['telefono2'],
-            'organismo' => NULL,
-            'asignacion' => $input['asignacion'],
-            'edocivil' => $input['edocivil'],
-            'fechaNacimiento' => $input['fechanacimiento'],
-            'nivelestudio' => $input['niveleducativo'],
-            'profesion' => $input['profesion'],
             'recaudos' => $input['recaudos'],
             'beneficiario' => $input['beneficiario'],
             'quejas' => $input['quejas'],
@@ -485,8 +457,7 @@ public function segumientoJson (){
     {
         //  $seguimiento_edit = Seguimiento::find('solicitud_id',$id);
         $seguimiento_edit = DB::table("seguimiento")->where("solicitud_id", $id)->get();
-        foreach ($seguimiento_edit as $seguimiento_edit_2)
-            ;
+        foreach ($seguimiento_edit as $seguimiento_edit_2);
         $solicitud_edit = Solicitud::find($id);
         // $input2 =$seguimiento_edit->all();
         //   var_dump(isset($seguimiento_edit_2));
@@ -495,7 +466,6 @@ public function segumientoJson (){
         //  exit();
         if (isset($seguimiento_edit_2->solicitud_id)) {
             $entro = true;
-
         } else {
             $seguimiento = new Seguimiento([
                 'solicitud_id' => $id,
@@ -510,7 +480,7 @@ public function segumientoJson (){
 
         }
 
-        $arrayData = isset($seguimiento_edit_2->seguimiento) ? $seguimiento_edit_2->seguimiento  : [];
+        $arrayData = isset($seguimiento_edit_2->seguimiento) ? $seguimiento_edit_2->seguimiento  : NULL;
 
         $valores = $solicitud_edit->all();
 
@@ -576,9 +546,7 @@ public function segumientoJson (){
         $edocivil = array('SOLTERO' => 'SOLTERO', 'CASADO' => 'CASADO', 'VIUDO' => 'VIUDO', 'DIVORCIADO' => 'DIVORCIADO');
         $nivelestudio = array('PRIMARIA' => 'PRIMARIA', 'SECUNDARIA' => 'SECUNDARIA', 'BACHILLERATO' => 'BACHILLERATO', 'UNIVERSITARIO' => 'UNIVERSITARIO', 'ESPECIALIZACION' => 'ESPECIALIZACION');
         $profesion = array('TECNICO MEDIO' => 'TECNICO MEDIO', 'TECNICO SUPERIOR' => 'TECNICO SUPERIOR', 'INGENIERO' => 'INGENIERO', 'ABOGADO' => 'ABOGADO', 'MEDICO CIRUJANO' => 'MEDICO CIRUJANO', 'HISTORIADOR' => 'HISTORIADOR', 'PALEONTOLOGO' => 'PALEONTOLOGO', 'GEOGRAFO' => 'GEOGRAFO', 'BIOLOGO' => 'BIOLOGO', 'PSICOLOGO' => 'PSICOLOGO', 'MATEMATICO' => 'MATEMATICO', 'ARQUITECTO' => 'ARQUITECTO', 'COMPUTISTA' => 'COMPUTISTA', 'PROFESOR' => 'PROFESOR', 'PERIODISTA' => 'PERIODISTA', 'BOTANICO' => 'BOTANICO', 'FISICO' => 'FISICO', 'SOCIOLOGO' => 'SOCIOLOGO', 'FARMACOLOGO' => 'FARMACOLOGO', 'QUIMICO' => 'QUIMICO', 'POLITOLOGO' => 'POLITOLOGO', 'ENFERMERO' => 'ENFERMERO', 'ELECTRICISTA' => 'ELECTRICISTA', 'BIBLIOTECOLOGO' => 'BIBLIOTECOLOGO', 'PARAMEDICO' => 'PARAMEDICO', 'TECNICO DE SONIDO' => 'TECNICO DE SONIDO', 'ARCHIVOLOGO' => 'ARCHIVOLOGO', 'MUSICO' => 'MUSICO', 'FILOSOFO' => 'FILOSOFO', 'SECRETARIA' => 'SECRETARIA', 'TRADUCTOR' => 'TRADUCTOR', 'ANTROPOLOGO' => 'ANTROPOLOGO', 'TECNICO TURISMO' => 'TECNICO TURISMO', 'ECONOMISTA' => 'ECONOMISTA', 'ADMINISTRADOR' => 'ADMINISTRADOR', 'CARPITERO' => 'CARPITERO', 'RADIOLOGO' => 'RADIOLOGO', 'COMERCIANTE' => 'COMERCIANTE', 'CERRAJERO' => 'CERRAJERO', 'COCINERO' => 'COCINERO', 'ALBAÑIL' => 'ALBAÑIL', 'PLOMERO' => 'PLOMERO', 'TORNERO' => 'TORNERO', 'EDITOR' => 'EDITOR', 'ESCULTOR' => 'ESCULTOR', 'ESCRITOR' => 'ESCRITOR', 'BARBERO' => 'BARBERO');
-
         $comuna = (new Comuna)->datos_comuna($solicitud_edit->parroquia_id);
-
         $comunidad = (new Comunidad)->datos_comunidad($solicitud_edit->comuna_id);
         $coordinacion = (new Coordinacion)->datos_coordinacion($solicitud_edit->direccion_id);        
         return view('Seguimiento.seguimiento_edit', compact('count_notification', 'status_solicitud', 'seguimiento_edit', 'titulo_modulo', 'solicitud_edit', 'estado', 'municipio', 'parroquia', 'asignacion', 'comuna', 'comunidad', 'tipo_solicitud', 'direcciones', 'enter', 'sexo', 'edocivil', 'nivelestudio', 'coordinacion', 'denuncia', 'beneficiario', 'quejas', 'sugerecia', 'asesoria', 'reclamo', 'profesion', 'recaudos', 'denunciado', 'array_color'));
@@ -627,7 +595,7 @@ public function segumientoJson (){
         // $count_notification = (new User)->count_noficaciones_user();
         // $verificarJSON = (new Solicitud)->verificarJSON($id);
         $verificarJSON = Seguimiento::find($id);
-        $input = $request->all();
+        $input = $request->all();        
         $imagen = $request->file('image');
         $nombreImagen = uniqid() . '.' . $imagen->getClientOriginalExtension();
         $ruta = $imagen->move('images/Evidencias', $nombreImagen);

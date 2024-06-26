@@ -35,7 +35,9 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
-                                <th  style="text-align:center;">Tipo Solicitud</th>
+                                <th>Cedula</th>
+                                <th>Cedula Anexa</th>
+                                <th style="text-align:center;">Tipo Solicitud</th>
                                 <th style="text-align:center;">Direccion</th>
                                 <th style="text-align:center;">Status</th>
                                 <th style="text-align:center;">{{ trans('message.botones.edit') }}</th>
@@ -75,6 +77,8 @@
                 }
             },
             {data: 'solicitante', name: 'solicitante'}, 
+            {data: 'cedula', name: 'cedula'}, 
+            {data: 'cedula2', name: 'cedula2'}, 
             {data: 'nombretipo', name: 'nombretipo'}, 
             {data: 'direccionnombre', name: 'direccionnombre'}, 
             {data: 'nombrestatus', name: 'nombrestatus'}, 

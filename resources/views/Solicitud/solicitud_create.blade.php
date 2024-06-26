@@ -289,7 +289,7 @@
                              </div>
 
                              <div id="beneficiario">
-                                    <h3>Peticion</h3>
+                                    <h3>Solicitud</h3>
                                      <div style="text-align:left;">
                                         {!! Form::label('nombrebeneficiario',trans('message.solicitud_action.nombrebeneficiario'), ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
                                          {!! Form::text('nombrebeneficiario',old('nombrebeneficiario'),['placeholder' => trans('message.solicitud_action.nombrebeneficiario'),'class' => 'form-control','id' => 'nombrebeneficiario_user']) !!}
@@ -303,10 +303,10 @@
                                          {!! Form::text('direccionbeneficiario',old('direccionbeneficiario'),['placeholder' => trans('message.solicitud_action.direccionbeneficiario'),'class' => 'form-control','id' => 'direccionbeneficiario_user']) !!}
                                      </div> 
                                      <div style="text-align:left;">
-                                        {!! Form::label('solicita', 'Solicita' , ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
-                                         {!! Form::text('solicita',old('solicita'),['placeholder' => 'Solicita','class' => 'form-control','id' => 'solicita_user']) !!}
+                                        {!! Form::label('solicita', 'Solicita', ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
+                                         {!! Form::text('solicita', isset($valores[0]["solicita"]) ?$valores[0]["solicita"]: '',['placeholder' => 'Solicita','class' => 'form-control','id' => 'solicita_user']) !!}
                                      </div> 
-                                    <h3>Recuados de la Peticion</h3>
+                                    <h3>Recaudos de la Solicitud</h3>
                                     <br>
                                     <div style="text-align:left;">
                                          <input  type="checkbox" id="checkcedula2" name ="checkcedula2">

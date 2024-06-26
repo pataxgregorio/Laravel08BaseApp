@@ -23,10 +23,8 @@
           <img src="{{ url('intro-img.svg') }}" alt="" class="img-fluid" style="width: 530px; height: 300px;">
         </div>
         <div style="text-align:center;">
-          <h3>{{ trans('message.home.realizado') }}<b>Tarsicio Carrizales</b></h3>
         </div>
         <div style="text-align:center;">
-          <h5>{{ trans('message.home.mail') }}<b>telecom.com.ve@gmail.com</b></h5>
         </div>        
       </div>
     </section><!-- #intro -->

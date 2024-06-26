@@ -45,6 +45,13 @@ Componentes para los Módulos del Sistema, (New,Print,Download and Upload)
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
+                                <th>Cedula</th>
+                                @if(Auth::user()->rols_id === 1)
+                                    <th>Cedula 2 SI funciona</th>
+                                @endif
+                                @if(Auth::user()->rols_id === 10)
+                                    <th>Cedula del Beneficiario</th>
+                                @endif
                                 <th style="text-align:center;">Tipo Solicitud</th>
                                 <th style="text-align:center;">Direccion</th>
                                 <th style="text-align:center;">Status</th>
@@ -84,7 +91,9 @@ Componentes para los Módulos del Sistema, (New,Print,Download and Upload)
                     return '<div style="text-align:center;"><b>'+data+'</b></div>';
                 }
             },
-            {data: 'solicitante', name: 'solicitante'}, 
+            {data: 'solicitante', name: 'solicitante'},
+            {data: 'cedula', name: 'cedula'}, 
+            {data: 'cedula2', name: 'cedula2'}, 
             {data: 'nombretipo', name: 'nombretipo'}, 
             {data: 'direccionnombre', name: 'direccionnombre'}, 
             {data: 'nombrestatus', name: 'nombrestatus'},          

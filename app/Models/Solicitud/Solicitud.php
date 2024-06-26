@@ -83,22 +83,70 @@ class Solicitud extends Model
             $rols_id = auth()->user()->rols_id;
             $user_id = auth()->user()->id;
         if($rols_id == 1){
-            return $solicitud = DB::table('solicitud')
-            ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
-            ->join('direccion', 'solicitud.direccion_id', '=', 'direccion.id')
-            ->join('status', 'solicitud.status_id', '=', 'status.id')
-            ->select('solicitud.id','solicitud.nombre AS solicitante','tipo_solicitud.nombre AS nombretipo','direccion.nombre AS direccionnombre','status.nombre AS nombrestatus')
-            ->where ('status_id',1)->get(); 
+            $solicitud = DB::table('solicitud')
+                    ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
+                    ->join('direccion', 'solicitud.direccion_id', '=', 'direccion.id')
+                    ->join('status', 'solicitud.status_id', '=','status.id')
+                    ->join('users', 'solicitud.users_id', '=', 'users.id')
+                    ->join('rols', 'users.rols_id', '=', 'rols.id')
+                    ->where('tipo_solicitud.id', '!=', 6)
+                    ->where('tipo_solicitud.id', '!=', 4)
+                    ->where('tipo_solicitud.id', '!=', 5)
+                    ->where('rols_id', $rols_id)
+                    ->where('status_id', '!=', 5)
+                    ->select(
+                        'solicitud.id',
+                        'solicitud.nombre AS solicitante',
+                        'solicitud.cedula AS cedula',
+                        'tipo_solicitud.nombre AS nombretipo',
+                        'direccion.nombre AS direccionnombre',
+                        'status.nombre AS nombrestatus',
+                        'solicitud.denunciado'
+                    ) // Extraer cedula     
+                    ->get(); // Manejar otros roles
+                    foreach ($solicitud as $item) {
+                        $denunciado = json_decode($item->denunciado, true);                    
+                        $item->cedula2 = $denunciado[0]['cedula'] ?? null; // Asignar cédula o null
+                        
+                        // Opcional: Eliminar el campo denunciado original si no lo necesitas
+                        unset($item->denunciado); 
+                    }
+
+                    return $solicitud;
         }
         if($rols_id == 10){
-            return DB::table('solicitud')
-            ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
-            ->join('direccion', 'solicitud.direccion_id', '=', 'direccion.id')
-            ->join('status', 'solicitud.status_id', '=', 'status.id')
-            ->join('users', 'solicitud.users_id', '=', 'users.id')
-            ->select('solicitud.id','solicitud.nombre AS solicitante','tipo_solicitud.nombre AS nombretipo','direccion.nombre AS direccionnombre','status.nombre AS nombrestatus')
-            ->where ('rols_id',10)
-            ->where ('status_id',1)->get();
+            $solicitud = DB::table('solicitud')
+                    ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
+                    ->join('direccion', 'solicitud.direccion_id', '=', 'direccion.id')
+                    ->join('status', 'solicitud.status_id', '=','status.id')
+                    ->join('users', 'solicitud.users_id', '=', 'users.id')
+                    ->join('rols', 'users.rols_id', '=', 'rols.id')
+                    ->where('tipo_solicitud.id', '!=', 4)
+                    ->where('tipo_solicitud.id', '!=', 5)
+                    ->where('rols_id', $rols_id)
+                    ->where('status_id', '!=', 5)
+                    ->select(
+                        'solicitud.id',
+                        'solicitud.nombre AS solicitante',
+                        'solicitud.cedula AS cedula',
+                        'tipo_solicitud.nombre AS nombretipo',
+                        'direccion.nombre AS direccionnombre',
+                        'status.nombre AS nombrestatus',
+                        'solicitud.beneficiario' // Seleccionar el campo beneficiario completo
+                    ) // Extraer cedula                    
+                    ->get();
+
+                
+                // Parsear el JSON y agregar cedulabeneficiario
+                foreach ($solicitud as $item) {
+                    $beneficiario = json_decode($item->beneficiario, true);                    
+                    $item->cedula2 = $beneficiario[0]['cedula'] ?? null; // Asignar cédula o null
+                    
+                    // Opcional: Eliminar el campo beneficiario original si no lo necesitas
+                    unset($item->beneficiario); 
+                }
+    
+                return $solicitud;
         }else{
             return $solicitud = DB::table('solicitud')
             ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
@@ -113,35 +161,80 @@ class Solicitud extends Model
         }
         
     }
-    public function getSolicitudList_DataTable2(){
-        try {
-            $rols_id = auth()->user()->rols_id;
-            if($rols_id == 1){
-                return DB::table('solicitud')
-                ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
-                ->join('direccion', 'solicitud.direccion_id', '=', 'direccion.id')
-                ->join('status', 'solicitud.status_id', '=', 'status.id')
-                ->join('users', 'solicitud.users_id', '=', 'users.id')
-                ->select('solicitud.id','solicitud.nombre AS solicitante','tipo_solicitud.nombre AS nombretipo','direccion.nombre AS direccionnombre','status.nombre AS nombrestatus')
-                ->where ('rols_id', $rols_id);
-            }else{
-            return DB::table('solicitud')
-            ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
-            ->join('direccion', 'solicitud.direccion_id', '=', 'direccion.id')
-            ->join('status', 'solicitud.status_id', '=', 'status.id')
-            ->join('users', 'solicitud.users_id', '=', 'users.id')
-            ->select('solicitud.id','solicitud.nombre AS solicitante','tipo_solicitud.nombre AS nombretipo','direccion.nombre AS direccionnombre','status.nombre AS nombrestatus')
-            ->where ('rols_id', $rols_id)
-            ->where ('tipo_solicitud.id', '!=',4)
-            ->where ('tipo_solicitud.id', '!=',5)
-            ->where ('status_id', '!=',5)->get();
+    public function getSolicitudList_DataTable2() {
+        try {            
+            $rols_id = auth()->user()->rols_id;            
+            if ($rols_id === 10) {         
+                $solicitud = DB::table('solicitud')
+                    ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
+                    ->join('direccion', 'solicitud.direccion_id', '=', 'direccion.id')
+                    ->join('status', 'solicitud.status_id', '=','status.id')
+                    ->join('users', 'solicitud.users_id', '=', 'users.id')
+                    ->join('rols', 'users.rols_id', '=', 'rols.id')
+                    ->where('tipo_solicitud.id', '!=', 4)
+                    ->where('tipo_solicitud.id', '!=', 5)
+                    ->where('rols_id', $rols_id)
+                    ->where('status_id', '!=', 5)
+                    ->select(
+                        'solicitud.id',
+                        'solicitud.nombre AS solicitante',
+                        'solicitud.cedula AS cedula',
+                        'tipo_solicitud.nombre AS nombretipo',
+                        'direccion.nombre AS direccionnombre',
+                        'status.nombre AS nombrestatus',
+                        'solicitud.beneficiario' // Seleccionar el campo beneficiario completo
+                    ) // Extraer cedula                    
+                    ->get();
+
+                
+                // Parsear el JSON y agregar cedulabeneficiario
+                foreach ($solicitud as $item) {
+                    $beneficiario = json_decode($item->beneficiario, true);                    
+                    $item->cedula2 = $beneficiario[0]['cedula'] ?? null; // Asignar cédula o null
+                    
+                    // Opcional: Eliminar el campo beneficiario original si no lo necesitas
+                    unset($item->beneficiario); 
+                }
+    
+                return $solicitud;
+            } else {
+                    $solicitud = DB::table('solicitud')
+                    ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
+                    ->join('direccion', 'solicitud.direccion_id', '=', 'direccion.id')
+                    ->join('status', 'solicitud.status_id', '=','status.id')
+                    ->join('users', 'solicitud.users_id', '=', 'users.id')
+                    ->join('rols', 'users.rols_id', '=', 'rols.id')
+                    ->where('tipo_solicitud.id', '!=', 6)
+                    ->where('tipo_solicitud.id', '!=', 4)
+                    ->where('tipo_solicitud.id', '!=', 5)
+                    ->where('rols_id', $rols_id)
+                    ->where('status_id', '!=', 5)
+                    ->select(
+                        'solicitud.id',
+                        'solicitud.nombre AS solicitante',
+                        'solicitud.cedula AS cedula',
+                        'tipo_solicitud.nombre AS nombretipo',
+                        'direccion.nombre AS direccionnombre',
+                        'status.nombre AS nombrestatus',
+                        'solicitud.denunciado'
+                    ) // Extraer cedula     
+                    ->get(); // Manejar otros roles
+                    foreach ($solicitud as $item) {
+                        $denunciado = json_decode($item->denunciado, true);                    
+                        $item->cedula2 = $denunciado[0]['cedula'] ?? null; // Asignar cédula o null
+                        
+                        // Opcional: Eliminar el campo denunciado original si no lo necesitas
+                        unset($item->denunciado); 
+                    }
+
+                    return $solicitud;
+            }
+        } catch (Throwable $e) {
+            Log::error("Error en getSolicitudList_DataTable2: " . $e->getMessage()); 
+            return [];
         }
-        }catch(Throwable $e){
-            $solicitud = [];
-            return $solicitud;
-        }
-        
     }
+    
     public function getSolicitudList_DataTable3($params){
         try {
             return $solicitud = DB::table('solicitud')
@@ -171,11 +264,13 @@ class Solicitud extends Model
     }
     public function count_solictud2()
     {
+        $rols_id = auth()->user()->rols_id;
       
         return DB::table('solicitud')
             ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
             ->join('users', 'solicitud.users_id', '=', 'users.id')
             ->select('tipo_solicitud.nombre AS SOLICITUD_NOMBRE', DB::raw('COUNT(solicitud.tipo_solicitud_id) AS TOTAL_SOLICITUD'))
+            ->where('users.rols_id', $rols_id)
             ->groupBy('tipo_solicitud.id')
             ->orderByDesc('TOTAL_SOLICITUD')->get();
     }
