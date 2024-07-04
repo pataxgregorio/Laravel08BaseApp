@@ -47,7 +47,7 @@ Componentes para los Módulos del Sistema, (New,Print,Download and Upload)
                                 <th>Nombre</th>
                                 <th>Cedula</th>
                                 @if(Auth::user()->rols_id === 1)
-                                    <th>Cedula 2 SI funciona</th>
+                                    <th>Cedula 2</th>
                                 @endif
                                 @if(Auth::user()->rols_id === 10)
                                     <th>Cedula del Beneficiario</th>

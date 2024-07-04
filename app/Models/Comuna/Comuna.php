@@ -13,9 +13,12 @@ class Comuna extends Model
         
     ];
     public function datos_comuna($parroquia){
-        try {
-            
-            $comuna = DB::table('comuna')->select('id','codigo')->where('parroquia_id',$parroquia)->orderBy('id')->pluck('codigo', 'id')->toArray();
+        try {            
+            $comuna = DB::table('comuna')
+            ->leftJoin('parroquia', 'comuna.parroquia_id', '=', 'parroquia.id')
+            ->select('comuna.id','comuna.codigo')
+            ->where('comuna.parroquia_id', '=',$parroquia)
+            ->get();           
             return $comuna;
         }catch(Throwable $e){
             $comuna = [];

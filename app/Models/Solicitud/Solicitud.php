@@ -14,12 +14,14 @@ class Solicitud extends Model
         'direccion_id',        
         'coordinacion_id',
         'tipo_solicitud_id',
+        'tipo_subsolicitud_id',
         'enter_descentralizados_id',
         'estado_id',
         'municipio_id',
         'parroquia_id',
         'comuna_id',
         'comunidad_id',
+        'jefecomunidad_id',
         'codigo_control',
         'status_id',
         'nombre',
@@ -250,9 +252,24 @@ class Solicitud extends Model
             $solicitud = [];
             return $solicitud;
         }
-        
     }
-    public function count_solictud(){    
+    public function getSolicitudList_DataTable4($params){
+        try {
+            return $solicitud = DB::table('solicitud')
+            ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
+            ->join('direccion', 'solicitud.direccion_id', '=', 'direccion.id')
+            ->join('status', 'solicitud.status_id', '=', 'status.id')
+            ->join('users', 'solicitud.users_id', '=', 'users.id')
+            ->join('comuna', 'solicitud.comuna_id', '=', 'comuna.id')
+            ->select('solicitud.id','solicitud.denunciado as denunciado')
+            ->orWhere('solicitud.id', $params)
+            ->orWhere('solicitud.cedula', $params)->get();
+        }catch(Throwable $e){
+            $solicitud = [];
+            return $solicitud;
+        }
+    }
+    public function count_solictud(){
         $rols_id = auth()->user()->rols_id;
         return DB::table('solicitud')
             ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
@@ -264,13 +281,11 @@ class Solicitud extends Model
     }
     public function count_solictud2()
     {
-        $rols_id = auth()->user()->rols_id;
-      
+
         return DB::table('solicitud')
             ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
             ->join('users', 'solicitud.users_id', '=', 'users.id')
             ->select('tipo_solicitud.nombre AS SOLICITUD_NOMBRE', DB::raw('COUNT(solicitud.tipo_solicitud_id) AS TOTAL_SOLICITUD'))
-            ->where('users.rols_id', $rols_id)
             ->groupBy('tipo_solicitud.id')
             ->orderByDesc('TOTAL_SOLICITUD')->get();
     }
@@ -333,6 +348,7 @@ class Solicitud extends Model
             ->join('users', 'solicitud.users_id', '=', 'users.id')
             ->join('status', 'solicitud.status_id','=','status.id')
             ->select('tipo_solicitud.nombre AS SOLICITUD_NOMBRE', DB::raw('COUNT(tipo_solicitud.id) AS TOTAL_SOLICITUD'))
+            ->where('users.rols_id', $rols_id)
             ->where('solicitud.status_id', 5)
             ->groupBy('tipo_solicitud.id')
             ->orderByDesc('TOTAL_SOLICITUD')->get();

@@ -28,6 +28,7 @@ use App\Notifications\NotificarEventos;
 use Carbon\Carbon;
 use App\Http\Controllers\User\Colores;
 use App\Models\Status\Status;
+use App\Models\JefeComunidad\JefeComunidad;
 
 class SeguimientoController extends Controller
 {
@@ -35,8 +36,8 @@ class SeguimientoController extends Controller
      * Display a listing of the resource.
      * @author Tarsicio Carrizales telecom.com.ve@gmail.com
      * @return \Illuminate\Http\Response
-     */
-    public function index()
+     */    
+     public function index()
     {
         $count_notification = (new User)->count_noficaciones_user();
         $tipo_alert = "";
@@ -50,6 +51,22 @@ class SeguimientoController extends Controller
         }
         $array_color = (new Colores)->getColores();
         return view('Seguimiento.seguimiento', compact('count_notification', 'tipo_alert', 'array_color'));
+    }
+
+    public function finalizadas()
+    {
+        $count_notification = (new User)->count_noficaciones_user();
+        $tipo_alert = "";
+        if (session('delete') == true) {
+            $tipo_alert = "Delete";
+            session(['delete' => false]);
+        }
+        if (session('update') == true) {
+            $tipo_alert = "Update";
+            session(['update' => false]);
+        }
+        $array_color = (new Colores)->getColores();
+        return view('Seguimiento.seguimiento_finalizadas', compact('count_notification', 'tipo_alert', 'array_color'));
     }
 
     public function getSeguimiento(Request $request)
@@ -75,6 +92,34 @@ class SeguimientoController extends Controller
 
                     ->rawColumns(['edit', 'view', 'del'])->toJson();
             }
+        } catch (Throwable $e) {
+            echo "Captured Throwable: " . $e->getMessage(), "\n";
+        }
+    }
+
+    public function getSeguimientoFinalizadas(Request $request)
+    {
+        try {            
+            if ($request->ajax()) { 
+                $data = (new Seguimiento)->getSolicitudList_Finalizadas($request->fecha_desde, $request->fecha_hasta);
+                
+                return datatables()->of($data)
+
+                    ->addColumn('edit', function ($data) {
+                        $user = Auth::user();
+                        if (($user->id != 1)) {
+                            $edit = '<a href="' . route('seguimiento.edit', $data->id) . '" id="edit_' . $data->id . '" class="btn btn-xs btn-primary" style="background-color: #2962ff;"><b><i class="fa fa-pencil"></i>&nbsp;' . trans('message.botones.go') . '</b></a>';
+                        } else {
+                            $edit = '<a href="' . route('seguimiento.edit', $data->id) . '" id="edit_' . $data->id . '" class="btn btn-xs btn-primary" style="background-color: #2962ff;"><b><i class="fa fa-pencil"></i>&nbsp;' . trans('message.botones.go') . '</b></a>';
+                        }
+                        return $edit;
+                    })
+                    ->addColumn('view', function ($data) {
+                        return '<a style="background-color: #5333ed;" href="' . route('seguimiento.view', $data->id) . '" id="view_' . $data->id . '" class="btn btn-xs btn-primary"><b><i class="fa fa-eye"></i>&nbsp;' . trans('message.botones.view') . '</b></a>';
+                    })
+
+                    ->rawColumns(['edit', 'view', 'del'])->toJson();
+            }            
         } catch (Throwable $e) {
             echo "Captured Throwable: " . $e->getMessage(), "\n";
         }
@@ -548,8 +593,9 @@ public function segumientoJson (){
         $profesion = array('TECNICO MEDIO' => 'TECNICO MEDIO', 'TECNICO SUPERIOR' => 'TECNICO SUPERIOR', 'INGENIERO' => 'INGENIERO', 'ABOGADO' => 'ABOGADO', 'MEDICO CIRUJANO' => 'MEDICO CIRUJANO', 'HISTORIADOR' => 'HISTORIADOR', 'PALEONTOLOGO' => 'PALEONTOLOGO', 'GEOGRAFO' => 'GEOGRAFO', 'BIOLOGO' => 'BIOLOGO', 'PSICOLOGO' => 'PSICOLOGO', 'MATEMATICO' => 'MATEMATICO', 'ARQUITECTO' => 'ARQUITECTO', 'COMPUTISTA' => 'COMPUTISTA', 'PROFESOR' => 'PROFESOR', 'PERIODISTA' => 'PERIODISTA', 'BOTANICO' => 'BOTANICO', 'FISICO' => 'FISICO', 'SOCIOLOGO' => 'SOCIOLOGO', 'FARMACOLOGO' => 'FARMACOLOGO', 'QUIMICO' => 'QUIMICO', 'POLITOLOGO' => 'POLITOLOGO', 'ENFERMERO' => 'ENFERMERO', 'ELECTRICISTA' => 'ELECTRICISTA', 'BIBLIOTECOLOGO' => 'BIBLIOTECOLOGO', 'PARAMEDICO' => 'PARAMEDICO', 'TECNICO DE SONIDO' => 'TECNICO DE SONIDO', 'ARCHIVOLOGO' => 'ARCHIVOLOGO', 'MUSICO' => 'MUSICO', 'FILOSOFO' => 'FILOSOFO', 'SECRETARIA' => 'SECRETARIA', 'TRADUCTOR' => 'TRADUCTOR', 'ANTROPOLOGO' => 'ANTROPOLOGO', 'TECNICO TURISMO' => 'TECNICO TURISMO', 'ECONOMISTA' => 'ECONOMISTA', 'ADMINISTRADOR' => 'ADMINISTRADOR', 'CARPITERO' => 'CARPITERO', 'RADIOLOGO' => 'RADIOLOGO', 'COMERCIANTE' => 'COMERCIANTE', 'CERRAJERO' => 'CERRAJERO', 'COCINERO' => 'COCINERO', 'ALBAÑIL' => 'ALBAÑIL', 'PLOMERO' => 'PLOMERO', 'TORNERO' => 'TORNERO', 'EDITOR' => 'EDITOR', 'ESCULTOR' => 'ESCULTOR', 'ESCRITOR' => 'ESCRITOR', 'BARBERO' => 'BARBERO');
         $comuna = (new Comuna)->datos_comuna($solicitud_edit->parroquia_id);
         $comunidad = (new Comunidad)->datos_comunidad($solicitud_edit->comuna_id);
-        $coordinacion = (new Coordinacion)->datos_coordinacion($solicitud_edit->direccion_id);        
-        return view('Seguimiento.seguimiento_edit', compact('count_notification', 'status_solicitud', 'seguimiento_edit', 'titulo_modulo', 'solicitud_edit', 'estado', 'municipio', 'parroquia', 'asignacion', 'comuna', 'comunidad', 'tipo_solicitud', 'direcciones', 'enter', 'sexo', 'edocivil', 'nivelestudio', 'coordinacion', 'denuncia', 'beneficiario', 'quejas', 'sugerecia', 'asesoria', 'reclamo', 'profesion', 'recaudos', 'denunciado', 'array_color'));
+        $coordinacion = (new Coordinacion)->datos_coordinacion($solicitud_edit->direccion_id);  
+        $jefecomunidad = (new JefeComunidad)->getJefe($solicitud_edit->comuna_id);   
+        return view('Seguimiento.seguimiento_edit', compact('jefecomunidad','count_notification', 'status_solicitud', 'seguimiento_edit', 'titulo_modulo', 'solicitud_edit', 'estado', 'municipio', 'parroquia', 'asignacion', 'comuna', 'comunidad', 'tipo_solicitud', 'direcciones', 'enter', 'sexo', 'edocivil', 'nivelestudio', 'coordinacion', 'denuncia', 'beneficiario', 'quejas', 'sugerecia', 'asesoria', 'reclamo', 'profesion', 'recaudos', 'denunciado', 'array_color'));
     }
     public function getComunas(Request $request)
     {

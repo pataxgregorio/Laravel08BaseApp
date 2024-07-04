@@ -45,6 +45,8 @@
             @endif
             <li><a href="{{ url('/solicitud') }}"><i class='fa fa-link'></i> <span>{{ trans('message.request') }}</span></a></li>
             <li><a href="{{ url('/seguimiento') }}"><i class='fa fa-link'></i> <span>Seguimiento</span></a></li>
+            <li><a href="{{ url('/finalizadas') }}"><i class='fa fa-link'></i> <span>Reporte Finalizadas</span></a></li>
+
             @if(Auth::user()->rols_id === 1 )
             <li><a href="{{ url('/notificaciones') }}"><i class='fa fa-link'></i> <span>{{ trans('message.menu_notificaciones') }}</span></a></li>
             <li class="treeview">

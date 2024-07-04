@@ -11,22 +11,7 @@
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="{{ url('/') }}" class="smoothScroll">{{ trans('message.home_1') }}</a></li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    @if (config('locale.status') && count(config('locale.languages')) > 1)
-                            @foreach (array_keys(config('locale.languages')) as $lang)
-                                @if ($lang != App::getLocale())
-                                   <li><a href="{!! route('idioma.cambioLenguaje', $lang) !!}">
-                                            @if ($lang == 'es')
-                                                <b>en <small>en</small></b>
-                                                <img src="{{ url ('/banderas/us.png') }}" class="user-image" alt="Bandera Image"/>
-                                            @else
-                                                <b>es <small>es</small></b>
-                                                <img src="{{ url ('/banderas/es.png') }}" class="user-image" alt="Bandera Image"/>
-                                            @endif
-                                    </a></li>
-                                @endif
-                            @endforeach                        
-                    @endif
+                <ul class="nav navbar-nav navbar-right">                   
                     @if (Auth::guest())
                         <li><a href="{{ url('/login') }}">{{ trans('message.login') }}</a></li>
                     @else

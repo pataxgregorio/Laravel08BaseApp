@@ -1,6 +1,5 @@
 var staticCacheName = "pwa-v" + new Date().getTime();
 var filesToCache = [
-    '/offline',    
     '/css/app.css',
     '/css/bootstrap.min.css',
     '/css/all-landing.css',

@@ -187,17 +187,24 @@ Route::post('/solicitud/{solicitud}', 'Solicitud\SolicitudController@update')->n
 Route::get('/solicitud/{solicitud}/delete', 'Solicitud\SolicitudController@destroy')->name('solicitud.destroy')->middleware('permiso:solicitud,delete');
 Route::get('/solicitud/getComunas', 'Solicitud\SolicitudController@getComunas')->name('getComunas2')->middleware('permiso:solicitud,view');
 Route::get('/solicitud/getComunidad', 'Solicitud\SolicitudController@getComunidad')->name('getComunidad2')->middleware('permiso:solicitud,view');
+
+Route::get('/solicitud/getTelefonoJefeComunidad', 'JefeComunidad\JefeComunidadController@getJefeComunidad2')->name('getJefeComunidad2');
+
+Route::get('/solicitud/getJefeComunidad', 'JefeComunidad\JefeComunidadController@getJefeComunidad')->name('getJefeComunidad');
 Route::get('/solicitud/getCoodinacion', 'Solicitud\SolicitudController@getCoodinacion')->name('getCoodinacion2')->middleware('permiso:solicitud,view');
 Route::get('/solicitud/list', 'Solicitud\SolicitudController@getSolicitud')->name('solicitud.list')->middleware('permiso:solicitud,view, edit');
 Route::get('/solicitud/print', 'Solicitud\SolicitudController@solicitudPrint')->name('solicitud.solicitudPrint')->middleware('permiso:solicitud,print');
 Route::get('/solicitud/solicitudTipo', 'Solicitud\SolicitudController@solicitudTipo')->name('solicitud.solicitudTipo');
+
+/* SACWAN */
 Route::get('/solicitud/solicitudTipo2', 'Solicitud\SolicitudController@solicitudTipo2')->name('solicitud.solicitudTipo2');
 Route::get('/solicitud/solicitudTipo3', 'Solicitud\SolicitudController@solicitudTipo3')->name('solicitud.solicitudTipo3');
 Route::get('/solicitud/solicitudTipo4', 'Solicitud\SolicitudController@solicitudTipo4')->name('solicitud.solicitudTipo4');
 Route::get('/solicitud/solicitudTipo5', 'Solicitud\SolicitudController@solicitudTipo5')->name('solicitud.solicitudTipo5');
 Route::get('/solicitud/solicitudTotalTipo', 'Solicitud\SolicitudController@solicitudTotalTipo')->name('solicitud.solicitudTotalTipo');
-
 Route::get('/solicitud/list2', 'Solicitud\SolicitudController@getSolicitud2')->name('solicitud.list2');
+Route::get('/solicitud/list3', 'Solicitud\SolicitudController@getSolicitud3')->name('solicitud.list3');
+
 Route::get('/imprimir', 'Solicitud\SolicitudController@imprimir')->name('imprimir');
 
 // ##############################rutas del seguimiento de la solicitud
@@ -219,6 +226,10 @@ Route::get('/seguimiento/solicitudTipo', 'Seguimiento\SeguimientoController@soli
 Route::get('/seguimiento/solicitudTotalTipo', 'Seguimiento\SeguimientoController@solicitudTotalTipo')->name('seguimiento.solicitudTotalTipo');
 Route::post('/seguimiento/addSeguimiento', 'Seguimiento\SeguimientoController@addSeguimiento')->name('addSeguimiento')->middleware('permiso:seguimiento,view');
 Route::get('/seguimientoapi', 'Seguimiento\SeguimientoController@segumientoJson')->name('seguimiento.segumientoapi');
+
+Route::get('/finalizadas', 'Seguimiento\SeguimientoController@finalizadas')->name('seguimiento.finalizadas')->middleware('permiso:seguimiento,view');
+Route::get('/seguimiento/finalizadas', 'Seguimiento\SeguimientoController@getSeguimientoFinalizadas')->name('seguimiento.finalizadas')->middleware('permiso:seguimiento,view');
+
 
 Route::get('/seguimiento/list2', 'Seguimiento\SeguimientoController@getSeguimiento2')->name('seguimiento.list2');
 // *********************************************************************************************************

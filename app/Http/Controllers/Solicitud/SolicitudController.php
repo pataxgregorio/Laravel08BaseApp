@@ -26,6 +26,8 @@ use App\Notifications\RegisterConfirm;
 use App\Notifications\NotificarEventos;
 use Carbon\Carbon;
 use App\Http\Controllers\User\Colores;
+use App\Models\JefeComunidad\JefeComunidad;
+use App\Models\Subtiposolicitud\subtiposolicitud;
 
 use DB;
 use App\Models\Seguimiento\Seguimiento;
@@ -84,6 +86,11 @@ class SolicitudController extends Controller
         $data = (new Solicitud)->getSolicitudList_DataTable3($request['params']);
         return response()->json($data);
     }
+
+    public function getSolicitud3(Request $request){
+        $data = (new Solicitud)->getSolicitudList_DataTable4($request['params']);
+        return response()->json($data);
+    }
     public function profile()
     {
         $count_notification = (new User)->count_noficaciones_user();
@@ -136,12 +143,17 @@ class SolicitudController extends Controller
         $parroquia = (new Parroquia)->datos_parroquia();
         $array_color = (new Colores)->getColores();
         $tipo_solicitud = (new Tipo_Solicitud)->datos_tipo_solicitud();
+        $subtiposolicitud = (new Subtiposolicitud)->getSubtiposolicitud();
         $direcciones = (new Direccion)->datos_direccion();
         $enter = (new Enter)->datos_enter();
         $comuna = [];
         $coordinacion = [];
         $comunidad = [];
-        return view('Solicitud.solicitud_create', compact('count_notification', 'titulo_modulo', 'roles', 'municipio', 'comuna', 'comunidad', 'direcciones', 'parroquia', 'estado', 'coordinacion', 'enter', 'tipo_solicitud', 'array_color'));
+        $jefecomunidad = [];     
+        
+
+        
+        return view('Solicitud.solicitud_create', compact('count_notification', 'titulo_modulo', 'roles', 'municipio', 'comuna', 'comunidad','jefecomunidad', 'direcciones', 'parroquia', 'estado', 'coordinacion', 'enter', 'tipo_solicitud','subtiposolicitud', 'array_color'));
     }
 
     /**
@@ -168,13 +180,9 @@ class SolicitudController extends Controller
          */
         // Target URL
 
-
-        $input = $request->all();
+        $input = $request->all(); 
         $input['users_id'] = Auth::user()->id;
         //  $data['is_deleted'] = false;
-        // var_dump ($input);
-        //   exit();
-
 
         $recaudos = NULL;
         $input['quejas'] = NULL;
@@ -185,6 +193,10 @@ class SolicitudController extends Controller
         $input['denuncia'] = NULL;
         $input['denunciado'] = NULL;
         $input['recaudos'] = $recaudos;
+        if($input['tipo_solicitud_id'] != 6){
+            $input['subtiposolicitud_id'] = NULL;
+        }
+        $input['subtiposolicitud_id'] = NULL;
         $input['codigocontrol'] = "001";
         if ($input['tipo_solicitud_id'] == 1) {
             $denuncia = [
@@ -230,7 +242,7 @@ class SolicitudController extends Controller
             ];
             $denunciado = [
                 [
-                    "cedula" => $input['ceduladenunciado'],
+                    "cedula" => isset($input['ceduladenunciado']) ? $input['ceduladenunciado']: NULL,
                     "nombre" => $input['nombredenunciado'],
                     "testigo" => $input['testigo']
                 ]
@@ -314,14 +326,26 @@ class SolicitudController extends Controller
             $input['recaudos'] = json_encode($recaudos);
         }
         if ($input['tipo_solicitud_id'] == 6) {
+            $input['direcciones_id'] =  5;
+            $input['coordinacion_id'] =  NULL;
+            $input['enter_descentralizados_id'] =  NULL;
+            $input['enter_id'] =  NULL;
+            $input['asignacion'] =  NULL; 
+            if($input['municipio_id'] == 2){
+                $input['parroquia_id'] = NULL;
+                $input['comuna_id'] = NULL;
+                $input['comunidad_id'] = NULL;
+                $input['jefecomunidad_id'] = NULL;
+            }
+            
             $beneficiario = [
                 [
                     "cedula" => isset($input['cedulabeneficiario']) ? $input['cedulabeneficiario'] : NULL,
                     "nombre" => isset($input['nombrebeneficiario']) ? $input['nombrebeneficiario'] : NULL,
                     "direccion" => isset($input['direccionbeneficiario']) ? $input['direccionbeneficiario'] : NULL,
-                    "solicita" => isset($input['solicita']) ? $input['solicita'] : NULL
+                    "solicita" => isset($input['solicita']) ? $input['solicita'] : NULL,
                 ]
-            ];
+            ];            
             $recaudos = [
                 [
                     "cedula" => isset($input['checkcedula2']) ? $input['checkcedula2'] : NULL,
@@ -333,18 +357,19 @@ class SolicitudController extends Controller
             $input['beneficiario'] = json_encode($beneficiario);
             $input['recaudos'] = json_encode($recaudos);
         }
-        
         $solicitud = new Solicitud([
             'users_id' => $input['users_id'],
             'direccion_id' => $input['direcciones_id'],
             'coordinacion_id' => $input['coordinacion_id'],
             'tipo_solicitud_id' => $input['tipo_solicitud_id'],
+            'tipo_subsolicitud_id' => $input['subtiposolicitud_id'],
             'enter_descentralizados_id' => $input['enter_id'],
             'estado_id' => $input['estado_id'],
             'municipio_id' => $input['municipio_id'],
             'parroquia_id' => $input['parroquia_id'],
             'comuna_id' => $input['comuna_id'],
             'comunidad_id' => $input['comunidad_id'],
+            'jefecomunidad_id' => $input['jefecomunidad_id'],
             'codigo_control' => $input['codigocontrol'],
             'status_id' => 1,
             'nombre' => $input['nombre'],
@@ -373,7 +398,7 @@ class SolicitudController extends Controller
             'created_at' => \Carbon\Carbon::now(),
             'updated_at' => \Carbon\Carbon::now(),
         ]);               
-
+        
         $solicitud->save();
 
         $count_notification = (new User)->count_noficaciones_user();
@@ -408,7 +433,6 @@ class SolicitudController extends Controller
 
         $solicitud_edit = Solicitud::find($id);
         $valores = $solicitud_edit->all();
-
         $denuncia = NULL;
         $quejas = NULL;
         $reclamo = NULL;
@@ -469,15 +493,16 @@ class SolicitudController extends Controller
         $sexo = array('MASCULINO' => 'MASCULINO', 'FEMENINO' => 'FEMENINO');
         $edocivil = array('SOLTERO' => 'SOLTERO', 'CASADO' => 'CASADO', 'VIUDO' => 'VIUDO', 'DIVORCIADO' => 'DIVORCIADO');
         $nivelestudio = array('PRIMARIA' => 'PRIMARIA', 'SECUNDARIA' => 'SECUNDARIA', 'BACHILLERATO' => 'BACHILLERATO', 'UNIVERSITARIO' => 'UNIVERSITARIO', 'ESPECIALIZACION' => 'ESPECIALIZACION');
-        $profesion = array('TECNICO MEDIO' => 'TECNICO MEDIO', 'TECNICO SUPERIOR' => 'TECNICO SUPERIOR', 'INGENIERO' => 'INGENIERO', 'ABOGADO' => 'ABOGADO', 'MEDICO CIRUJANO' => 'MEDICO CIRUJANO', 'HISTORIADOR' => 'HISTORIADOR', 'PALEONTOLOGO' => 'PALEONTOLOGO', 'GEOGRAFO' => 'GEOGRAFO', 'BIOLOGO' => 'BIOLOGO', 'PSICOLOGO' => 'PSICOLOGO', 'MATEMATICO' => 'MATEMATICO', 'ARQUITECTO' => 'ARQUITECTO', 'COMPUTISTA' => 'COMPUTISTA', 'PROFESOR' => 'PROFESOR', 'PERIODISTA' => 'PERIODISTA', 'BOTANICO' => 'BOTANICO', 'FISICO' => 'FISICO', 'SOCIOLOGO' => 'SOCIOLOGO', 'FARMACOLOGO' => 'FARMACOLOGO', 'QUIMICO' => 'QUIMICO', 'POLITOLOGO' => 'POLITOLOGO', 'ENFERMERO' => 'ENFERMERO', 'ELECTRICISTA' => 'ELECTRICISTA', 'BIBLIOTECOLOGO' => 'BIBLIOTECOLOGO', 'PARAMEDICO' => 'PARAMEDICO', 'TECNICO DE SONIDO' => 'TECNICO DE SONIDO', 'ARCHIVOLOGO' => 'ARCHIVOLOGO', 'MUSICO' => 'MUSICO', 'FILOSOFO' => 'FILOSOFO', 'SECRETARIA' => 'SECRETARIA', 'TRADUCTOR' => 'TRADUCTOR', 'ANTROPOLOGO' => 'ANTROPOLOGO', 'TECNICO TURISMO' => 'TECNICO TURISMO', 'ECONOMISTA' => 'ECONOMISTA', 'ADMINISTRADOR' => 'ADMINISTRADOR', 'CARPITERO' => 'CARPITERO', 'RADIOLOGO' => 'RADIOLOGO', 'COMERCIANTE' => 'COMERCIANTE', 'CERRAJERO' => 'CERRAJERO', 'COCINERO' => 'COCINERO', 'ALBAÑIL' => 'ALBAÑIL', 'PLOMERO' => 'PLOMERO', 'TORNERO' => 'TORNERO', 'EDITOR' => 'EDITOR', 'ESCULTOR' => 'ESCULTOR', 'ESCRITOR' => 'ESCRITOR', 'BARBERO' => 'BARBERO');
+        $profesion = array('JUBILADO' => 'JUBILADO','PENSIONADO' => 'PENSIONADO','OFICIOS DEL HOGAR' => 'OFICIOS DEL HOGAR','TECNICO MEDIO' => 'TECNICO MEDIO', 'TECNICO SUPERIOR' => 'TECNICO SUPERIOR', 'INGENIERO' => 'INGENIERO', 'ABOGADO' => 'ABOGADO', 'MEDICO CIRUJANO' => 'MEDICO CIRUJANO', 'HISTORIADOR' => 'HISTORIADOR', 'PALEONTOLOGO' => 'PALEONTOLOGO', 'GEOGRAFO' => 'GEOGRAFO', 'BIOLOGO' => 'BIOLOGO', 'PSICOLOGO' => 'PSICOLOGO', 'MATEMATICO' => 'MATEMATICO', 'ARQUITECTO' => 'ARQUITECTO', 'COMPUTISTA' => 'COMPUTISTA', 'PROFESOR' => 'PROFESOR', 'PERIODISTA' => 'PERIODISTA', 'BOTANICO' => 'BOTANICO', 'FISICO' => 'FISICO', 'SOCIOLOGO' => 'SOCIOLOGO', 'FARMACOLOGO' => 'FARMACOLOGO', 'QUIMICO' => 'QUIMICO', 'POLITOLOGO' => 'POLITOLOGO', 'ENFERMERO' => 'ENFERMERO', 'ELECTRICISTA' => 'ELECTRICISTA', 'BIBLIOTECOLOGO' => 'BIBLIOTECOLOGO', 'PARAMEDICO' => 'PARAMEDICO', 'TECNICO DE SONIDO' => 'TECNICO DE SONIDO', 'ARCHIVOLOGO' => 'ARCHIVOLOGO', 'MUSICO' => 'MUSICO', 'FILOSOFO' => 'FILOSOFO', 'SECRETARIA' => 'SECRETARIA', 'TRADUCTOR' => 'TRADUCTOR', 'ANTROPOLOGO' => 'ANTROPOLOGO', 'TECNICO TURISMO' => 'TECNICO TURISMO', 'ECONOMISTA' => 'ECONOMISTA', 'ADMINISTRADOR' => 'ADMINISTRADOR', 'CARPITERO' => 'CARPITERO', 'RADIOLOGO' => 'RADIOLOGO', 'COMERCIANTE' => 'COMERCIANTE', 'CERRAJERO' => 'CERRAJERO', 'COCINERO' => 'COCINERO', 'ALBAÑIL' => 'ALBAÑIL', 'PLOMERO' => 'PLOMERO', 'TORNERO' => 'TORNERO', 'EDITOR' => 'EDITOR', 'ESCULTOR' => 'ESCULTOR', 'ESCRITOR' => 'ESCRITOR', 'BARBERO' => 'BARBERO');
 
         $comuna = (new Comuna)->datos_comuna($solicitud_edit->parroquia_id);
 
         $comunidad = (new Comunidad)->datos_comunidad($solicitud_edit->comuna_id);
         $coordinacion = (new Coordinacion)->datos_coordinacion($solicitud_edit->direccion_id);
 
+        $jefecomunidad = (new JefeComunidad)->getJefe($solicitud_edit->comuna_id);   
 
-        return view('Solicitud.show', compact('count_notification', 'titulo_modulo', 'solicitud_edit', 'estado', 'municipio', 'parroquia', 'asignacion', 'comuna', 'comunidad', 'tipo_solicitud', 'direcciones', 'enter', 'sexo', 'edocivil', 'nivelestudio', 'coordinacion', 'denuncia', 'beneficiario', 'quejas', 'sugerecia', 'asesoria', 'reclamo', 'profesion', 'recaudos', 'denunciado', 'array_color'));
+        return view('Solicitud.show', compact('count_notification', 'titulo_modulo', 'solicitud_edit', 'estado', 'municipio', 'parroquia', 'asignacion', 'comuna', 'comunidad','jefecomunidad', 'tipo_solicitud', 'direcciones', 'enter', 'sexo', 'edocivil', 'nivelestudio', 'coordinacion', 'denuncia', 'beneficiario', 'quejas', 'sugerecia', 'asesoria', 'reclamo', 'profesion', 'recaudos', 'denunciado', 'array_color'));
 
     }
 
@@ -549,25 +574,25 @@ class SolicitudController extends Controller
         $direcciones = (new Direccion)->datos_direccion();
         $enter = (new Enter)->datos_enter();
         $comunidad = [];
-        $asignacion = array('DIRECCION' => 'DIRECCION', 'ENTER' => 'ENTER');
+        $asignacion = array('DIRECCION' => 'DIRECCION');
         $sexo = array('MASCULINO' => 'MASCULINO', 'FEMENINO' => 'FEMENINO');
         $edocivil = array('SOLTERO' => 'SOLTERO', 'CASADO' => 'CASADO', 'VIUDO' => 'VIUDO', 'DIVORCIADO' => 'DIVORCIADO');
         $nivelestudio = array('PRIMARIA' => 'PRIMARIA', 'SECUNDARIA' => 'SECUNDARIA', 'BACHILLERATO' => 'BACHILLERATO', 'UNIVERSITARIO' => 'UNIVERSITARIO', 'ESPECIALIZACION' => 'ESPECIALIZACION');
-        $profesion = array('TECNICO MEDIO' => 'TECNICO MEDIO', 'TECNICO SUPERIOR' => 'TECNICO SUPERIOR', 'INGENIERO' => 'INGENIERO', 'ABOGADO' => 'ABOGADO', 'MEDICO CIRUJANO' => 'MEDICO CIRUJANO', 'HISTORIADOR' => 'HISTORIADOR', 'PALEONTOLOGO' => 'PALEONTOLOGO', 'GEOGRAFO' => 'GEOGRAFO', 'BIOLOGO' => 'BIOLOGO', 'PSICOLOGO' => 'PSICOLOGO', 'MATEMATICO' => 'MATEMATICO', 'ARQUITECTO' => 'ARQUITECTO', 'COMPUTISTA' => 'COMPUTISTA', 'PROFESOR' => 'PROFESOR', 'PERIODISTA' => 'PERIODISTA', 'BOTANICO' => 'BOTANICO', 'FISICO' => 'FISICO', 'SOCIOLOGO' => 'SOCIOLOGO', 'FARMACOLOGO' => 'FARMACOLOGO', 'QUIMICO' => 'QUIMICO', 'POLITOLOGO' => 'POLITOLOGO', 'ENFERMERO' => 'ENFERMERO', 'ELECTRICISTA' => 'ELECTRICISTA', 'BIBLIOTECOLOGO' => 'BIBLIOTECOLOGO', 'PARAMEDICO' => 'PARAMEDICO', 'TECNICO DE SONIDO' => 'TECNICO DE SONIDO', 'ARCHIVOLOGO' => 'ARCHIVOLOGO', 'MUSICO' => 'MUSICO', 'FILOSOFO' => 'FILOSOFO', 'SECRETARIA' => 'SECRETARIA', 'TRADUCTOR' => 'TRADUCTOR', 'ANTROPOLOGO' => 'ANTROPOLOGO', 'TECNICO TURISMO' => 'TECNICO TURISMO', 'ECONOMISTA' => 'ECONOMISTA', 'ADMINISTRADOR' => 'ADMINISTRADOR', 'CARPITERO' => 'CARPITERO', 'RADIOLOGO' => 'RADIOLOGO', 'COMERCIANTE' => 'COMERCIANTE', 'CERRAJERO' => 'CERRAJERO', 'COCINERO' => 'COCINERO', 'ALBAÑIL' => 'ALBAÑIL', 'PLOMERO' => 'PLOMERO', 'TORNERO' => 'TORNERO', 'EDITOR' => 'EDITOR', 'ESCULTOR' => 'ESCULTOR', 'ESCRITOR' => 'ESCRITOR', 'BARBERO' => 'BARBERO');
+        $profesion = array('JUBILADO' => 'JUBILADO','PENSIONADO' => 'PENSIONADO','OFICIOS DEL HOGAR' => 'OFICIOS DEL HOGAR','TECNICO MEDIO' => 'TECNICO MEDIO', 'TECNICO SUPERIOR' => 'TECNICO SUPERIOR', 'INGENIERO' => 'INGENIERO', 'ABOGADO' => 'ABOGADO', 'MEDICO CIRUJANO' => 'MEDICO CIRUJANO', 'HISTORIADOR' => 'HISTORIADOR', 'PALEONTOLOGO' => 'PALEONTOLOGO', 'GEOGRAFO' => 'GEOGRAFO', 'BIOLOGO' => 'BIOLOGO', 'PSICOLOGO' => 'PSICOLOGO', 'MATEMATICO' => 'MATEMATICO', 'ARQUITECTO' => 'ARQUITECTO', 'COMPUTISTA' => 'COMPUTISTA', 'PROFESOR' => 'PROFESOR', 'PERIODISTA' => 'PERIODISTA', 'BOTANICO' => 'BOTANICO', 'FISICO' => 'FISICO', 'SOCIOLOGO' => 'SOCIOLOGO', 'FARMACOLOGO' => 'FARMACOLOGO', 'QUIMICO' => 'QUIMICO', 'POLITOLOGO' => 'POLITOLOGO', 'ENFERMERO' => 'ENFERMERO', 'ELECTRICISTA' => 'ELECTRICISTA', 'BIBLIOTECOLOGO' => 'BIBLIOTECOLOGO', 'PARAMEDICO' => 'PARAMEDICO', 'TECNICO DE SONIDO' => 'TECNICO DE SONIDO', 'ARCHIVOLOGO' => 'ARCHIVOLOGO', 'MUSICO' => 'MUSICO', 'FILOSOFO' => 'FILOSOFO', 'SECRETARIA' => 'SECRETARIA', 'TRADUCTOR' => 'TRADUCTOR', 'ANTROPOLOGO' => 'ANTROPOLOGO', 'TECNICO TURISMO' => 'TECNICO TURISMO', 'ECONOMISTA' => 'ECONOMISTA', 'ADMINISTRADOR' => 'ADMINISTRADOR', 'CARPITERO' => 'CARPITERO', 'RADIOLOGO' => 'RADIOLOGO', 'COMERCIANTE' => 'COMERCIANTE', 'CERRAJERO' => 'CERRAJERO', 'COCINERO' => 'COCINERO', 'ALBAÑIL' => 'ALBAÑIL', 'PLOMERO' => 'PLOMERO', 'TORNERO' => 'TORNERO', 'EDITOR' => 'EDITOR', 'ESCULTOR' => 'ESCULTOR', 'ESCRITOR' => 'ESCRITOR', 'BARBERO' => 'BARBERO');
 
         $comuna = (new Comuna)->datos_comuna($solicitud_edit->parroquia_id);
 
         $comunidad = (new Comunidad)->datos_comunidad($solicitud_edit->comuna_id);
         $coordinacion = (new Coordinacion)->datos_coordinacion($solicitud_edit->direccion_id);
-
-
-        return view('Solicitud.solicitud_edit', compact('count_notification', 'titulo_modulo', 'solicitud_edit', 'estado', 'municipio', 'parroquia', 'asignacion', 'comuna', 'comunidad', 'tipo_solicitud', 'direcciones', 'enter', 'sexo', 'edocivil', 'nivelestudio', 'coordinacion', 'denuncia', 'beneficiario', 'quejas', 'sugerecia', 'asesoria', 'reclamo', 'profesion', 'recaudos', 'denunciado', 'array_color'));
+        $jefecomunidad2 = (new JefeComunidad)->getJefe($solicitud_edit->comuna_id);
+        $jefecomunidad = (new JefeComunidad)->getJefe2($solicitud_edit->jefecomunidad_id);   
+        return view('Solicitud.solicitud_edit', compact('count_notification', 'titulo_modulo', 'solicitud_edit', 'estado', 'municipio', 'parroquia', 'asignacion', 'comuna', 'comunidad','jefecomunidad','jefecomunidad2', 'tipo_solicitud', 'direcciones', 'enter', 'sexo', 'edocivil', 'nivelestudio', 'coordinacion', 'denuncia', 'beneficiario', 'quejas', 'sugerecia', 'asesoria', 'reclamo', 'profesion', 'recaudos', 'denunciado', 'array_color'));
     }
     public function getComunas(Request $request)
     {
 
         $comuna = (new Comuna)->datos_comuna($request['parroquia']);
-
+        
         return $comuna;
 
     }
@@ -744,7 +769,9 @@ class SolicitudController extends Controller
                 [
                     "cedula" => isset($input['cedulabeneficiario']) ? $input['cedulabeneficiario'] : NULL,
                     "nombre" => isset($input['nombrebeneficiario']) ? $input['nombrebeneficiario'] : NULL,
-                    "direccion" => isset($input['direccionbeneficiario']) ? $input['direccionbeneficiario'] : NULL
+                    "direccion" => isset($input['direccionbeneficiario']) ? $input['direccionbeneficiario'] : NULL,
+                    "solicita" => isset($input['solicita']) ? $input['solicita'] : NULL,
+                    "nrosolicitud" => isset($input['nrosolicitud']) ? $input['nrosolicitud'] : NULL
                 ]
             ];
             $recaudos = [
@@ -892,6 +919,7 @@ class SolicitudController extends Controller
             return response($countTotalSolicitud);
         }
     }
+
     public function colorView()
     {
         $titulo_modulo = trans('message.users_action.cambiar_colores');
@@ -964,7 +992,7 @@ class SolicitudController extends Controller
         return redirect('/dashboard');
     }
     public function imprimir(Request $request)
-    {
+    {        
         $activardenuncia = "";
         $activarqueja = "";
         $activarsugerencia = "";
@@ -999,8 +1027,7 @@ class SolicitudController extends Controller
         $idparroquia = $solicitud["parroquia_id"];
         $idcomuna = $solicitud["comuna_id"];
         $idcomunidad = $solicitud["comunidad_id"];
-        $estado = (new Solicitud)->nombreestado($idestado, $idmunicipio, $idparroquia, $idcomuna, $idcomunidad);
-        foreach ($estado as $estado2);
+
         $fecha = date('d-m-Y', strtotime($solicitud->fecha));
         $dia = date('d', strtotime($solicitud->fecha));
         $mes = date('m', strtotime($solicitud->fecha));
@@ -2695,7 +2722,7 @@ class SolicitudController extends Controller
             HTML;
         }
 
-        if ($solicitud["tipo_solicitud_id"] === 6) {
+        if ($solicitud["tipo_solicitud_id"] === 6) {            
             $urlActual = $_SERVER['HTTP_HOST'];            
             $beneficiario = $solicitud->beneficiario;      
             $beneficiario = json_decode($beneficiario, true);
@@ -2708,6 +2735,48 @@ class SolicitudController extends Controller
             $cedularecaudos = $recaudos[0]["cedula"];
             $motivorecaudos = $recaudos[0]["motivo"];
             $informerecaudos = $recaudos[0]["informe"];
+            $jefecomunidadID = $solicitud->jefecomunidad_id;
+            $jefecomunidad = (new JefeComunidad)->getJefe2($jefecomunidadID);
+            $jefe = $jefecomunidad->first();
+            $municipioID = $solicitud->municipio_id;            
+
+            if($municipioID == 2){
+                $estado = (new Solicitud)->nombreestado($idestado, $idmunicipio, $idparroquia, $idcomuna, $idcomunidad);
+                foreach ($estado as $estado2);                
+                $estadoSolicitud = NULL;
+                $municipio = NULL;
+                $parroquia = NULL;
+                $comuna = NULL;
+                $comunidad = NULL;
+            }else{
+                $estado = (new Solicitud)->nombreestado($idestado, $idmunicipio, $idparroquia, $idcomuna, $idcomunidad);
+                foreach ($estado as $estado2);
+                $estadoSolicitud = $estado2->estado2;
+                $municipio = $estado2->municipio;
+                $parroquia = $estado2->parroquia;
+                $comuna = $estado2->comuna;
+                $comunidad = $estado2->comunidad;
+            }
+
+            if($municipioID == 2){
+                $estadoSolicitud = 'FORANEO';
+                $municipio = 'FORANEO';
+                $parroquia = 'FORANEO';
+                $comuna = 'FORANEO';
+                $comunidad = 'FORANEO';
+                $nombreJefeCom = 'FORANEO';
+                $telJefeCom = 'FORANEO';
+                $nombreUbch = 'FORANEO';
+                $nombreJefUbch = 'FORANEO';
+                $telefonoJefeUbch = 'FORANEO';
+            }else{    
+                $nombreJefeCom = $jefe->Nombre_Jefe_Comunidad;
+                $telJefeCom = $jefe->Telefono_Jefe_Comunidad;
+                $nombreUbch = $jefe->Nombre_Ubch;
+                $nombreJefUbch = $jefe->Nombre_Jefe_Ubch;
+                $telefonoJefeUbch = $jefe->Telefono_Jefe_Ubch;
+            }     
+            
             $beneficiariorecaudos = $recaudos[0]["beneficiario"];
             $imagen = $urlActual.'assets/img/cintillo.png';
             if($cedularecaudos === "on"){
@@ -2723,7 +2792,7 @@ class SolicitudController extends Controller
                 $activarrecaudoBeneficiario = "checked";
             }
             $activarpeticiones = "checked";
-            $valor = "Peticion";
+            $valor = "SALUD";
             $htmlsolicitud = <<<HTML
             <!DOCTYPE html>
             <html lang="en">
@@ -2755,7 +2824,7 @@ class SolicitudController extends Controller
                 </style>
             </head>
             <body>
-            <img src="https://prensa.alcaldiapaez.gob.ve/wp-content/uploads/sites/2/2024/06/cintillo.png" alt="" srcset="" width="100%">
+            <img src="https://prensa.alcaldiapaez.gob.ve/wp-content/uploads/sites/2/2024/06/CINTILLO-POLITICAS-SOCIALES-Y-COMUNITARIAS-Y-PODER-POPULAR.jpg" alt="" srcset="" width="100%">
                 <table>
                     <tr>
                         <th>Numero de Registro $idsolicitud</th>
@@ -2765,26 +2834,8 @@ class SolicitudController extends Controller
                         <th>Mes: $mes</th>
                         <th>Año: $anno</th>
                     </tr>
-                </table>
+                </table>               
                 
-                <table>
-                    <tr>
-                        <th>Denuncia</th>
-                        <th>Queja</th>
-                        <th>Sugerencia</th>
-                        <th>Asesoria</th>
-                        <th>Reclamos</th>
-                        <th>Peticion</th>
-                        <tr>
-                        <td><input type="checkbox" $activardenuncia></td>
-                        <td><input type="checkbox" $activarqueja></td>
-                        <td><input type="checkbox" $activarsugerencia></td>
-                        <td><input type="checkbox" $activarasesoria></td>
-                        <td><input type="checkbox" $activarreclamos></td>
-                        <td><input type="checkbox" $activarpeticiones></td>
-                        </tr>
-                    </tr>
-                </table>
                 <table>
                     <tr>
                         <th>Datos del ciudadano(a) Solicitante</th>
@@ -2828,20 +2879,35 @@ class SolicitudController extends Controller
                         <th>Tipo de Solicitud</th>
                     </tr>
                     <tr>
-                        <td>$estado2->estado2</td>
-                        <td>$estado2->municipio</td>
-                        <td>$estado2->parroquia</td>
-                        <td>$estado2->comuna</td>
-                        <td>$estado2->comunidad</td>
+                        <td>$estadoSolicitud</td>
+                        <td>$municipio</td>
+                        <td>$parroquia</td>
+                        <td>$comuna</td>
+                        <td>$comunidad</td>
                         <td>$solicitud->direccion</td>
                         <td>$valor</td>
                     </tr>
                         </table>
                         <table>
                     <tr>
-                        <th>Recaudos de la Peticion</th>
                     </tr>
             </table>
+            <table>
+                    <tr>
+                        <th>Nombre Jefe Comunidad</th>
+                        <th>Telefono Jefe de Comunidad</th>
+                        <th>Nombre de UBCH</th>
+                        <th>Nombre de Jefe de UBCH</th>
+                        <th>Telefono de Jefe de UBCH</th>
+                        <tr>
+                        <td>$nombreJefeCom</td>
+                        <td>$telJefeCom</td>
+                        <td>$nombreUbch</td>
+                        <td>$nombreJefUbch</td>
+                        <td>$telefonoJefeUbch</td>
+                        </tr>
+                    </tr>
+                </table>
 
                 <table>
                     <tr>
@@ -2890,35 +2956,7 @@ class SolicitudController extends Controller
                         <td></td> -->
                     </tr>
                 </table>
-                <table>
-                    <!-- <tr>
-                        <th>Direccion de habitacion</th>
-                    </tr>
-                    <tr>
-                        <td></td>
-                    </tr>
-                </table>
-
-                <table>
-                    <tr>
-                        <th>Parroquia</th>
-                        <th>Municipio</th>
-                        <th>Ciudad</th>
-                        <th>Correo Electronico</th>
-                        <th>Telefono Habitacion</th>
-                        <th>Telefono Celular</th>
-                        <th>Telefono Trabajo</th>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr> -->
-                </table>
+                
                     <table>
                         <tr><th>
                             Documentos que anexa
@@ -2962,19 +3000,6 @@ class SolicitudController extends Controller
 
                 <table>
                     <tr>
-                        <th>Prioridad del tramite</th>
-                    </tr>
-                </table>
-
-                <table>
-                    <tr>
-                        <td>Alta<input type='checkbox'></td>
-                        <td>Media<input type='checkbox'></td>
-                        <td>Baja<input type='checkbox'></td>
-                    </tr>
-                </table>
-                <table>
-                    <tr>
                         <th>Descripcion de el tramite</th>
                     </tr>
                     <tr>
@@ -2996,36 +3021,13 @@ class SolicitudController extends Controller
                 <p>----------------------------------------------------------------------------------------------------------------------------------------</p>
                 <table style="margin-top: 20px">
                     <tr>
-                        <th>Oficina de Atencion Ciudadana <span style="text-align: right">Numero de Registro $idsolicitud</span></th>
+                        <th>Oficina de Politicas Sociales <span style="text-align: right">Numero de Registro $solicitud->id</span></th>
                     </tr>
                 </table>
 
-                <table>
-                    <tr>
-                        <th>
-                            Planilla de Solicitud:
-                        </th>
-                    </tr>
-                </table>
+                
 
-                    <table>
-                        <tr>
-                            <th>Denuncia</th>
-                            <th>Queja</th>
-                            <th>Sugerencia</th>
-                            <th>Asesoria</th>
-                            <th>Reclamos</th>
-                            <th>Peticion</th>
-                            <tr>
-                            <td><input type="checkbox" $activardenuncia></td>
-                            <td><input type="checkbox" $activarqueja></td>
-                            <td><input type="checkbox" $activarsugerencia></td>
-                            <td><input type="checkbox" $activarasesoria></td>
-                            <td><input type="checkbox" $activarreclamos></td>
-                            <td><input type="checkbox" $activarpeticiones></td>
-                            </tr>
-                        </tr>
-                    </table>
+                    
                 </table>
                 <table>
                         <tr>
@@ -3053,7 +3055,7 @@ class SolicitudController extends Controller
                         <td></td>
                     </tr>
                 </table>
-                <h5 style="text-align: center">Usted podra solicitar informacion sobre su solicitud en la Oficina de Atencion Ciudadana a traves de los telefonos (0414 1572028) (0412 5526701)</h5>
+                <h5 style="text-align: center">Usted podra solicitar informacion sobre su solicitud en la Oficina de Atencion Ciudadana a traves del telefono 0416-6408570 y el Correo Electronico direccionpoliticassociales@alcaldiapaez.gob.ve</h5>
                 <h5 style="text-align: center">Todos los tramites realizados ante esta oficina son absolutamente gratuitos</h5>
                     </body>
                     </html>
