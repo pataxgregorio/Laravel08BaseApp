@@ -13,13 +13,13 @@
  
 <div class="row">        
     <div class="col-lg-4 col-md-6 col-xs-12">            
-		<x-box titulo="Total Solicitudes Registrada" cantidad="{{$total_solicitudes_registradas2}}" name="Solitudes Registradas"  color="bg-yellow"></x-box>		
+		<x-box titulo="Total Solicitudes Registrada" cantidad="{{$total_solicitudes_registradas2}}" name="Solitudes Registradas"  color="bg-red"></x-box>		
 	</div>
 	<div class="col-lg-4 col-md-6 col-xs-12">            		
-		<x-box titulo="Total Solicitudes en Proceso" cantidad="{{$total_solicitudes_procesadas2}}" name="Solitudes en Proceso" ></x-box>
+		<x-box titulo="Total Solicitudes en Proceso" cantidad="{{$total_solicitudes_procesadas2}}" name="Solitudes en Proceso" color="bg-yellow"></x-box>
 	</div>
 	<div class="col-lg-4 col-md-6 col-xs-12">            		
-		<x-box titulo="Total Solicitudes Terminadas" cantidad="{{$total_solicitudes_finalizadas2}}" name="Solitudes Terminadas" color="bg-red"></x-box>
+		<x-box titulo="Total Solicitudes Terminadas" cantidad="{{$total_solicitudes_finalizadas2}}" name="Solitudes Terminadas" color="bg-green"></x-box>
 	</div>
 </div>
 	<!--  CANVAS de las Metricas Para User, Rol y Notificaciones, para View-->
@@ -28,7 +28,7 @@
             <div class="row">
               <div class="col-lg-6">
                 <div class="panel panel-default">
-                  <div class="panel-heading"><b>Solicitudes Terminadas</b></div>
+                  <div class="panel-heading"><b> Indicadores de la Evolución de los Casos Atendidos</b></div>
                   <div class="panel-body" id="contenedor_01">
                     <canvas style="width: 684px; height: 400px;" id="solicitudTotalTipo"></canvas>
                   </div>
@@ -36,7 +36,7 @@
               </div>
               <div class="col-lg-6">
                 <div class="panel panel-default">
-                  <div class="panel-heading"><b>Total por Tipo de Solicitudes</b></div>
+                  <div class="panel-heading"><b>Medidores por tipo de Gestiones y Solicitudes de Atención al Ciudadano </b></div>
                   <div class="panel-body" id="contenedor_02">
                     <canvas style="width: 684px; height: 400px;" id="solicitudTipo"></canvas>
                   </div>

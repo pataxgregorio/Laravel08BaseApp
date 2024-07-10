@@ -29,6 +29,7 @@ use Carbon\Carbon;
 use App\Http\Controllers\User\Colores;
 use App\Models\Status\Status;
 use App\Models\JefeComunidad\JefeComunidad;
+use App\Models\Subtiposolicitud\subtiposolicitud;
 
 class SeguimientoController extends Controller
 {
@@ -594,8 +595,12 @@ public function segumientoJson (){
         $comuna = (new Comuna)->datos_comuna($solicitud_edit->parroquia_id);
         $comunidad = (new Comunidad)->datos_comunidad($solicitud_edit->comuna_id);
         $coordinacion = (new Coordinacion)->datos_coordinacion($solicitud_edit->direccion_id);  
-        $jefecomunidad = (new JefeComunidad)->getJefe($solicitud_edit->comuna_id);   
-        return view('Seguimiento.seguimiento_edit', compact('jefecomunidad','count_notification', 'status_solicitud', 'seguimiento_edit', 'titulo_modulo', 'solicitud_edit', 'estado', 'municipio', 'parroquia', 'asignacion', 'comuna', 'comunidad', 'tipo_solicitud', 'direcciones', 'enter', 'sexo', 'edocivil', 'nivelestudio', 'coordinacion', 'denuncia', 'beneficiario', 'quejas', 'sugerecia', 'asesoria', 'reclamo', 'profesion', 'recaudos', 'denunciado', 'array_color'));
+        $jefecomunidad = (new JefeComunidad)->getJefe($solicitud_edit->comuna_id);  
+
+        $subtiposolicitud = (new Subtiposolicitud)->getSubtiposolicitud();
+        $correlativoSALUD = (new Solicitud)->ObtenerNumeroSolicitud();
+
+        return view('Seguimiento.seguimiento_edit', compact('recaudos','correlativoSALUD','subtiposolicitud','jefecomunidad','count_notification', 'status_solicitud', 'seguimiento_edit', 'titulo_modulo', 'solicitud_edit', 'estado', 'municipio', 'parroquia', 'asignacion', 'comuna', 'comunidad', 'tipo_solicitud', 'direcciones', 'enter', 'sexo', 'edocivil', 'nivelestudio', 'coordinacion', 'denuncia', 'beneficiario', 'quejas', 'sugerecia', 'asesoria', 'reclamo', 'profesion', 'recaudos', 'denunciado', 'array_color'));
     }
     public function getComunas(Request $request)
     {

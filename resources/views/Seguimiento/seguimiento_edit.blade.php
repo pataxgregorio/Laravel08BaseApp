@@ -38,9 +38,17 @@
                 <?php 
                     $usuario = Auth::user()->name;
                     $rols_id = auth()->user()->rols_id;
+                    $idmunicipio = $solicitud_edit->municipio_id;
+                    echo "<script> var idmunicipioJS = '" . $idmunicipio . "'; </script>";
                 ?>
 
                 <div class="form-group">
+                    <div style="text-align:left;">
+                        {!! Form::label('solicitud_salud_id_label', 'ID DE LA SOLICITUD', ['class' => 'control-label']) !!}<span
+                            class="required" style="color:red;">*</span>
+                        {!! Form::text('solicitud_salud_id_show', $correlativoSALUD, ['placeholder' => $correlativoSALUD, 'class' => 'form-control', 'id' => 'solicitud_salud_id', 'DISABLED' => TRUE]) !!}
+                        <input type="text" name="solicitud_salud_id" id="solicitud_salud_id" value="{{ $correlativoSALUD }}" hidden>
+                    </div>
                     <div style="text-align:left;">
                         {!! Form::label('nombre',trans('message.users_action.nombre'), ['class' => 'control-label'])
                         !!}<span class="required" style="color:red;">*</span>
@@ -126,13 +134,16 @@
                     </div>
                     <div style="text-align:left;">
                         {!! Form::label('parroquia_id',trans('message.solicitud_action.parroquia'), ['class' =>
-                        'control-label']) !!}<span class="required" style="color:red;">*</span>
+                        'control-label', 'id' => 'parroquia_id_label']) !!}<span class="required" style="color:red;" id="parroquia_id_span">*</span>
                         {!! Form::select('parroquia_id', $parroquia, $solicitud_edit->parroquia_id, ['placeholder' =>
                         trans('message.solicitud_action.parroquia'),'class' => 'form-control','id' =>
                         'parroquia_id','disabled' => true]) !!}
                     </div>
+                    
+                    
+
                     <div style="text-align:left;">
-                            {!! Form::label('comuna_id', trans('message.solicitud_action.comuna'), ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
+                            {!! Form::label('comuna_id', trans('message.solicitud_action.comuna'), ['class' => 'control-label', 'id' => 'comuna_id_label']) !!}<span class="required" style="color:red;" id="comuna_id_span">*</span>
                             <select name="comuna_id" id="comuna_id" class="form-control" disabled>
                                 @foreach($comuna as $key => $value)
                                     <option value="{{ $value->id }}" @if(old('comuna_id', $solicitud_edit->comuna_id) == $value->id) selected @endif>{{ $value->codigo }}</option>
@@ -141,7 +152,7 @@
                         </div>
  
                         <div style="text-align:left;">
-                            {!! Form::label('comunidad_id',trans('message.solicitud_action.comunidad'), ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
+                            {!! Form::label('comunidad_id',trans('message.solicitud_action.comunidad'), ['class' => 'control-label', 'id' => 'comunidad_id_label']) !!}<span class="required" style="color:red;" id="comunidad_id_span">*</span>
                             <select name="comunidad_id" id="comunidad_id" class="form-control" disabled>
                                 @foreach($comunidad as $key => $value)
                                     <option value="{{ $value->id }}" @if(old('comunidad_id', $solicitud_edit->comunidad_id) == $value->id) selected @endif>{{ $value->nombre }}</option>
@@ -150,7 +161,7 @@
                         </div>  
 
                         <div style="text-align:left;">
-                            {!! Form::label('jefecomunidad_id', 'Jefe de Comunidad', ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
+                            {!! Form::label('jefecomunidad_id', 'Jefe de Comunidad', ['class' => 'control-label', 'id' => 'jefecomunidad_label']) !!}<span class="required" style="color:red;" id="jefecomunidad_Span">*</span>
                             <select name="jefecomunidad_id" id="jefecomunidad_id" class="form-control" disabled>
                                 @foreach($jefecomunidad as $key => $value)
                                     <option value="{{ $value->id }}" @if(old('jefecomunidad_id', $solicitud_edit->jefecomunidad_id) == $value->id) selected @endif>{{ $value->Nombre_Jefe_Comunidad }}</option>
@@ -158,38 +169,40 @@
                             </select>
                         </div>
                         <div style="text-align:left;">
-                            {!! Form::label('jefecomunidad_id', 'Telefono de Jefe de Comunidad', ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
-                            <select name="jefecomunidad_id" id="jefecomunidad_id" class="form-control" disabled>
+                            {!! Form::label('telefonoJEFE', 'Telefono de Jefe de Comunidad', ['class' => 'control-label', 'id' => 'telefonoJEFE_label']) !!}<span class="required" style="color:red;" id="telefonoJEFE_span">*</span>
+                            <select name="telefonoJEFE" id="telefonoJEFE" class="form-control" disabled>
                                 @foreach($jefecomunidad as $key => $value)
-                                    <option value="{{ $value->id }}" @if(old('jefecomunidad_id', $solicitud_edit->jefecomunidad_id) == $value->id) selected @endif>{{ $value->Telefono_Jefe_Comunidad }}</option>
+                                    <option value="{{ $value->id }}" @if(old('telefonoJEFE', $solicitud_edit->jefecomunidad_id) == $value->id) selected @endif>{{ $value->Telefono_Jefe_Comunidad }}</option>
                                 @endforeach
                             </select>
                         </div>
                        
                         <div style="text-align:left;">
-                            {!! Form::label('jefecomunidad_id', 'Nombre de UBCH', ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
-                            <select name="jefecomunidad_id" id="jefecomunidad_id" class="form-control" disabled>
+                            {!! Form::label('nombreUBCH', 'Nombre de UBCH', ['class' => 'control-label', 'id' => 'nombreUBCH_label']) !!}<span class="required" style="color:red;" id="nombreUBCH_span">*</span>
+                            <select name="nombreUBCH" id="nombreUBCH" class="form-control" disabled>
                                 @foreach($jefecomunidad as $key => $value)
-                                    <option value="{{ $value->id }}" @if(old('jefecomunidad_id', $solicitud_edit->jefecomunidad_id) == $value->id) selected @endif>{{ $value->Nombre_Ubch }}</option>
+                                    <option value="{{ $value->id }}" @if(old('nombreUBCH', $solicitud_edit->jefecomunidad_id) == $value->id) selected @endif>{{ $value->Nombre_Ubch }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div style="text-align:left;">
-                            {!! Form::label('jefecomunidad_id', 'Nombre de Jefe UBCH', ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
-                            <select name="jefecomunidad_id" id="jefecomunidad_id" class="form-control" disabled>
+                            {!! Form::label('nomjefeUBCH', 'Nombre de Jefe UBCH', ['class' => 'control-label', 'id' => 'nomjefeUBCH_label']) !!}<span class="required" style="color:red;" id="nomjefeUBCH_span">*</span>
+                            <select name="nomjefeUBCH" id="nomjefeUBCH" class="form-control" disabled>
                                 @foreach($jefecomunidad as $key => $value)
-                                    <option value="{{ $value->id }}" @if(old('jefecomunidad_id', $solicitud_edit->jefecomunidad_id) == $value->id) selected @endif>{{ $value->Nombre_Jefe_Ubch }}</option>
+                                    <option value="{{ $value->id }}" @if(old('nomjefeUBCH', $solicitud_edit->jefecomunidad_id) == $value->id) selected @endif>{{ $value->Nombre_Jefe_Ubch }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div style="text-align:left;">
-                            {!! Form::label('jefecomunidad_id', 'Telefono de Jefe UBCH', ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
-                            <select name="jefecomunidad_id" id="jefecomunidad_id" class="form-control" disabled>
+                            {!! Form::label('teljefeUBCH', 'Telefono de Jefe UBCH', ['class' => 'control-label', 'id' => 'teljefeUBCH_label']) !!}<span class="required" style="color:red;" id="teljefeUBCH_span">*</span>
+                            <select name="teljefeUBCH" id="teljefeUBCH" class="form-control" disabled>
                                 @foreach($jefecomunidad as $key => $value)
-                                    <option value="{{ $value->id }}" @if(old('jefecomunidad_id', $solicitud_edit->jefecomunidad_id) == $value->id) selected @endif>{{ $value->Telefono_Jefe_Ubch }}</option>
+                                    <option value="{{ $value->id }}" @if(old('teljefeUBCH', $solicitud_edit->jefecomunidad_id) == $value->id) selected @endif>{{ $value->Telefono_Jefe_Ubch }}</option>
                                 @endforeach
                             </select>
                         </div>
+
+
                     <div style="text-align:left;">
                         {!! Form::label('direccion',trans('message.solicitud_action.direccion'), ['class' =>
                         'control-label']) !!}<span class="required" style="color:red;">*</span>
@@ -197,6 +210,7 @@
                         trans('message.solicitud_action.direccion'),'class' => 'form-control','id' =>
                         'direccion_user','disabled' => true]) !!}
                     </div>
+
                     @if($rols_id != 10)
                     <div style="text-align:left;">
                         {!! Form::label('tipo_solicitud_id',trans('message.solicitud_action.tipo_solicitud'), ['class'
@@ -205,14 +219,36 @@
                         ['placeholder' => trans('message.solicitud_action.tipo_solicitud'),'class' =>
                         'form-control','id' => 'tipo_solicitud_id','disabled' => true]) !!}
                     </div>
-                    @endif
+                    @endif                    
+
+                    @if($rols_id == 10)                    
                     <div style="text-align:left;">
-                            {!! Form::label('jefecomunidad_id', 'Tipo de Solicitud', ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
-                            <select name="jefecomunidad_id" id="jefecomunidad_id" class="form-control" disabled>
-                                @foreach($jefecomunidad as $key => $value)
-                                    <option value="{{ $value->id }}" @if(old('jefecomunidad_id', $solicitud_edit->jefecomunidad_id) == $value->id) selected @endif>{{ $value->tipo_subsolicitud_id }}</option>
-                                @endforeach
-                            </select>
+                        {!! Form::label('tipo_subsolicitud_id', 'TIPO SOLICITUD', ['class' => 'control-label']) !!}<span
+                            class="required" style="color:red;">*</span>
+                        <select name="tipo_subsolicitud_id" id="tipo_subsolicitud_id" class="form-control" disabled>
+                            @foreach($subtiposolicitud as $key => $value)
+                                <option value="{{ $value->id}}" @if(old('tipo_subsolicitud_id', $solicitud_edit->tipo_subsolicitud_id) == $value->id) selected @endif>
+                                    {{ $value->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif  
+                    <?php  
+                    
+                        $variable = $solicitud_edit->tipo_solicitud_id;
+
+                        if ($solicitud_edit->tipo_solicitud_id == 6) {
+                            $valores = $beneficiario;
+                        }
+                        
+                
+                    
+                    ?>
+
+                    <div style="text-align:left;">
+                            {!! Form::label('solicita', 'Solicita', ['class' => 'control-label']) !!}<span
+                                class="required" style="color:red;">*</span>
+                            {!! Form::text('solicita', isset($valores[0]["solicita"]) ? $valores[0]["solicita"] : '', ['placeholder' => 'Solicita', 'class' => 'form-control', 'id' => 'solicita_user', 'disabled' => true]) !!}
                     </div>
 
                     <div class="container-fluid">
@@ -324,8 +360,34 @@
             @section('script_datatable')
             <script type="text/javascript">        
             $(document).ready(function() {
-    var seguimientoID = null; // Declaramos seguimientoID como null por defecto
-    var solicitudID = null; // Declaramos solicitudID como null por defecto
+                if(idmunicipioJS == 2){
+                    $("#parroquia_id").hide();
+                    $("#parroquia_id_label").hide();
+                    $("#parroquia_id_span").hide();
+                    $("#comuna_id").hide();
+                    $("#comuna_id_label").hide();
+                    $("#comuna_id_span").hide();
+                    $("#comunidad_id").hide();
+                    $("#comunidad_id_label").hide();
+                    $("#comunidad_id_span").hide();
+                    $("#jefecomunidad_label").hide();
+                    $("#jefecomunidad_Span").hide();
+                    $("#jefecomunidad_id").hide();
+                    $("#telefonoJEFE").hide();
+                    $("#telefonoJEFE_label").hide();
+                    $("#telefonoJEFE_span").hide();
+                    $("#nombreUBCH").hide();
+                    $("#nombreUBCH_label").hide();
+                    $("#nombreUBCH_span").hide();
+                    $("#nomjefeUBCH").hide();
+                    $("#nomjefeUBCH_label").hide();
+                    $("#nomjefeUBCH_span").hide();
+                    $("#teljefeUBCH").hide();
+                    $("#teljefeUBCH_label").hide();
+                    $("#teljefeUBCH_span").hide();
+                }
+            var seguimientoID = null; // Declaramos seguimientoID como null por defecto
+            var solicitudID = null; // Declaramos solicitudID como null por defecto
 
     <?php                
         foreach ($seguimiento_edit as $index => $seguimientoID) {

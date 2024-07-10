@@ -154,7 +154,7 @@
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="{{ url('/users/profile') }}" class="btn btn-default btn-flat">{{ trans('message.profile') }}</a>
+                                    <a href="{{ url('/users/'.Auth::user()->id.'/edit') }}" class="btn btn-default btn-flat">{{ trans('message.profile') }}</a>
                                 </div>
                                 <div class="pull-right">
                                     <a href="{{ url('/logout') }}" class="btn btn-default btn-flat" id="logout"

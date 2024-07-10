@@ -293,7 +293,7 @@ class UserController extends Controller
             $user_Update->save();
         }
         session(['update' => true]);            
-        return redirect('/users');
+        return redirect('/users/'.Auth::user()->id.'/edit');
     }
 
     private function update_image($request,$avatar_viejo,&$user_Update){

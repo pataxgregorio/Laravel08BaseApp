@@ -50,9 +50,22 @@
 
                 {{ csrf_field() }}
                 <div class="form-group ">
+                    <div style="text-align:left;">
+                        {!! Form::label('tipo_solicitud_id', trans('message.solicitud_action.tipo_solicitud'), ['class' => 'control-label']) !!}<span
+                            class="required" style="color:red;">*</span>
+                        {!! Form::select('tipo_solicitud_id', $tipo_solicitud, $rols_id == 10 ? 6 : old('tipo_solicitud_id'), ['placeholder' => trans('message.solicitud_action.tipo_solicitud'), 'class' => 'form-control', 'id' => 'tipo_solicitud_id', $rols_id == 10 ? 'disabled' : '']) !!}
+                        @if($rols_id == 10)
+                        <input type="text" name="tipo_solicitud_id" id="tipo_solicitud_id" value=6 hidden>
+                        @endif                        
+                    </div>
                     <h3>Datos del Solicitante </h3>
                     <br>
-
+                    <div style="text-align:left;">
+                        {!! Form::label('solicitud_salud_id_label', 'ID DE LA SOLICITUD', ['class' => 'control-label']) !!}<span
+                            class="required" style="color:red;">*</span>
+                        {!! Form::text('solicitud_salud_id_show', old('solicitud_salud_id'), ['placeholder' => $correlativoSALUD, 'class' => 'form-control', 'id' => 'solicitud_salud_id', 'DISABLED' => TRUE]) !!}
+                        <input type="text" name="solicitud_salud_id" id="solicitud_salud_id" value="{{ $correlativoSALUD }}" hidden>
+                    </div>
                     <div style="text-align:left;">
                         {!! Form::label('nombre', trans('message.users_action.nombre'), ['class' => 'control-label']) !!}<span
                             class="required" style="color:red;">*</span>
@@ -78,7 +91,16 @@
                             class="required" style="color:red;">*</span>
                         {!! Form::email('email', old('email'), ['placeholder' => trans('message.users_action.mail_ejemplo'), 'class' => 'form-control', 'id' => 'email_user']) !!}
                     </div>
-
+                    <div style="text-align:left;">
+                        <label>TRABAJADOR DE LA ALCALDIA *</label>
+                        <select required name="trabajador" id="trabajador" class="selectpicker form-control" data-live-search="true"
+                            data-live-search-style="begins">
+                            <option value="SELECCIONE UNA OPCION">SELECCIONE UNA OPCION</option>
+                            <option value="no">NO</option>
+                            <option value="trabajador">EMPLEADO</option>
+                            <option value="obrero">OBRERO</option>
+                        </select>
+                    </div>
                     <div style="text-align:left;">
                         <label>Sexo *</label>
                         <select required name="sexo" id="sexo" class="selectpicker form-control" data-live-search="true"
@@ -266,23 +288,15 @@
                         {!! Form::label('direccion', trans('message.solicitud_action.direccion'), ['class' => 'control-label']) !!}<span
                             class="required" style="color:red;">*</span>
                         {!! Form::text('direccion', old('direccion'), ['placeholder' => trans('message.solicitud_action.direccion'), 'class' => 'form-control', 'id' => 'direccion_user']) !!}
-                    </div>
+                    </div>                    
                     
-                    <div style="text-align:left;">
-                        {!! Form::label('tipo_solicitud_id', trans('message.solicitud_action.tipo_solicitud'), ['class' => 'control-label']) !!}<span
-                            class="required" style="color:red;">*</span>
-                        {!! Form::select('tipo_solicitud_id', $tipo_solicitud, $rols_id == 10 ? 6 : old('tipo_solicitud_id'), ['placeholder' => trans('message.solicitud_action.tipo_solicitud'), 'class' => 'form-control', 'id' => 'tipo_solicitud_id', $rols_id == 10 ? 'disabled' : '']) !!}
-                        @if($rols_id == 10)
-                        <input type="text" name="tipo_solicitud_id" id="tipo_solicitud_id" value=6 hidden>
-                        @endif                        
-                    </div>
                     @if($rols_id == 10)
                     <div style="text-align:left;">
-                    {!! Form::label('subtiposolicitud_id', trans('message.solicitud_action.tipo_solicitud'), ['class' => 'control-label']) !!}<span
+                    {!! Form::label('tipo_subsolicitud_id', trans('message.solicitud_action.tipo_solicitud'), ['class' => 'control-label']) !!}<span
                             class="required" style="color:red;">*</span>
-                        <select name="subtiposolicitud_id" id="subtiposolicitud_id" class="form-control">                           
+                        <select name="tipo_subsolicitud_id" id="tipo_subsolicitud_id" class="form-control">                           
                             @foreach($subtiposolicitud as $subtipo)
-                                <option value="{{ $subtipo->id }}" {{ old('subtiposolicitud_id') == $subtipo->id ? 'selected' : '' }}>{{ $subtipo->nombre }}</option>
+                                <option value="{{ $subtipo->id }}" {{ old('tipo_subsolicitud_id') == $subtipo->id ? 'selected' : '' }}>{{ $subtipo->nombre }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -416,6 +430,11 @@
                                 class="required" style="color:red;">*</span>
                             {!! Form::text('solicita', isset($valores[0]["solicita"]) ? $valores[0]["solicita"] : '', ['placeholder' => 'Solicita', 'class' => 'form-control', 'id' => 'solicita_user']) !!}
                         </div>
+                        <div style="text-align:left;">
+                            {!! Form::label('venApp', 'Codigo venApp', ['class' => 'control-label']) !!}<span
+                                class="required" style="color:red;">*</span>
+                            {!! Form::text('venApp', isset($valores[0]["venApp"]) ? $valores[0]["venApp"] : '', ['placeholder' => 'Codigo', 'class' => 'form-control', 'id' => 'venApp_user']) !!}
+                        </div>
                         <h3>Recaudos de la Solicitud</h3>
                         <br>
                         <div style="text-align:left;">
@@ -433,6 +452,22 @@
                         <div style="text-align:left;">
                             <input type="checkbox" id="checkcedulabeneficiario" name="checkcedulabeneficiario">
                             <label class="form-check-label" for="defaultCheck1">Cedula Beneficiario</label>
+                        </div>
+                        <div style="text-align:left;">
+                            <input type="checkbox" id="checkpresupuesto" name="checkpresupuesto">
+                            <label class="form-check-label" for="defaultCheck1">Presupuesto (BS)</label>
+                        </div>
+                        <div style="text-align:left;">
+                            <input type="checkbox" id="evifotobeneficiario" name="evifotobeneficiario">
+                            <label class="form-check-label" for="defaultCheck1">Evidencia Fotografica</label>
+                        </div>
+                        <div style="text-align:left;">
+                            <input type="checkbox" id="permisoinhumacion" name="permisoinhumacion">
+                            <label class="form-check-label" for="defaultCheck1">Permiso de Inhumacion</label>
+                        </div>
+                        <div style="text-align:left;">
+                            <input type="checkbox" id="certificadodefuncion" name="certificadodefuncion">
+                            <label class="form-check-label" for="defaultCheck1">Certificado de Defuncion</label>
                         </div>
                     </div>
                     <div style="text-align:left;">

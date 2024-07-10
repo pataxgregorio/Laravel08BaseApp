@@ -19,7 +19,7 @@ class Box extends Component
      * @return void
      */
     public function __construct(string $titulo, int $cantidad = 0,
-                                string $name,string $color = 'bg-blue')
+                                string $name,string $color = '')
     {
         $this->titulo = $titulo;
         $this->cantidad = $cantidad;

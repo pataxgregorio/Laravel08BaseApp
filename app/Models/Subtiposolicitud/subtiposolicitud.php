@@ -27,4 +27,15 @@ class subtiposolicitud extends Model
         ->get();
         return $resultados;
     }
+
+    public function getSubtiposolicitudbyID($id){
+        $resultados = DB::table('solicitud')
+            ->join('users', 'solicitud.users_id', '=', 'users.id')
+            ->join('tipo_subsolicitud', 'solicitud.tipo_subsolicitud_id', '=', 'tipo_subsolicitud.id')
+            ->where('tipo_subsolicitud.id', '=', $id)
+            ->select('tipo_subsolicitud.id as id', 'tipo_subsolicitud.nombre as nombre')
+            ->first();
+        return $resultados;
+    }
+
 }

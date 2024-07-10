@@ -61,6 +61,8 @@
             </table>
         </div>
     </div>
+    <button class="btn btn-primary" style="padding:5px;" id="btn_listado">Imprimir Listado</button>
+    <button class="btn btn-primary" style="padding:5px;" id="btn_totales">Imprimir Totales</button>
 </div>
 
 
@@ -75,6 +77,23 @@
 <script type="text/javascript">
     $(function () {
         
+        $('#btn_totales').click(function() {
+        $.ajax({
+            url: "{{ route('solicitud.solicitudTotalFinalizadas') }}",
+            method: 'GET',
+            dataType: 'json', // Indicamos que esperamos una respuesta JSON
+            success: function(response) {
+                console.log(response); 
+                // Aquí puedes mostrar los resultados en tu interfaz de usuario
+                // Por ejemplo: 
+                // alert("Total de solicitudes: " + response.TOTAL_SOLICITUD);
+            },
+            error: function() {
+                console.error("Error al obtener los totales.");
+            }
+            });
+        });
+
         var table = $('.solicitud_all').DataTable({
             processing: true,
             serverSide: true,
@@ -114,9 +133,8 @@
             }
         });
 
-        // Evento del botón Filtrar
         $('#btn_filtrar').click(function() {
-            table.ajax.reload(); // Recargamos la tabla con los nuevos parámetros
+            table.ajax.reload(); 
         });
     }); 
 </script>

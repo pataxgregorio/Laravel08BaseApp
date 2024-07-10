@@ -149,11 +149,13 @@ class SolicitudController extends Controller
         $comuna = [];
         $coordinacion = [];
         $comunidad = [];
-        $jefecomunidad = [];     
-        
+        $jefecomunidad = [];
 
-        
-        return view('Solicitud.solicitud_create', compact('count_notification', 'titulo_modulo', 'roles', 'municipio', 'comuna', 'comunidad','jefecomunidad', 'direcciones', 'parroquia', 'estado', 'coordinacion', 'enter', 'tipo_solicitud','subtiposolicitud', 'array_color'));
+        $consulta = (new Solicitud)->ObtenerNumeroSolicitud();
+        $correlativoSALUD = $consulta ? $consulta + 1 : 3000; 
+
+
+        return view('Solicitud.solicitud_create', compact('count_notification', 'titulo_modulo', 'roles','correlativoSALUD', 'municipio', 'comuna', 'comunidad','jefecomunidad', 'direcciones', 'parroquia', 'estado', 'coordinacion', 'enter', 'tipo_solicitud','subtiposolicitud', 'array_color'));
     }
 
     /**
@@ -179,227 +181,245 @@ class SolicitudController extends Controller
          * https://laravel.com/docs/8.x/queues#supervisor-configuration
          */
         // Target URL
-
-        $input = $request->all(); 
-        $input['users_id'] = Auth::user()->id;
-        //  $data['is_deleted'] = false;
-
-        $recaudos = NULL;
-        $input['quejas'] = NULL;
-        $input['reclamos'] = NULL;
-        $input['sugerencia'] = NULL;
-        $input['asesoria'] = NULL;
-        $input['beneficiario'] = NULL;
-        $input['denuncia'] = NULL;
-        $input['denunciado'] = NULL;
-        $input['recaudos'] = $recaudos;
-        if($input['tipo_solicitud_id'] != 6){
+        DB::beginTransaction();
+        try {
+            $input = $request->all(); 
+            $input['users_id'] = Auth::user()->id;
+            //  $data['is_deleted'] = false;
+            $recaudos = NULL;
+            $input['quejas'] = NULL;
+            $input['reclamos'] = NULL;
+            $input['sugerencia'] = NULL;
+            $input['asesoria'] = NULL;
+            $input['beneficiario'] = NULL;
+            $input['denuncia'] = NULL;
+            $input['denunciado'] = NULL;
+            $input['recaudos'] = $recaudos;
+            if($input['tipo_solicitud_id'] != 6){
+                $input['subtiposolicitud_id'] = NULL;
+            }
             $input['subtiposolicitud_id'] = NULL;
-        }
-        $input['subtiposolicitud_id'] = NULL;
-        $input['codigocontrol'] = "001";
-        if ($input['tipo_solicitud_id'] == 1) {
-            $denuncia = [
-                [
-                    "relato" => $input['relato'],
-                    "observacion" => $input['observacion'],
-                    "expliquepresentada" => $input['explique'],
-                    "explique competencia" => $input['explique2']
-                ]
-            ];
-            $denunciado = [
-                [
-                    "cedula" => $input['ceduladenunciado'],
-                    "nombre" => $input['nombredenunciado'],
-                    "testigo" => $input['testigo']
-                ]
-            ];
-            $recaudos = [
-                [
-                    "cedula" => isset($input['checkcedula']) ? $input['checkcedula'] : NULL,
-                    "motivo" => isset($input['checkmotivo']) ? $input['checkmotivo'] : NULL,
-                    "video" => isset($input['checkvideo']) ? $input['checkvideo'] : NULL,
-                    "foto" => isset($input['checkfoto']) ? $input['checkfoto'] : NULL,
-                    "grabacion" => isset($input['checkgrabacion']) ? $input['checkgrabacion'] : NULL,
-                    "testigo" => isset($input['checktestigo']) ? $input['checktestigo'] : NULL,
-                    "residencia" => isset($input['checkresidencia']) ? $input['checkresidencia'] : NULL
-                ]
-            ];
+            $input['codigocontrol'] = "001";
+            if ($input['tipo_solicitud_id'] == 1) {
+                $denuncia = [
+                    [
+                        "relato" => $input['relato'],
+                        "observacion" => $input['observacion'],
+                        "expliquepresentada" => $input['explique'],
+                        "explique competencia" => $input['explique2']
+                    ]
+                ];
+                $denunciado = [
+                    [
+                        "cedula" => $input['ceduladenunciado'],
+                        "nombre" => $input['nombredenunciado'],
+                        "testigo" => $input['testigo']
+                    ]
+                ];
+                $recaudos = [
+                    [
+                        "cedula" => isset($input['checkcedula']) ? $input['checkcedula'] : NULL,
+                        "motivo" => isset($input['checkmotivo']) ? $input['checkmotivo'] : NULL,
+                        "video" => isset($input['checkvideo']) ? $input['checkvideo'] : NULL,
+                        "foto" => isset($input['checkfoto']) ? $input['checkfoto'] : NULL,
+                        "grabacion" => isset($input['checkgrabacion']) ? $input['checkgrabacion'] : NULL,
+                        "testigo" => isset($input['checktestigo']) ? $input['checktestigo'] : NULL,
+                        "residencia" => isset($input['checkresidencia']) ? $input['checkresidencia'] : NULL
+                    ]
+                ];
 
-            $input['denuncia'] = json_encode($denuncia);
-            $input['denunciado'] = json_encode($denunciado);
-            $input['recaudos'] = json_encode($recaudos);
+                $input['denuncia'] = json_encode($denuncia);
+                $input['denunciado'] = json_encode($denunciado);
+                $input['recaudos'] = json_encode($recaudos);
 
-        }
-        if ($input['tipo_solicitud_id'] == 2) {
-            $queja = [
-                [
-                    "relato" => $input['relato'],
-                    "observacion" => $input['observacion'],
-                    "expliquepresentada" => $input['explique'],
-                    "explique competencia" => $input['explique2']
-                ]
-            ];
-            $denunciado = [
-                [
-                    "cedula" => isset($input['ceduladenunciado']) ? $input['ceduladenunciado']: NULL,
-                    "nombre" => $input['nombredenunciado'],
-                    "testigo" => $input['testigo']
-                ]
-            ];
-            $recaudos = [
-                [
-                    "cedula" => isset($input['checkcedula']) ? $input['checkcedula'] : NULL,
-                    "motivo" => isset($input['checkmotivo']) ? $input['checkmotivo'] : NULL,
-                    "video" => isset($input['checkvideo']) ? $input['checkvideo'] : NULL,
-                    "foto" => isset($input['checkfoto']) ? $input['checkfoto'] : NULL,
-                    "grabacion" => isset($input['checkgrabacion']) ? $input['checkgrabacion'] : NULL,
-                    "testigo" => isset($input['checktestigo']) ? $input['checktestigo'] : NULL,
-                    "residencia" => isset($input['checkresidencia']) ? $input['checkresidencia'] : NULL
-                ]
-            ];
+            }
+            if ($input['tipo_solicitud_id'] == 2) {
+                $queja = [
+                    [
+                        "relato" => $input['relato'],
+                        "observacion" => $input['observacion'],
+                        "expliquepresentada" => $input['explique'],
+                        "explique competencia" => $input['explique2']
+                    ]
+                ];
+                $denunciado = [
+                    [
+                        "cedula" => isset($input['ceduladenunciado']) ? $input['ceduladenunciado']: NULL,
+                        "nombre" => $input['nombredenunciado'],
+                        "testigo" => $input['testigo']
+                    ]
+                ];
+                $recaudos = [
+                    [
+                        "cedula" => isset($input['checkcedula']) ? $input['checkcedula'] : NULL,
+                        "motivo" => isset($input['checkmotivo']) ? $input['checkmotivo'] : NULL,
+                        "video" => isset($input['checkvideo']) ? $input['checkvideo'] : NULL,
+                        "foto" => isset($input['checkfoto']) ? $input['checkfoto'] : NULL,
+                        "grabacion" => isset($input['checkgrabacion']) ? $input['checkgrabacion'] : NULL,
+                        "testigo" => isset($input['checktestigo']) ? $input['checktestigo'] : NULL,
+                        "residencia" => isset($input['checkresidencia']) ? $input['checkresidencia'] : NULL
+                    ]
+                ];
 
-            $input['quejas'] = json_encode($queja);
-            $input['denunciado'] = json_encode($denunciado);
-            $input['recaudos'] = json_encode($recaudos);
-        }
-        if ($input['tipo_solicitud_id'] == 3) {
-            $reclamo = [
-                [
-                    "relato" => $input['relato'],
-                    "observacion" => $input['observacion'],
-                    "expliquepresentada" => $input['explique'],
-                    "explique competencia" => $input['explique2']
-                ]
-            ];
-            $denunciado = [
-                [
-                    "cedula" => $input['ceduladenunciado'],
-                    "nombre" => $input['nombredenunciado'],
-                    "testigo" => $input['testigo']
-                ]
-            ];
-            $recaudos = [
-                [
-                    "cedula" => isset($input['checkcedula']) ? $input['checkcedula'] : NULL,
-                    "motivo" => isset($input['checkmotivo']) ? $input['checkmotivo'] : NULL,
-                    "video" => isset($input['checkvideo']) ? $input['checkvideo'] : NULL,
-                    "foto" => isset($input['checkfoto']) ? $input['checkfoto'] : NULL,
-                    "grabacion" => isset($input['checkgrabacion']) ? $input['checkgrabacion'] : NULL,
-                    "testigo" => isset($input['checktestigo']) ? $input['checktestigo'] : NULL,
-                    "residencia" => isset($input['checkresidencia']) ? $input['checkresidencia'] : NULL
-                ]
-            ];
+                $input['quejas'] = json_encode($queja);
+                $input['denunciado'] = json_encode($denunciado);
+                $input['recaudos'] = json_encode($recaudos);
+            }
+            if ($input['tipo_solicitud_id'] == 3) {
+                $reclamo = [
+                    [
+                        "relato" => $input['relato'],
+                        "observacion" => $input['observacion'],
+                        "expliquepresentada" => $input['explique'],
+                        "explique competencia" => $input['explique2']
+                    ]
+                ];
+                $denunciado = [
+                    [
+                        "cedula" => $input['ceduladenunciado'],
+                        "nombre" => $input['nombredenunciado'],
+                        "testigo" => $input['testigo']
+                    ]
+                ];
+                $recaudos = [
+                    [
+                        "cedula" => isset($input['checkcedula']) ? $input['checkcedula'] : NULL,
+                        "motivo" => isset($input['checkmotivo']) ? $input['checkmotivo'] : NULL,
+                        "video" => isset($input['checkvideo']) ? $input['checkvideo'] : NULL,
+                        "foto" => isset($input['checkfoto']) ? $input['checkfoto'] : NULL,
+                        "grabacion" => isset($input['checkgrabacion']) ? $input['checkgrabacion'] : NULL,
+                        "testigo" => isset($input['checktestigo']) ? $input['checktestigo'] : NULL,
+                        "residencia" => isset($input['checkresidencia']) ? $input['checkresidencia'] : NULL
+                    ]
+                ];
 
-            $input['reclamos'] = json_encode($reclamo);
-            $input['denunciado'] = json_encode($denunciado);
-            $input['recaudos'] = json_encode($recaudos);
-        }
-        if ($input['tipo_solicitud_id'] == 4) {
-            $sugerencia = [
-                [
-                    "observacion" => $input['observacion2'],
+                $input['reclamos'] = json_encode($reclamo);
+                $input['denunciado'] = json_encode($denunciado);
+                $input['recaudos'] = json_encode($recaudos);
+            }
+            if ($input['tipo_solicitud_id'] == 4) {
+                $sugerencia = [
+                    [
+                        "observacion" => $input['observacion2'],
+                        ]
+                    ];
+                    $recaudos = [
+                        [
+                            "motivo" => isset($input['checkmotivo2']) ? $input['checkmotivo2'] : NULL
+                            ]
+                        ];
+                $input['direcciones_id'] =  14;
+                $input['sugerencia'] = json_encode($sugerencia);
+                $input['recaudos'] = json_encode($recaudos);
+            }
+            if ($input['tipo_solicitud_id'] == 5) {
+                $asesoria = [
+                    [
+                        "observacion" => isset($input['observacion2']) ? $input['observacion2'] : NULL,
                     ]
                 ];
                 $recaudos = [
                     [
                         "motivo" => isset($input['checkmotivo2']) ? $input['checkmotivo2'] : NULL
-                        ]
-                    ];
-            $input['direcciones_id'] =  14;
-            $input['sugerencia'] = json_encode($sugerencia);
-            $input['recaudos'] = json_encode($recaudos);
-        }
-        if ($input['tipo_solicitud_id'] == 5) {
-            $asesoria = [
-                [
-                    "observacion" => isset($input['observacion2']) ? $input['observacion2'] : NULL,
-                ]
-            ];
-            $recaudos = [
-                [
-                    "motivo" => isset($input['checkmotivo2']) ? $input['checkmotivo2'] : NULL
-                ]
-            ];
-            $input['direcciones_id'] =  14;
-            $input['asesoria'] = json_encode($asesoria);
-            $input['recaudos'] = json_encode($recaudos);
-        }
-        if ($input['tipo_solicitud_id'] == 6) {
-            $input['direcciones_id'] =  5;
-            $input['coordinacion_id'] =  NULL;
-            $input['enter_descentralizados_id'] =  NULL;
-            $input['enter_id'] =  NULL;
-            $input['asignacion'] =  NULL; 
-            if($input['municipio_id'] == 2){
-                $input['parroquia_id'] = NULL;
-                $input['comuna_id'] = NULL;
-                $input['comunidad_id'] = NULL;
-                $input['jefecomunidad_id'] = NULL;
+                    ]
+                ];
+                $input['direcciones_id'] =  14;
+                $input['asesoria'] = json_encode($asesoria);
+                $input['recaudos'] = json_encode($recaudos);
             }
-            
-            $beneficiario = [
-                [
-                    "cedula" => isset($input['cedulabeneficiario']) ? $input['cedulabeneficiario'] : NULL,
-                    "nombre" => isset($input['nombrebeneficiario']) ? $input['nombrebeneficiario'] : NULL,
-                    "direccion" => isset($input['direccionbeneficiario']) ? $input['direccionbeneficiario'] : NULL,
-                    "solicita" => isset($input['solicita']) ? $input['solicita'] : NULL,
-                ]
-            ];            
-            $recaudos = [
-                [
-                    "cedula" => isset($input['checkcedula2']) ? $input['checkcedula2'] : NULL,
-                    "motivo" => isset($input['checkmotivo3']) ? $input['checkmotivo3'] : NULL,
-                    "informe" => isset($input['checkinforme']) ? $input['checkinforme'] : NULL,
-                    "beneficiario" => isset($input['checkcedulabeneficiario']) ? $input['checkcedulabeneficiario'] : NULL
-                ]
-            ];
-            $input['beneficiario'] = json_encode($beneficiario);
-            $input['recaudos'] = json_encode($recaudos);
-        }
-        $solicitud = new Solicitud([
-            'users_id' => $input['users_id'],
-            'direccion_id' => $input['direcciones_id'],
-            'coordinacion_id' => $input['coordinacion_id'],
-            'tipo_solicitud_id' => $input['tipo_solicitud_id'],
-            'tipo_subsolicitud_id' => $input['subtiposolicitud_id'],
-            'enter_descentralizados_id' => $input['enter_id'],
-            'estado_id' => $input['estado_id'],
-            'municipio_id' => $input['municipio_id'],
-            'parroquia_id' => $input['parroquia_id'],
-            'comuna_id' => $input['comuna_id'],
-            'comunidad_id' => $input['comunidad_id'],
-            'jefecomunidad_id' => $input['jefecomunidad_id'],
-            'codigo_control' => $input['codigocontrol'],
-            'status_id' => 1,
-            'nombre' => $input['nombre'],
-            'cedula' => $input['cedula'],
-            'sexo' => $input['sexo'],
-            'email' => $input['email'],
-            'direccion' => $input['direccion'],
-            'fecha' => \Carbon\Carbon::now(),
-            'telefono' => $input['telefono'],
-            'telefono2' => $input['telefono2'],
-            'organismo' => NULL,
-            'asignacion' => $input['asignacion'],
-            'edocivil' => $input['edocivil'],
-            'fechaNacimiento' => $input['fechanacimiento'],
-            'nivelestudio' => $input['niveleducativo'],
-            'profesion' => $input['profesion'],
-            'recaudos' => $input['recaudos'],
-            'beneficiario' => $input['beneficiario'],
-            'quejas' => $input['quejas'],
-            'reclamo' => $input['reclamos'],
-            'sugerecia' => $input['sugerencia'],
-            'asesoria' => $input['asesoria'],
-            'denuncia' => $input['denuncia'],
-            'denunciado' => $input['denunciado'],
+            if ($input['tipo_solicitud_id'] == 6) {
+                $input['direcciones_id'] =  5;
+                $input['coordinacion_id'] =  NULL;
+                $input['enter_descentralizados_id'] =  NULL;
+                $input['enter_id'] =  NULL;
+                $input['asignacion'] =  NULL; 
+                if($input['municipio_id'] == 2){
+                    $input['parroquia_id'] = NULL;
+                    $input['comuna_id'] = NULL;
+                    $input['comunidad_id'] = NULL;
+                    $input['jefecomunidad_id'] = NULL;
+                }
+                
+                $beneficiario = [
+                    [
+                        "cedula" => isset($input['cedulabeneficiario']) ? $input['cedulabeneficiario'] : NULL,
+                        "nombre" => isset($input['nombrebeneficiario']) ? $input['nombrebeneficiario'] : NULL,
+                        "direccion" => isset($input['direccionbeneficiario']) ? $input['direccionbeneficiario'] : NULL,
+                        "solicita" => isset($input['solicita']) ? $input['solicita'] : NULL,
+                        "venApp" => isset($input['venApp']) ? $input['venApp'] : NULL,
+                    ]
+                ];            
+                $recaudos = [
+                    [
+                        "cedula" => isset($input['checkcedula2']) ? $input['checkcedula2'] : NULL,
+                        "motivo" => isset($input['checkmotivo3']) ? $input['checkmotivo3'] : NULL,
+                        "informe" => isset($input['checkinforme']) ? $input['checkinforme'] : NULL,
+                        "beneficiario" => isset($input['checkcedulabeneficiario']) ? $input['checkcedulabeneficiario'] : NULL,
+                        "checkpresupuesto" => isset($input['checkpresupuesto']) ? $input['checkpresupuesto'] : NULL,
+                        "evifotobeneficiario" => isset($input['evifotobeneficiario']) ? $input['evifotobeneficiario'] : NULL,
+                        "permisoinhumacion" => isset($input['permisoinhumacion']) ? $input['permisoinhumacion'] : NULL,
+                        "certificadodefuncion" => isset($input['certificadodefuncion']) ? $input['certificadodefuncion'] : NULL
+                    ]
+                ];
 
-            'created_at' => \Carbon\Carbon::now(),
-            'updated_at' => \Carbon\Carbon::now(),
-        ]);               
+                $input['beneficiario'] = json_encode($beneficiario);
+                $input['recaudos'] = json_encode($recaudos);
+            }
+            if($input['tipo_solicitud_id'] == 6){
+                $ultimoNumero = (new Solicitud)->ObtenerNumeroSolicitud();
+                $nuevoNumero = $ultimoNumero ? $ultimoNumero + 1 : 3000;
+            }else{
+                $nuevoNumero = NULL;
+            }
+            $solicitud = new Solicitud([
+                'solicitud_salud_id' => $nuevoNumero, 
+                'users_id' => $input['users_id'],
+                'trabajador' => $input['trabajador'],
+                'direccion_id' => $input['direcciones_id'],
+                'coordinacion_id' => $input['coordinacion_id'],
+                'tipo_solicitud_id' => $input['tipo_solicitud_id'],
+                'tipo_subsolicitud_id' => $input['tipo_subsolicitud_id'],
+                'enter_descentralizados_id' => $input['enter_id'],
+                'estado_id' => $input['estado_id'],
+                'municipio_id' => $input['municipio_id'],
+                'parroquia_id' => $input['parroquia_id'],
+                'comuna_id' => $input['comuna_id'],
+                'comunidad_id' => $input['comunidad_id'],
+                'jefecomunidad_id' => $input['jefecomunidad_id'],
+                'codigo_control' => $input['codigocontrol'],
+                'status_id' => 1,
+                'nombre' => $input['nombre'],
+                'cedula' => $input['cedula'],
+                'sexo' => $input['sexo'],
+                'email' => $input['email'],
+                'direccion' => $input['direccion'],
+                'fecha' => \Carbon\Carbon::now('America/Caracas'),
+                'telefono' => $input['telefono'],
+                'telefono2' => $input['telefono2'],
+                'organismo' => NULL,
+                'asignacion' => $input['asignacion'],
+                'edocivil' => $input['edocivil'],
+                'fechaNacimiento' => $input['fechanacimiento'],
+                'nivelestudio' => $input['niveleducativo'],
+                'profesion' => $input['profesion'],
+                'recaudos' => $input['recaudos'],
+                'beneficiario' => $input['beneficiario'],
+                'quejas' => $input['quejas'],
+                'reclamo' => $input['reclamos'],
+                'sugerecia' => $input['sugerencia'],
+                'asesoria' => $input['asesoria'],
+                'denuncia' => $input['denuncia'],
+                'denunciado' => $input['denunciado'],
+
+                'created_at' => \Carbon\Carbon::now('America/Caracas'),
+                'updated_at' => \Carbon\Carbon::now('America/Caracas'),
+            ]);                   
         
-        $solicitud->save();
+            $solicitud->save();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
 
         $count_notification = (new User)->count_noficaciones_user();
         $tipo_alert = "Create";
@@ -491,6 +511,7 @@ class SolicitudController extends Controller
         $comunidad = [];
         $asignacion = array('DIRECCION' => 'DIRECCION', 'ENTER' => 'ENTER');
         $sexo = array('MASCULINO' => 'MASCULINO', 'FEMENINO' => 'FEMENINO');
+        $trabajador = array('NO' => 'NO','EMPLEADO' => 'EMPLEADO', 'OBRERO' => 'OBRERO');
         $edocivil = array('SOLTERO' => 'SOLTERO', 'CASADO' => 'CASADO', 'VIUDO' => 'VIUDO', 'DIVORCIADO' => 'DIVORCIADO');
         $nivelestudio = array('PRIMARIA' => 'PRIMARIA', 'SECUNDARIA' => 'SECUNDARIA', 'BACHILLERATO' => 'BACHILLERATO', 'UNIVERSITARIO' => 'UNIVERSITARIO', 'ESPECIALIZACION' => 'ESPECIALIZACION');
         $profesion = array('JUBILADO' => 'JUBILADO','PENSIONADO' => 'PENSIONADO','OFICIOS DEL HOGAR' => 'OFICIOS DEL HOGAR','TECNICO MEDIO' => 'TECNICO MEDIO', 'TECNICO SUPERIOR' => 'TECNICO SUPERIOR', 'INGENIERO' => 'INGENIERO', 'ABOGADO' => 'ABOGADO', 'MEDICO CIRUJANO' => 'MEDICO CIRUJANO', 'HISTORIADOR' => 'HISTORIADOR', 'PALEONTOLOGO' => 'PALEONTOLOGO', 'GEOGRAFO' => 'GEOGRAFO', 'BIOLOGO' => 'BIOLOGO', 'PSICOLOGO' => 'PSICOLOGO', 'MATEMATICO' => 'MATEMATICO', 'ARQUITECTO' => 'ARQUITECTO', 'COMPUTISTA' => 'COMPUTISTA', 'PROFESOR' => 'PROFESOR', 'PERIODISTA' => 'PERIODISTA', 'BOTANICO' => 'BOTANICO', 'FISICO' => 'FISICO', 'SOCIOLOGO' => 'SOCIOLOGO', 'FARMACOLOGO' => 'FARMACOLOGO', 'QUIMICO' => 'QUIMICO', 'POLITOLOGO' => 'POLITOLOGO', 'ENFERMERO' => 'ENFERMERO', 'ELECTRICISTA' => 'ELECTRICISTA', 'BIBLIOTECOLOGO' => 'BIBLIOTECOLOGO', 'PARAMEDICO' => 'PARAMEDICO', 'TECNICO DE SONIDO' => 'TECNICO DE SONIDO', 'ARCHIVOLOGO' => 'ARCHIVOLOGO', 'MUSICO' => 'MUSICO', 'FILOSOFO' => 'FILOSOFO', 'SECRETARIA' => 'SECRETARIA', 'TRADUCTOR' => 'TRADUCTOR', 'ANTROPOLOGO' => 'ANTROPOLOGO', 'TECNICO TURISMO' => 'TECNICO TURISMO', 'ECONOMISTA' => 'ECONOMISTA', 'ADMINISTRADOR' => 'ADMINISTRADOR', 'CARPITERO' => 'CARPITERO', 'RADIOLOGO' => 'RADIOLOGO', 'COMERCIANTE' => 'COMERCIANTE', 'CERRAJERO' => 'CERRAJERO', 'COCINERO' => 'COCINERO', 'ALBAÑIL' => 'ALBAÑIL', 'PLOMERO' => 'PLOMERO', 'TORNERO' => 'TORNERO', 'EDITOR' => 'EDITOR', 'ESCULTOR' => 'ESCULTOR', 'ESCRITOR' => 'ESCRITOR', 'BARBERO' => 'BARBERO');
@@ -499,10 +520,10 @@ class SolicitudController extends Controller
 
         $comunidad = (new Comunidad)->datos_comunidad($solicitud_edit->comuna_id);
         $coordinacion = (new Coordinacion)->datos_coordinacion($solicitud_edit->direccion_id);
-
         $jefecomunidad = (new JefeComunidad)->getJefe($solicitud_edit->comuna_id);   
-
-        return view('Solicitud.show', compact('count_notification', 'titulo_modulo', 'solicitud_edit', 'estado', 'municipio', 'parroquia', 'asignacion', 'comuna', 'comunidad','jefecomunidad', 'tipo_solicitud', 'direcciones', 'enter', 'sexo', 'edocivil', 'nivelestudio', 'coordinacion', 'denuncia', 'beneficiario', 'quejas', 'sugerecia', 'asesoria', 'reclamo', 'profesion', 'recaudos', 'denunciado', 'array_color'));
+        $subtiposolicitud = (new subtiposolicitud)->getSubtiposolicitudbyID($solicitud_edit->tipo_subsolicitud_id);
+        $correlativoSALUD = (new Solicitud)->ObtenerNumeroSolicitud();
+        return view('Solicitud.show', compact('count_notification', 'titulo_modulo', 'solicitud_edit','correlativoSALUD' ,'trabajador','estado', 'municipio', 'parroquia', 'asignacion', 'comuna', 'comunidad','jefecomunidad', 'tipo_solicitud','subtiposolicitud', 'direcciones', 'enter', 'sexo', 'edocivil', 'nivelestudio', 'coordinacion', 'denuncia', 'beneficiario', 'quejas', 'sugerecia', 'asesoria', 'reclamo', 'profesion', 'recaudos', 'denunciado', 'array_color'));
 
     }
 
@@ -576,6 +597,7 @@ class SolicitudController extends Controller
         $comunidad = [];
         $asignacion = array('DIRECCION' => 'DIRECCION');
         $sexo = array('MASCULINO' => 'MASCULINO', 'FEMENINO' => 'FEMENINO');
+        $trabajador = array('NO' => 'NO', 'EMPLEADO' => 'EMPLEADO', 'OBRERO' => 'OBRERO');
         $edocivil = array('SOLTERO' => 'SOLTERO', 'CASADO' => 'CASADO', 'VIUDO' => 'VIUDO', 'DIVORCIADO' => 'DIVORCIADO');
         $nivelestudio = array('PRIMARIA' => 'PRIMARIA', 'SECUNDARIA' => 'SECUNDARIA', 'BACHILLERATO' => 'BACHILLERATO', 'UNIVERSITARIO' => 'UNIVERSITARIO', 'ESPECIALIZACION' => 'ESPECIALIZACION');
         $profesion = array('JUBILADO' => 'JUBILADO','PENSIONADO' => 'PENSIONADO','OFICIOS DEL HOGAR' => 'OFICIOS DEL HOGAR','TECNICO MEDIO' => 'TECNICO MEDIO', 'TECNICO SUPERIOR' => 'TECNICO SUPERIOR', 'INGENIERO' => 'INGENIERO', 'ABOGADO' => 'ABOGADO', 'MEDICO CIRUJANO' => 'MEDICO CIRUJANO', 'HISTORIADOR' => 'HISTORIADOR', 'PALEONTOLOGO' => 'PALEONTOLOGO', 'GEOGRAFO' => 'GEOGRAFO', 'BIOLOGO' => 'BIOLOGO', 'PSICOLOGO' => 'PSICOLOGO', 'MATEMATICO' => 'MATEMATICO', 'ARQUITECTO' => 'ARQUITECTO', 'COMPUTISTA' => 'COMPUTISTA', 'PROFESOR' => 'PROFESOR', 'PERIODISTA' => 'PERIODISTA', 'BOTANICO' => 'BOTANICO', 'FISICO' => 'FISICO', 'SOCIOLOGO' => 'SOCIOLOGO', 'FARMACOLOGO' => 'FARMACOLOGO', 'QUIMICO' => 'QUIMICO', 'POLITOLOGO' => 'POLITOLOGO', 'ENFERMERO' => 'ENFERMERO', 'ELECTRICISTA' => 'ELECTRICISTA', 'BIBLIOTECOLOGO' => 'BIBLIOTECOLOGO', 'PARAMEDICO' => 'PARAMEDICO', 'TECNICO DE SONIDO' => 'TECNICO DE SONIDO', 'ARCHIVOLOGO' => 'ARCHIVOLOGO', 'MUSICO' => 'MUSICO', 'FILOSOFO' => 'FILOSOFO', 'SECRETARIA' => 'SECRETARIA', 'TRADUCTOR' => 'TRADUCTOR', 'ANTROPOLOGO' => 'ANTROPOLOGO', 'TECNICO TURISMO' => 'TECNICO TURISMO', 'ECONOMISTA' => 'ECONOMISTA', 'ADMINISTRADOR' => 'ADMINISTRADOR', 'CARPITERO' => 'CARPITERO', 'RADIOLOGO' => 'RADIOLOGO', 'COMERCIANTE' => 'COMERCIANTE', 'CERRAJERO' => 'CERRAJERO', 'COCINERO' => 'COCINERO', 'ALBAÑIL' => 'ALBAÑIL', 'PLOMERO' => 'PLOMERO', 'TORNERO' => 'TORNERO', 'EDITOR' => 'EDITOR', 'ESCULTOR' => 'ESCULTOR', 'ESCRITOR' => 'ESCRITOR', 'BARBERO' => 'BARBERO');
@@ -586,7 +608,9 @@ class SolicitudController extends Controller
         $coordinacion = (new Coordinacion)->datos_coordinacion($solicitud_edit->direccion_id);
         $jefecomunidad2 = (new JefeComunidad)->getJefe($solicitud_edit->comuna_id);
         $jefecomunidad = (new JefeComunidad)->getJefe2($solicitud_edit->jefecomunidad_id);   
-        return view('Solicitud.solicitud_edit', compact('count_notification', 'titulo_modulo', 'solicitud_edit', 'estado', 'municipio', 'parroquia', 'asignacion', 'comuna', 'comunidad','jefecomunidad','jefecomunidad2', 'tipo_solicitud', 'direcciones', 'enter', 'sexo', 'edocivil', 'nivelestudio', 'coordinacion', 'denuncia', 'beneficiario', 'quejas', 'sugerecia', 'asesoria', 'reclamo', 'profesion', 'recaudos', 'denunciado', 'array_color'));
+        $subtiposolicitud = (new Subtiposolicitud)->getSubtiposolicitud();
+        $correlativoSALUD = (new Solicitud)->ObtenerNumeroSolicitud();
+        return view('Solicitud.solicitud_edit', compact('count_notification', 'titulo_modulo', 'solicitud_edit','correlativoSALUD','trabajador','estado', 'municipio', 'parroquia', 'asignacion', 'comuna', 'comunidad','jefecomunidad','jefecomunidad2', 'tipo_solicitud','subtiposolicitud', 'direcciones', 'enter', 'sexo', 'edocivil', 'nivelestudio', 'coordinacion', 'denuncia', 'beneficiario', 'quejas', 'sugerecia', 'asesoria', 'reclamo', 'profesion', 'recaudos', 'denunciado', 'array_color'));
     }
     public function getComunas(Request $request)
     {
@@ -765,13 +789,20 @@ class SolicitudController extends Controller
             $input['recaudos'] = json_encode($recaudos);
         }
         if ($input['tipo_solicitud_id'] == 6) {
+            if($input['municipio_id'] == 2){
+                $input['parroquia_id'] = NULL;
+                $input['comuna_id'] = NULL;
+                $input['comununidad_id'] = NULL;
+                $input['jefecomunidad_id'] = NULL;
+                $input['comunidad_id'] = NULL;
+            }
             $beneficiario = [
                 [
                     "cedula" => isset($input['cedulabeneficiario']) ? $input['cedulabeneficiario'] : NULL,
                     "nombre" => isset($input['nombrebeneficiario']) ? $input['nombrebeneficiario'] : NULL,
                     "direccion" => isset($input['direccionbeneficiario']) ? $input['direccionbeneficiario'] : NULL,
                     "solicita" => isset($input['solicita']) ? $input['solicita'] : NULL,
-                    "nrosolicitud" => isset($input['nrosolicitud']) ? $input['nrosolicitud'] : NULL
+                    "venApp" => isset($input['venApp']) ? $input['venApp'] : NULL,
                 ]
             ];
             $recaudos = [
@@ -779,7 +810,11 @@ class SolicitudController extends Controller
                     "cedula" => isset($input['checkcedula2']) ? $input['checkcedula2'] : NULL,
                     "motivo" => isset($input['checkmotivo3']) ? $input['checkmotivo3'] : NULL,
                     "informe" => isset($input['checkinforme']) ? $input['checkinforme'] : NULL,
-                    "beneficiario" => isset($input['checkcedulabeneficiario']) ? $input['checkcedulabeneficiario'] : NULL
+                    "beneficiario" => isset($input['checkcedulabeneficiario']) ? $input['checkcedulabeneficiario'] : NULL,
+                    "checkpresupuesto" => isset($input['checkpresupuesto']) ? $input['checkpresupuesto'] : NULL,
+                    "evifotobeneficiario" => isset($input['evifotobeneficiario']) ? $input['evifotobeneficiario'] : NULL,
+                    "permisoinhumacion" => isset($input['permisoinhumacion']) ? $input['permisoinhumacion'] : NULL,
+                    "certificadodefuncion" => isset($input['certificadodefuncion']) ? $input['certificadodefuncion'] : NULL
                 ]
             ];
 
@@ -787,7 +822,6 @@ class SolicitudController extends Controller
             $input['recaudos'] = json_encode($recaudos);
         }
         // $input = $request->except('relato');
-
         unset($input['relato']);
         unset($input['observacion']);
         unset($input['explique']);
@@ -920,6 +954,13 @@ class SolicitudController extends Controller
         }
     }
 
+    public function getTotalSolicitudesFinalizadas(Request $request){
+        if ($request->ajax()) {
+            $countTotalSolicitudesFinalizadas = (new Solicitud)->reportetotalcasosatendidosSALUD();
+            return response()->json($countTotalSolicitudesFinalizadas);
+        }
+    }
+
     public function colorView()
     {
         $titulo_modulo = trans('message.users_action.cambiar_colores');
@@ -1006,9 +1047,13 @@ class SolicitudController extends Controller
         $activarrecaudoGrabacion = "";
         $activarrecaudoCedulaTestigo = "";
         $activarrecaudoCartaResidencia = "";
-        $activarrecaudoExposiciondeMotivo = "";
         $activarrecaudoInforme = "";
+        
         $activarrecaudoBeneficiario = "";
+        $activarrecaudoPresupuesto = "";
+        $activarevidenciafotobeneficiario = "";
+        $activarpermisoinhumacion = "";
+        $activarcertificadodefuncion = "";
 
         $quejasRelato = NULL;
         $quejasObservacion = NULL;
@@ -2722,23 +2767,34 @@ class SolicitudController extends Controller
             HTML;
         }
 
-        if ($solicitud["tipo_solicitud_id"] === 6) {            
-            $urlActual = $_SERVER['HTTP_HOST'];            
+        if ($solicitud["tipo_solicitud_id"] === 6) {       
+            $urlActual = $_SERVER['HTTP_HOST'];          
             $beneficiario = $solicitud->beneficiario;      
             $beneficiario = json_decode($beneficiario, true);
             $cedulabeneficiario = $beneficiario[0]["cedula"];
             $nombrebeneficiario = $beneficiario[0]["nombre"];
             $direccionbeneficiario = $beneficiario[0]["direccion"];
+            $codigovenapp = $beneficiario[0]["venApp"];
+            
             $solicita = isset($beneficiario[0]["solicita"]) ? $beneficiario[0]["solicita"]: 'N/A';
             $recaudos = $solicitud->recaudos;
             $recaudos = json_decode($recaudos, true);
             $cedularecaudos = $recaudos[0]["cedula"];
             $motivorecaudos = $recaudos[0]["motivo"];
             $informerecaudos = $recaudos[0]["informe"];
+            $beneficiariorecaudos = $recaudos[0]["beneficiario"];
+            $presupuestorecaudos = $recaudos[0]["checkpresupuesto"];
+            $evidenciafotobeneficiario = $recaudos[0]["evifotobeneficiario"];
+            $permisoinhumacion = $recaudos[0]["permisoinhumacion"];
+            $certificadodefuncion = $recaudos[0]["certificadodefuncion"];
+
+            $trabajadorAlcaldia = $solicitud->trabajador;
+
             $jefecomunidadID = $solicitud->jefecomunidad_id;
             $jefecomunidad = (new JefeComunidad)->getJefe2($jefecomunidadID);
             $jefe = $jefecomunidad->first();
-            $municipioID = $solicitud->municipio_id;            
+            $municipioID = $solicitud->municipio_id;
+            $solicitud_salud_id = $solicitud->solicitud_salud_id;       
 
             if($municipioID == 2){
                 $estado = (new Solicitud)->nombreestado($idestado, $idmunicipio, $idparroquia, $idcomuna, $idcomunidad);
@@ -2775,9 +2831,8 @@ class SolicitudController extends Controller
                 $nombreUbch = $jefe->Nombre_Ubch;
                 $nombreJefUbch = $jefe->Nombre_Jefe_Ubch;
                 $telefonoJefeUbch = $jefe->Telefono_Jefe_Ubch;
-            }     
-            
-            $beneficiariorecaudos = $recaudos[0]["beneficiario"];
+            }
+
             $imagen = $urlActual.'assets/img/cintillo.png';
             if($cedularecaudos === "on"){
                 $activarrecaudoCedula = "checked";
@@ -2790,6 +2845,18 @@ class SolicitudController extends Controller
             }
             if($beneficiariorecaudos === "on"){
                 $activarrecaudoBeneficiario = "checked";
+            }
+            if($presupuestorecaudos === "on"){
+                $activarrecaudoPresupuesto = "checked";
+            }
+            if($evidenciafotobeneficiario === "on"){
+                $activarevidenciafotobeneficiario = "checked";
+            }
+            if($permisoinhumacion === "on"){
+                $activarpermisoinhumacion = "checked";
+            }
+            if($certificadodefuncion === "on"){
+                $activarcertificadodefuncion = "checked";
             }
             $activarpeticiones = "checked";
             $valor = "SALUD";
@@ -2827,7 +2894,7 @@ class SolicitudController extends Controller
             <img src="https://prensa.alcaldiapaez.gob.ve/wp-content/uploads/sites/2/2024/06/CINTILLO-POLITICAS-SOCIALES-Y-COMUNITARIAS-Y-PODER-POPULAR.jpg" alt="" srcset="" width="100%">
                 <table>
                     <tr>
-                        <th>Numero de Registro $idsolicitud</th>
+                        <th>Numero de Registro $solicitud_salud_id</th>
                         <th>Oficina de Atencion Ciudadana</th>
                         <th>Planilla de Solicitud</th>
                         <th>Dia: $dia</th>
@@ -2852,7 +2919,7 @@ class SolicitudController extends Controller
                         <th>Estado Civil</th>
                         <th>Fecha de Nacimiento</th>
                         <th>Nivel Educativo</th>
-                        <th>Ocupacion O/U Oficio</th>
+                        <!-- <th>Ocupacion O/U Oficio</th> -->
                     </tr>
                     <tr>
                         <td>$solicitud->nombre</td>
@@ -2864,7 +2931,7 @@ class SolicitudController extends Controller
                         <td>$solicitud->edocivil</td>
                         <td>$solicitud->fechaNacimiento</td>
                         <td>$solicitud->nivelestudio</td> 
-                        <td>$solicitud->profesion</td> 
+                        <!-- <td>$solicitud->profesion</td>  -->
                     </tr>
             </table>
     
@@ -2933,10 +3000,11 @@ class SolicitudController extends Controller
                         <th>Cedula de Identidad</th>
                         <!-- <th>Tipo de Registro</th> -->
                         <th>Apellido y Nombre</th>
+                        <th>Trabajador de la alcaldia</th>
                         <th>Direccion de Benificiario</th>
                         <th>Solicita</th>
-                        <!-- <th>Edad</th>
-                        <th>Estado Civil</th>
+                        <th>Codigo VenApp</th>
+                        <!-- <th>Estado Civil</th>
                         <th>Fecha de nacimiento</th>
                         <th>Nivel Educativo</th>
                         <th>Profesion</th>
@@ -2946,10 +3014,11 @@ class SolicitudController extends Controller
                         <td>$cedulabeneficiario</td>
                         <!-- <td></td> -->
                         <td>$nombrebeneficiario</td>
+                        <td>$trabajadorAlcaldia</td>
                         <td>$direccionbeneficiario</td>
                         <td>$solicita</td>
+                        <td>$codigovenapp</td>
                         <!-- <td></td>
-                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -2969,12 +3038,20 @@ class SolicitudController extends Controller
                         <th>Carta Exposicion de Motivo</th>
                         <th>Informe Medico</th>
                         <th>Copia de Cedula de Beneficiario</th>
+                        <th>Presupuesto (BS)</th>
+                        <th>Evidencia Fotografica</th>
+                        <th>Permiso de Inhumacion</th>
+                        <th>Certificado de Funcion</th>
                     </tr>
                     <tr>
                         <td><input type='checkbox' $activarrecaudoCedula></td>
                         <td><input type='checkbox' $activarrecaudoMotivo></td>
                         <td><input type='checkbox' $activarrecaudoInforme></td>
                         <td><input type='checkbox' $activarrecaudoBeneficiario></td>
+                        <td><input type='checkbox' $activarrecaudoPresupuesto></td>
+                        <td><input type='checkbox' $activarevidenciafotobeneficiario></td>
+                        <td><input type='checkbox' $activarpermisoinhumacion></td>
+                        <td><input type="checkbox" $activarcertificadodefuncion></td>
                     </tr>
                 </table>
                 <table>
@@ -3021,7 +3098,7 @@ class SolicitudController extends Controller
                 <p>----------------------------------------------------------------------------------------------------------------------------------------</p>
                 <table style="margin-top: 20px">
                     <tr>
-                        <th>Oficina de Politicas Sociales <span style="text-align: right">Numero de Registro $solicitud->id</span></th>
+                        <th>Oficina de Politicas Sociales <span style="text-align: right">Numero de Registro $solicitud_salud_id</span></th>
                     </tr>
                 </table>
 
@@ -3055,7 +3132,7 @@ class SolicitudController extends Controller
                         <td></td>
                     </tr>
                 </table>
-                <h5 style="text-align: center">Usted podra solicitar informacion sobre su solicitud en la Oficina de Atencion Ciudadana a traves del telefono 0416-6408570 y el Correo Electronico direccionpoliticassociales@alcaldiapaez.gob.ve</h5>
+                <h5 style="text-align: center">Usted podra solicitar informacion sobre su solicitud en la Oficina de Atencion Ciudadana a traves del telefono 0416-6408570 y el Correo Electronico politicassocialesycomunitarias@alcaldiapaez.gob.ve</h5>
                 <h5 style="text-align: center">Todos los tramites realizados ante esta oficina son absolutamente gratuitos</h5>
                     </body>
                     </html>
@@ -3069,7 +3146,7 @@ class SolicitudController extends Controller
         $dompdf->loadHtml($html);
         $dompdf->setPaper('legal', 'portrait');
         $dompdf->render();
-        $dompdf->stream("Atencion al Ciudadano.pdf", array("Attachment" => 1));
+        $dompdf->stream("Solicitud Numero $solicitud_salud_id Direccion Politicas Sociales.pdf", array("Attachment" => 1));
         return redirect()->back();
 
     }

@@ -11,6 +11,8 @@ class Solicitud extends Model
     protected $table = 'solicitud';
     protected $fillable = [
         'users_id',
+        'trabajador',
+        'solicitud_salud_id',
         'direccion_id',        
         'coordinacion_id',
         'tipo_solicitud_id',
@@ -91,13 +93,10 @@ class Solicitud extends Model
                     ->join('status', 'solicitud.status_id', '=','status.id')
                     ->join('users', 'solicitud.users_id', '=', 'users.id')
                     ->join('rols', 'users.rols_id', '=', 'rols.id')
-                    ->where('tipo_solicitud.id', '!=', 6)
-                    ->where('tipo_solicitud.id', '!=', 4)
-                    ->where('tipo_solicitud.id', '!=', 5)
-                    ->where('rols_id', $rols_id)
                     ->where('status_id', '!=', 5)
                     ->select(
                         'solicitud.id',
+                        'solicitud.solicitud_salud_id as saludID',
                         'solicitud.nombre AS solicitante',
                         'solicitud.cedula AS cedula',
                         'tipo_solicitud.nombre AS nombretipo',
@@ -129,6 +128,7 @@ class Solicitud extends Model
                     ->where('status_id', '!=', 5)
                     ->select(
                         'solicitud.id',
+                        'solicitud.solicitud_salud_id as saludID',
                         'solicitud.nombre AS solicitante',
                         'solicitud.cedula AS cedula',
                         'tipo_solicitud.nombre AS nombretipo',
@@ -166,7 +166,36 @@ class Solicitud extends Model
     public function getSolicitudList_DataTable2() {
         try {            
             $rols_id = auth()->user()->rols_id;            
-            if ($rols_id === 10) {         
+            if($rols_id === 1) {
+                $solicitud = DB::table('solicitud')
+                    ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
+                    ->join('direccion', 'solicitud.direccion_id', '=', 'direccion.id')
+                    ->join('status', 'solicitud.status_id', '=','status.id')
+                    ->join('users', 'solicitud.users_id', '=', 'users.id')
+                    ->join('rols', 'users.rols_id', '=', 'rols.id')
+                    ->where('status_id', '!=', 5)
+                    ->select(
+                        'solicitud.id',
+                        'solicitud.solicitud_salud_id as saludID',
+                        'solicitud.nombre AS solicitante',
+                        'solicitud.cedula AS cedula',
+                        'tipo_solicitud.nombre AS nombretipo',
+                        'direccion.nombre AS direccionnombre',
+                        'status.nombre AS nombrestatus',
+                        'solicitud.denunciado'
+                    ) // Extraer cedula     
+                    ->get(); // Manejar otros roles
+                    foreach ($solicitud as $item) {
+                        $denunciado = json_decode($item->denunciado, true);                    
+                        $item->cedula2 = $denunciado[0]['cedula'] ?? null; // Asignar cédula o null
+                        
+                        // Opcional: Eliminar el campo denunciado original si no lo necesitas
+                        unset($item->denunciado); 
+                    }
+
+                    return $solicitud;
+            }
+            elseif($rols_id === 10) {         
                 $solicitud = DB::table('solicitud')
                     ->join('tipo_solicitud', 'solicitud.tipo_solicitud_id', '=', 'tipo_solicitud.id')
                     ->join('direccion', 'solicitud.direccion_id', '=', 'direccion.id')
@@ -179,6 +208,7 @@ class Solicitud extends Model
                     ->where('status_id', '!=', 5)
                     ->select(
                         'solicitud.id',
+                        'solicitud.solicitud_salud_id as saludID',
                         'solicitud.nombre AS solicitante',
                         'solicitud.cedula AS cedula',
                         'tipo_solicitud.nombre AS nombretipo',
@@ -269,6 +299,39 @@ class Solicitud extends Model
             return $solicitud;
         }
     }
+
+    public function reportetotalcasosatendidosSALUD()
+    {
+        $resultados = DB::table('solicitud')
+            ->leftJoin('status', 'solicitud.status_id', '=', 'status.id')
+            ->join('tipo_subsolicitud', 'solicitud.tipo_subsolicitud_id', '=', 'tipo_subsolicitud.id') // Cambiamos a INNER JOIN
+            ->select(
+                DB::raw('COUNT(*) AS TOTAL_SOLICITUD'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "MEDICINA" THEN 1 END) AS MEDICINA'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "LABORATORIO" THEN 1 END) AS LABORATORIO'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "ESTUDIO" THEN 1 END) AS ESTUDIO'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "INSUMOS" THEN 1 END) AS INSUMOS'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "CONSULTAS" THEN 1 END) AS CONSULTAS'), // Agregamos CONSULTAS
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "DONACIONES Y AYUDA ECONOMICA" THEN 1 END) AS DONACIONES_Y_AYUDA_ECONOMICA'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "AYUDAS TECNICAS" THEN 1 END) AS AYUDAS_TECNICAS'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "CIRUGIAS" THEN 1 END) AS CIRUGIAS'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "OFTAMOLOGIA" THEN 1 END) AS OFTAMOLOGIA'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "VISITA SOCIAL" THEN 1 END) AS VISITA_SOCIAL'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "MATERIALES" THEN 1 END) AS MATERIALES'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "JORNADAS" THEN 1 END) AS JORNADAS'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "ALTO COSTO" THEN 1 END) AS ALTO_COSTO'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "HURNAS" THEN 1 END) AS HURNAS'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "FOSAS" THEN 1 END) AS FOSAS'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "APOYO LOGISTICO" THEN 1 END) AS APOYO_LOGISTICO'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "DOTACION" THEN 1 END) AS DOTACION'),
+                DB::raw('COUNT(CASE WHEN tipo_subsolicitud.nombre = "OTROS" THEN 1 END) AS OTROS'),
+            )
+            ->where('solicitud.status_id', 5)
+            ->first();
+
+        return $resultados;
+    }
+    
     public function count_solictud(){
         $rols_id = auth()->user()->rols_id;
         return DB::table('solicitud')
@@ -314,7 +377,6 @@ class Solicitud extends Model
             ->groupBy('tipo_solicitud.id')
             ->orderByDesc('TOTAL_SOLICITUD')->get();
     }
-
     public function count_solictud5()
     {
         $resultados = DB::table('solicitud')
@@ -369,5 +431,15 @@ class Solicitud extends Model
         ->where('comunidad.id', $idcomunidad)
         ->get();
         return $resultado;
+    }    
+
+    public function ObtenerNumeroSolicitud(){
+        $ultimoResultado = DB::table('solicitud')
+        ->select('solicitud.solicitud_salud_id as salud_id')
+        ->whereNotNull('solicitud.solicitud_salud_id')
+        ->latest('solicitud.solicitud_salud_id')
+        ->first();
+
+    return $ultimoResultado ? $ultimoResultado->salud_id : null;
     }
 }

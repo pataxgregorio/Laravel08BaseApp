@@ -43,7 +43,7 @@ Componentes para los Módulos del Sistema, (New,Print,Download and Upload)
                 <table class="table table-bordered solicitud_all">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>Nro Solicitud</th>
                                 <th>Nombre</th>
                                 <th>Cedula</th>
                                 @if(Auth::user()->rols_id === 1)
@@ -86,7 +86,7 @@ Componentes para los Módulos del Sistema, (New,Print,Download and Upload)
         
         columns: [          
             {
-                data: 'id', name: 'id',
+                data: 'saludID', name: 'id',
                 "render": function ( data, type, row ) {
                     return '<div style="text-align:center;"><b>'+data+'</b></div>';
                 }

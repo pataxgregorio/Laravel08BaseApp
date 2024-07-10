@@ -175,7 +175,6 @@ Route::group(['middleware' => 'auth'], function () {
 Route::get('register/confirm/{confirmation_code}', 'Auth\RegisterController@confirm')->name('auth.confirm');
 // *********************************************************************************************************
 
-
 /* Rutas de Control Diario, para todas las operaciones, con el Middleware (permiso) Integrado, para cada caso.
 */
 Route::get('/solicitud', 'Solicitud\SolicitudController@index')->name('solicitud.index')->middleware('permiso:solicitud,view');
@@ -195,6 +194,8 @@ Route::get('/solicitud/getCoodinacion', 'Solicitud\SolicitudController@getCoodin
 Route::get('/solicitud/list', 'Solicitud\SolicitudController@getSolicitud')->name('solicitud.list')->middleware('permiso:solicitud,view, edit');
 Route::get('/solicitud/print', 'Solicitud\SolicitudController@solicitudPrint')->name('solicitud.solicitudPrint')->middleware('permiso:solicitud,print');
 Route::get('/solicitud/solicitudTipo', 'Solicitud\SolicitudController@solicitudTipo')->name('solicitud.solicitudTipo');
+
+Route::get('/solicitud/totalFinalizadas', 'Solicitud\SolicitudController@getTotalSolicitudesFinalizadas')->name('solicitud.solicitudTotalFinalizadas');
 
 /* SACWAN */
 Route::get('/solicitud/solicitudTipo2', 'Solicitud\SolicitudController@solicitudTipo2')->name('solicitud.solicitudTipo2');

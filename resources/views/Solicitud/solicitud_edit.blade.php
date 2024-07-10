@@ -36,21 +36,34 @@
                 @endif
                 <?php 
                     $rols_id = auth()->user()->rols_id;
-$phpValue = $rols_id;
-echo "<script> var rolsJS = '" . $phpValue . "'; </script>";
+                    $phpValue = $rols_id;
+                    $idmunicipio = $solicitud_edit->municipio_id;
+                    echo "<script> var rolsJS = '" . $phpValue . "'; </script>"; 
+                    echo "<script> var idmunicipioJS = '" . $idmunicipio . "'; </script>"
                     ?>
-                {!! Form::open(
-    array(
-        'route' => array('solicitud.update', $solicitud_edit->id),
-        'method' => 'POST',
-        'id' => 'form_users_id',
-        'enctype' => 'multipart/form-data'
-    )
-) !!}
-
+                    
+                    {!! Form::open(
+                        array(
+                        'route' => array('solicitud.update', $solicitud_edit->id),
+                        'method' => 'POST',
+                        'id' => 'form_users_id',
+                        'enctype' => 'multipart/form-data'
+                    )
+                ) !!}
 
 
                 <div class="form-group">
+                <div style="text-align:left;">
+                        {!! Form::label('solicitud_salud_id_label', 'ID DE LA SOLICITUD', ['class' => 'control-label']) !!}<span
+                            class="required" style="color:red;">*</span>
+                        {!! Form::text('solicitud_salud_id_show', old('solicitud_salud_id'), ['placeholder' => $correlativoSALUD, 'class' => 'form-control', 'id' => 'solicitud_salud_id', 'DISABLED' => TRUE]) !!}
+                        <input type="text" name="solicitud_salud_id" id="solicitud_salud_id" value="{{ $correlativoSALUD }}" hidden>
+                    </div>
+                    <div style="text-align:left;">
+                        {!! Form::label('trabajador', 'Trabajador', ['class' => 'control-label']) !!}<span
+                            class="required" style="color:red;">*</span>
+                        {!! Form::select('trabajador', $trabajador, $solicitud_edit->trabajador, ['placeholder' => trans('message.solicitud_action.sexo'), 'class' => 'form-control', 'id' => 'trabajador']) !!}
+                    </div>
                     <div style="text-align:left;">
                         {!! Form::label('nombre', trans('message.users_action.nombre'), ['class' => 'control-label']) !!}<span
                             class="required" style="color:red;">*</span>
@@ -77,7 +90,7 @@ echo "<script> var rolsJS = '" . $phpValue . "'; </script>";
                         {!! Form::email('email', $solicitud_edit->email, ['placeholder' => trans('message.users_action.mail_ejemplo'), 'class' => 'form-control', 'id' => 'email_user']) !!}
                     </div>
                     <div style="text-align:left;">
-                        {!! Form::label('estado_id', trans('message.solicitud_action.estado'), ['class' => 'control-label']) !!}<span
+                        {!! Form::label('estado_id', 'SEXO', ['class' => 'control-label']) !!}<span
                             class="required" style="color:red;">*</span>
                         {!! Form::select('sexo', $sexo, $solicitud_edit->sexo, ['placeholder' => trans('message.solicitud_action.sexo'), 'class' => 'form-control', 'id' => 'sexo']) !!}
                     </div>
@@ -113,13 +126,14 @@ echo "<script> var rolsJS = '" . $phpValue . "'; </script>";
                         {!! Form::select('municipio_id', $municipio, $solicitud_edit->municipio_id, ['placeholder' => trans('message.solicitud_action.municipio'), 'class' => 'form-control', 'id' => 'municipio_id']) !!}
                     </div>
                     <div style="text-align:left;">
-                        {!! Form::label('parroquia_id', trans('message.solicitud_action.parroquia'), ['class' => 'control-label']) !!}<span
-                            class="required" style="color:red;">*</span>
+                        {!! Form::label('parroquia_id', trans('message.solicitud_action.parroquia'), ['class' => 'control-label', 'id' => 'parroquia_id_label']) !!}<span
+                            class="required" style="color:red;" id="parroquia_id_span">*</span>
                         {!! Form::select('parroquia_id', $parroquia, $solicitud_edit->parroquia_id, ['placeholder' => trans('message.solicitud_action.parroquia'), 'class' => 'form-control', 'id' => 'parroquia_id']) !!}
                     </div>
+                    
                     <div style="text-align:left;">
-                        {!! Form::label('comuna_id', trans('message.solicitud_action.comuna'), ['class' => 'control-label']) !!}<span
-                            class="required" style="color:red;">*</span>
+                        {!! Form::label('comuna_id_label', trans('message.solicitud_action.comuna'), ['class' => 'control-label', 'id' => 'comuna_id_label']) !!}<span
+                            class="required" style="color:red;" id="comuna_id_span">*</span>
                         <select name="comuna_id" id="comuna_id" class="form-control">
                             @foreach($comuna as $key => $value)
                                 <option value="{{ $value->id }}" @if(old('comuna_id', $solicitud_edit->comuna_id) == $value->id) selected @endif>{{ $value->codigo }}</option>
@@ -128,8 +142,8 @@ echo "<script> var rolsJS = '" . $phpValue . "'; </script>";
                     </div>
 
                     <div style="text-align:left;">
-                        {!! Form::label('comunidad_id', trans('message.solicitud_action.comunidad'), ['class' => 'control-label']) !!}<span
-                            class="required" style="color:red;">*</span>
+                        {!! Form::label('comunidad_id', trans('message.solicitud_action.comunidad'), ['class' => 'control-label', 'id' => 'comunidad_id_label']) !!}<span
+                            class="required" style="color:red;" id="comunidad_id_span">*</span>
                         <select name="comunidad_id" id="comunidad_id" class="form-control">
                             @foreach($comunidad as $key => $value)
                                 <option value="{{ $value->id }}" @if(old('comunidad_id', $solicitud_edit->comunidad_id) == $value->id) selected @endif>{{ $value->nombre }}
@@ -139,8 +153,8 @@ echo "<script> var rolsJS = '" . $phpValue . "'; </script>";
                     </div>
 
                     <div style="text-align:left;">
-                        {!! Form::label('jefecomunidad_id', 'Jefe de Comunidad', ['class' => 'control-label']) !!}<span
-                            class="required" style="color:red;">*</span>
+                        {!! Form::label('jefecomunidad', 'Jefe de Comunidad', ['class' => 'control-label', 'id' => 'jefecomunidad_label']) !!}<span
+                            class="required" style="color:red;" id="jefecomunidad_Span">*</span>
                         <select name="jefecomunidad_id" id="jefecomunidad_id" class="form-control">
                             @foreach($jefecomunidad2 as $key => $value)
                                 <option value="{{ $value->id}}" @if(old('jefecomunidad_id', $solicitud_edit->jefecomunidad_id) == $value->id) selected @endif>
@@ -150,8 +164,8 @@ echo "<script> var rolsJS = '" . $phpValue . "'; </script>";
                     </div>
 
                     <div style="text-align:left;">
-                        {!! Form::label('jefecomunidad_id', 'Telefono de Jefe de Comunidad', ['class' => 'control-label']) !!}<span
-                            class="required" style="color:red;">*</span>
+                        {!! Form::label('telefonoJEFE', 'Telefono de Jefe de Comunidad', ['class' => 'control-label', 'id' => 'telefonoJEFE_label']) !!}<span
+                            class="required" style="color:red;" id="telefonoJEFE_span">*</span>
                         <select name="telefonoJEFE" id="telefonoJEFE" class="form-control" disabled>
                             @foreach($jefecomunidad as $key => $value)
                                 <option value="{{ $value->id }}" @if(old('jefecomunidad_id', $solicitud_edit->jefecomunidad_id) == $value->id) selected @endif>
@@ -161,8 +175,8 @@ echo "<script> var rolsJS = '" . $phpValue . "'; </script>";
                     </div>
 
                     <div style="text-align:left;">
-                        {!! Form::label('jefecomunidad_id', 'Nombre de UBCH', ['class' => 'control-label']) !!}<span
-                            class="required" style="color:red;">*</span>
+                        {!! Form::label('nombreUBCH', 'Nombre de UBCH', ['class' => 'control-label', 'id' => 'nombreUBCH_label']) !!}<span
+                            class="required" style="color:red;" id="nombreUBCH_span">*</span>
                         <select name="nombreUBCH" id="nombreUBCH" class="form-control" disabled>
                             @foreach($jefecomunidad as $key => $value)
                                 <option value="{{ $value->id }}" @if(old('jefecomunidad_id', $solicitud_edit->jefecomunidad_id) == $value->id) selected @endif>
@@ -171,8 +185,8 @@ echo "<script> var rolsJS = '" . $phpValue . "'; </script>";
                         </select>
                     </div>
                     <div style="text-align:left;">
-                        {!! Form::label('jefecomunidad_id', 'Nombre de Jefe UBCH', ['class' => 'control-label']) !!}<span
-                            class="required" style="color:red;">*</span>
+                        {!! Form::label('nomjefeUBCH', 'Nombre de Jefe UBCH', ['class' => 'control-label', 'id' => 'nomjefeUBCH_label']) !!}<span
+                            class="required" style="color:red;" id="nomjefeUBCH_span">*</span>
                         <select name="nomjefeUBCH" id="nomjefeUBCH" class="form-control" disabled>
                             @foreach($jefecomunidad as $key => $value)
                                 <option value="{{ $value->id }}" @if(old('jefecomunidad_id', $solicitud_edit->jefecomunidad_id) == $value->id) selected @endif>
@@ -181,8 +195,8 @@ echo "<script> var rolsJS = '" . $phpValue . "'; </script>";
                         </select>
                     </div>
                     <div style="text-align:left;">
-                        {!! Form::label('jefecomunidad_id', 'Telefono de Jefe UBCH', ['class' => 'control-label']) !!}<span
-                            class="required" style="color:red;">*</span>
+                        {!! Form::label('teljefeUBCH', 'Telefono de Jefe UBCH', ['class' => 'control-label', 'id' => 'teljefeUBCH_label']) !!}<span
+                            class="required" style="color:red;" id="teljefeUBCH_span">*</span>
                         <select name="teljefeUBCH" id="teljefeUBCH" class="form-control" disabled>
                             @foreach($jefecomunidad as $key => $value)
                                 <option value="{{ $value->id }}" @if(old('jefecomunidad_id', $solicitud_edit->jefecomunidad_id) == $value->id) selected @endif>
@@ -208,22 +222,35 @@ echo "<script> var rolsJS = '" . $phpValue . "'; </script>";
                             <input type="hidden" name="tipo_solicitud_id" id="tipo_solicitud_id" value="6">
                         @endif
                     </div>
+                    
+                    @if($rols_id == 10)                    
+                    <div style="text-align:left;">
+                        {!! Form::label('tipo_subsolicitud_id', 'TIPO SOLICITUD', ['class' => 'control-label']) !!}<span
+                            class="required" style="color:red;">*</span>
+                        <select name="tipo_subsolicitud_id" id="tipo_subsolicitud_id" class="form-control">
+                            @foreach($subtiposolicitud as $key => $value)
+                                <option value="{{ $value->id}}" @if(old('tipo_subsolicitud_id', $solicitud_edit->tipo_subsolicitud_id) == $value->id) selected @endif>
+                                    {{ $value->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
 
                     <div id="denunciado">
                         <?php  
                     
                          $variable = $solicitud_edit->tipo_solicitud_id;
 
-if ($solicitud_edit->tipo_solicitud_id == 1) {
-    $valores = $denuncia;
-}
-if ($solicitud_edit->tipo_solicitud_id == 2) {
+                        if ($solicitud_edit->tipo_solicitud_id == 1) {
+                            $valores = $denuncia;
+                        }
+                        if ($solicitud_edit->tipo_solicitud_id == 2) {
 
-    $valores = $quejas;
-}
-if ($solicitud_edit->tipo_solicitud_id == 3) {
-    $valores = $reclamo;
-}
+                            $valores = $quejas;
+                        }
+                        if ($solicitud_edit->tipo_solicitud_id == 3) {
+                            $valores = $reclamo;
+                        }
                             
                          ?>
 
@@ -437,9 +464,9 @@ if ($valor2 == "on") {
                     
                         $variable = $solicitud_edit->tipo_solicitud_id;
 
-if ($solicitud_edit->tipo_solicitud_id == 6) {
-    $valores = $beneficiario;
-}
+                        if ($solicitud_edit->tipo_solicitud_id == 6) {
+                            $valores = $beneficiario;
+                        }
                         
                    
                        
@@ -465,6 +492,11 @@ if ($solicitud_edit->tipo_solicitud_id == 6) {
                             {!! Form::label('solicita', 'Solicita', ['class' => 'control-label']) !!}<span
                                 class="required" style="color:red;">*</span>
                             {!! Form::text('solicita', isset($valores[0]["solicita"]) ? $valores[0]["solicita"] : '', ['placeholder' => 'Solicita', 'class' => 'form-control', 'id' => 'solicita_user']) !!}
+                        </div>
+                        <div style="text-align:left;">
+                            {!! Form::label('venApp', 'Codigo venApp', ['class' => 'control-label']) !!}<span
+                                class="required" style="color:red;">*</span>
+                            {!! Form::text('venApp', isset($valores[0]["venApp"]) ? $valores[0]["venApp"] : '', ['placeholder' => 'Codigo', 'class' => 'form-control', 'id' => 'venApp_user']) !!}
                         </div>
                         <h3>Recuados de la Solicitud</h3>
                         <br>
@@ -513,18 +545,62 @@ if ($valor2 == "on") {
                         </div>
                         <div style="text-align:left;">
                             <?php 
-                                             $valor = false;
-$valor2 = isset($recaudos[0]["beneficiario"]) ? $recaudos[0]["beneficiario"] : '';
-if ($valor2 == "on") {
-    $valor = true;
+                                $valor = false;
+                                $valor2 = isset($recaudos[0]["beneficiario"]) ? $recaudos[0]["beneficiario"] : '';
+                                if ($valor2 == "on") {
+                                    $valor = true;
 
-}   
-                                               ?>
+                                }   
+                            ?>
 
                             {!! Form::checkbox('checkcedulabeneficiario', 'on', $valor) !!}
                             {!! Form::label('checkcedulabeneficiario', 'Cedula Beneficiario') !!}
 
                         </div>
+                        <div style="text-align:left;">
+                        <?php 
+                            $valor = false;
+                            $valor2 = isset($recaudos[0]["checkpresupuesto"]) ?$recaudos[0]["checkpresupuesto"]: '';
+                            if ($valor2 == "on"){
+                                $valor = true;
+                                }   
+                                ?>
+                                {!! Form::checkbox('checkpresupuesto', 'on', $valor) !!}
+                                {!! Form::label('checkpresupuesto', 'Presupuesto (BS)') !!}                                
+                        </div>
+                        <div style="text-align:left;">
+                        <?php 
+                            $valor = false;
+                            $valor2 = isset($recaudos[0]["evifotobeneficiario"]) ?$recaudos[0]["evifotobeneficiario"]: '';
+                            if ($valor2 == "on"){
+                                $valor = true;
+                                }   
+                                ?>
+                                {!! Form::checkbox('evifotobeneficiario', 'on', $valor) !!}
+                                {!! Form::label('evifotobeneficiario', 'Evidencia Fotografica') !!}                                
+                        </div> 
+                        <div style="text-align:left;">
+                        <?php 
+                            $valor = false;
+                            $valor2 = isset($recaudos[0]["permisoinhumacion"]) ?$recaudos[0]["permisoinhumacion"]: '';
+                            if ($valor2 == "on"){
+                                $valor = true;
+                                }   
+                                ?>
+                                {!! Form::checkbox('permisoinhumacion', 'on', $valor) !!}
+                                {!! Form::label('permisoinhumacion', 'Permiso de Inhumacion') !!}                                
+                        </div> 
+                        <div style="text-align:left;">
+                        <?php 
+                            $valor = false;
+                            $valor2 = isset($recaudos[0]["certificadodefuncion"]) ?$recaudos[0]["certificadodefuncion"]: '';
+                            if ($valor2 == "on"){
+                                $valor = true;
+                                }   
+                                ?>
+                                {!! Form::checkbox('certificadodefuncion', 'on', $valor) !!}
+                                {!! Form::label('certificadodefuncion', 'Certificado de Defuncion') !!}                                
+                        </div> 
                     </div>
                     @if($rols_id != 10)
                         <div style="text-align:left;">
@@ -546,39 +622,41 @@ if ($valor2 == "on") {
                                 {!! Form::select('coordinacion_id', $coordinacion, $solicitud_edit->coordinacion_id, ['placeholder' => trans('message.solicitud_action.coordinacion'), 'class' => 'form-control', 'id' => 'coordinacion_id']) !!}
                             </div>
                         </div>
-                    @endif                      <?php  
+                    @endif                      
+                    <?php  
+
                     $variable = $solicitud_edit->tipo_solicitud_id;
-$variable2 = $solicitud_edit->asignacion;
-if ($variable == 1) {
-    echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
-    echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
-}
-if ($variable == 2) {
-    echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
-    echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
-}
-if ($variable == 3) {
-    echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
-    echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
-}
-if ($variable == 4) {
-    echo '<script>document.getElementById("denunciado").style.display = "none";</script>';
-    echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
-}
-if ($variable == 5) {
-    echo '<script>document.getElementById("denunciado").style.display = "none";</script>';
-    echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
-}
-if ($variable == 6) {
-    echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
-    echo '<script>document.getElementById("denunciado").style.display = "none";</script>';
-}
-if ($variable2 == 'DIRECCION') {
-    echo '<script>document.getElementById("enter_descentralizados_id").style.display = "none";</script>';
-}
-if ($variable2 == 'ENTER') {
-    echo '<script>document.getElementById("direccion").style.display = "none";</script>';
-}
+                    $variable2 = $solicitud_edit->asignacion;
+                    if ($variable == 1) {
+                        echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
+                        echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
+                    }
+                    if ($variable == 2) {
+                        echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
+                        echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
+                    }
+                    if ($variable == 3) {
+                        echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
+                        echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
+                    }
+                    if ($variable == 4) {
+                        echo '<script>document.getElementById("denunciado").style.display = "none";</script>';
+                        echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
+                    }
+                    if ($variable == 5) {
+                        echo '<script>document.getElementById("denunciado").style.display = "none";</script>';
+                        echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
+                    }
+                    if ($variable == 6) {
+                        echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
+                        echo '<script>document.getElementById("denunciado").style.display = "none";</script>';
+                    }
+                    if ($variable2 == 'DIRECCION') {
+                        echo '<script>document.getElementById("enter_descentralizados_id").style.display = "none";</script>';
+                    }
+                    if ($variable2 == 'ENTER') {
+                        echo '<script>document.getElementById("direccion").style.display = "none";</script>';
+                    }
                    ?>
                     <hr>
                     {!! Form::submit('ACT. SOLIC', ['class' => 'form-control btn btn-primary', 'title' => 'ACT. SOLIC', 'data-toggle' => 'tooltip', 'style' => 'background-color:' . $array_color['group_button_color'] . ';']) !!}
@@ -606,7 +684,33 @@ if ($variable2 == 'ENTER') {
         //$("#beneficiario").hide();
         //   $("#enter").hide();
         // $("#direccion").hide();
-
+        
+        if(idmunicipioJS == 2){
+            $("#parroquia_id").hide();
+                $("#parroquia_id_label").hide();
+                $("#parroquia_id_span").hide();
+                $("#comuna_id").hide();
+                $("#comuna_id_label").hide();
+                $("#comuna_id_span").hide();
+                $("#comunidad_id").hide();
+                $("#comunidad_id_label").hide();
+                $("#comunidad_id_span").hide();
+                $("#jefecomunidad_label").hide();
+                $("#jefecomunidad_Span").hide();
+                $("#jefecomunidad_id").hide();
+                $("#telefonoJEFE").hide();
+                $("#telefonoJEFE_label").hide();
+                $("#telefonoJEFE_span").hide();
+                $("#nombreUBCH").hide();
+                $("#nombreUBCH_label").hide();
+                $("#nombreUBCH_span").hide();
+                $("#nomjefeUBCH").hide();
+                $("#nomjefeUBCH_label").hide();
+                $("#nomjefeUBCH_span").hide();
+                $("#teljefeUBCH").hide();
+                $("#teljefeUBCH_label").hide();
+                $("#teljefeUBCH_span").hide();
+        }
         $('#municipio_id').change(function () {
             var municipio = $('#municipio_id').val();
             if (municipio == 2) {
@@ -619,7 +723,7 @@ if ($variable2 == 'ENTER') {
                 $("#comunidad_id").hide();
                 $("#comunidad_id_label").hide();
                 $("#comunidad_id_span").hide();
-                $("#jefecomunidad_Label").hide();
+                $("#jefecomunidad_label").hide();
                 $("#jefecomunidad_Span").hide();
                 $("#jefecomunidad_id").hide();
                 $("#telefonoJEFE").hide();
@@ -645,7 +749,7 @@ if ($variable2 == 'ENTER') {
                 $("#comunidad_id_label").show();
                 $("#comunidad_id_span").show();
                 $("#jefecomunidad_id").show();
-                $("#jefecomunidad_Label").show();
+                $("#jefecomunidad_label").show();
                 $("#jefecomunidad_Span").show();
                 $("#telefonoJEFE").show();
                 $("#telefonoJEFE_label").show();
