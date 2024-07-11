@@ -183,7 +183,7 @@ class SolicitudController extends Controller
         // Target URL
         DB::beginTransaction();
         try {
-            $input = $request->all(); 
+            $input = $request->all();            
             $input['users_id'] = Auth::user()->id;
             //  $data['is_deleted'] = false;
             $recaudos = NULL;
@@ -353,12 +353,15 @@ class SolicitudController extends Controller
                     [
                         "cedula" => isset($input['checkcedula2']) ? $input['checkcedula2'] : NULL,
                         "motivo" => isset($input['checkmotivo3']) ? $input['checkmotivo3'] : NULL,
+                        "recipe" => isset($input['recipe']) ? $input['recipe'] : NULL,
                         "informe" => isset($input['checkinforme']) ? $input['checkinforme'] : NULL,
                         "beneficiario" => isset($input['checkcedulabeneficiario']) ? $input['checkcedulabeneficiario'] : NULL,
                         "checkpresupuesto" => isset($input['checkpresupuesto']) ? $input['checkpresupuesto'] : NULL,
                         "evifotobeneficiario" => isset($input['evifotobeneficiario']) ? $input['evifotobeneficiario'] : NULL,
+                        "certificadodefuncion" => isset($input['certificadodefuncion']) ? $input['certificadodefuncion'] : NULL,                        
                         "permisoinhumacion" => isset($input['permisoinhumacion']) ? $input['permisoinhumacion'] : NULL,
-                        "certificadodefuncion" => isset($input['certificadodefuncion']) ? $input['certificadodefuncion'] : NULL
+                        "ordenexamen" => isset($input['ordenexamen']) ? $input['ordenexamen'] : NULL,
+
                     ]
                 ];
 
@@ -371,6 +374,7 @@ class SolicitudController extends Controller
             }else{
                 $nuevoNumero = NULL;
             }
+            
             $solicitud = new Solicitud([
                 'solicitud_salud_id' => $nuevoNumero, 
                 'users_id' => $input['users_id'],
@@ -413,7 +417,7 @@ class SolicitudController extends Controller
 
                 'created_at' => \Carbon\Carbon::now('America/Caracas'),
                 'updated_at' => \Carbon\Carbon::now('America/Caracas'),
-            ]);                   
+            ]);
         
             $solicitud->save();
             DB::commit();
@@ -514,7 +518,7 @@ class SolicitudController extends Controller
         $trabajador = array('NO' => 'NO','EMPLEADO' => 'EMPLEADO', 'OBRERO' => 'OBRERO');
         $edocivil = array('SOLTERO' => 'SOLTERO', 'CASADO' => 'CASADO', 'VIUDO' => 'VIUDO', 'DIVORCIADO' => 'DIVORCIADO');
         $nivelestudio = array('PRIMARIA' => 'PRIMARIA', 'SECUNDARIA' => 'SECUNDARIA', 'BACHILLERATO' => 'BACHILLERATO', 'UNIVERSITARIO' => 'UNIVERSITARIO', 'ESPECIALIZACION' => 'ESPECIALIZACION');
-        $profesion = array('JUBILADO' => 'JUBILADO','PENSIONADO' => 'PENSIONADO','OFICIOS DEL HOGAR' => 'OFICIOS DEL HOGAR','TECNICO MEDIO' => 'TECNICO MEDIO', 'TECNICO SUPERIOR' => 'TECNICO SUPERIOR', 'INGENIERO' => 'INGENIERO', 'ABOGADO' => 'ABOGADO', 'MEDICO CIRUJANO' => 'MEDICO CIRUJANO', 'HISTORIADOR' => 'HISTORIADOR', 'PALEONTOLOGO' => 'PALEONTOLOGO', 'GEOGRAFO' => 'GEOGRAFO', 'BIOLOGO' => 'BIOLOGO', 'PSICOLOGO' => 'PSICOLOGO', 'MATEMATICO' => 'MATEMATICO', 'ARQUITECTO' => 'ARQUITECTO', 'COMPUTISTA' => 'COMPUTISTA', 'PROFESOR' => 'PROFESOR', 'PERIODISTA' => 'PERIODISTA', 'BOTANICO' => 'BOTANICO', 'FISICO' => 'FISICO', 'SOCIOLOGO' => 'SOCIOLOGO', 'FARMACOLOGO' => 'FARMACOLOGO', 'QUIMICO' => 'QUIMICO', 'POLITOLOGO' => 'POLITOLOGO', 'ENFERMERO' => 'ENFERMERO', 'ELECTRICISTA' => 'ELECTRICISTA', 'BIBLIOTECOLOGO' => 'BIBLIOTECOLOGO', 'PARAMEDICO' => 'PARAMEDICO', 'TECNICO DE SONIDO' => 'TECNICO DE SONIDO', 'ARCHIVOLOGO' => 'ARCHIVOLOGO', 'MUSICO' => 'MUSICO', 'FILOSOFO' => 'FILOSOFO', 'SECRETARIA' => 'SECRETARIA', 'TRADUCTOR' => 'TRADUCTOR', 'ANTROPOLOGO' => 'ANTROPOLOGO', 'TECNICO TURISMO' => 'TECNICO TURISMO', 'ECONOMISTA' => 'ECONOMISTA', 'ADMINISTRADOR' => 'ADMINISTRADOR', 'CARPITERO' => 'CARPITERO', 'RADIOLOGO' => 'RADIOLOGO', 'COMERCIANTE' => 'COMERCIANTE', 'CERRAJERO' => 'CERRAJERO', 'COCINERO' => 'COCINERO', 'ALBAÑIL' => 'ALBAÑIL', 'PLOMERO' => 'PLOMERO', 'TORNERO' => 'TORNERO', 'EDITOR' => 'EDITOR', 'ESCULTOR' => 'ESCULTOR', 'ESCRITOR' => 'ESCRITOR', 'BARBERO' => 'BARBERO');
+        $profesion = array('OBREBRO' => 'OBREBRO','JUBILADO' => 'JUBILADO','PENSIONADO' => 'PENSIONADO','OFICIOS DEL HOGAR' => 'OFICIOS DEL HOGAR','OTRO' => 'OTRO','TECNICO MEDIO' => 'TECNICO MEDIO', 'TECNICO SUPERIOR' => 'TECNICO SUPERIOR', 'INGENIERO' => 'INGENIERO', 'ABOGADO' => 'ABOGADO', 'MEDICO CIRUJANO' => 'MEDICO CIRUJANO', 'HISTORIADOR' => 'HISTORIADOR', 'PALEONTOLOGO' => 'PALEONTOLOGO', 'GEOGRAFO' => 'GEOGRAFO', 'BIOLOGO' => 'BIOLOGO', 'PSICOLOGO' => 'PSICOLOGO', 'MATEMATICO' => 'MATEMATICO', 'ARQUITECTO' => 'ARQUITECTO', 'COMPUTISTA' => 'COMPUTISTA', 'PROFESOR' => 'PROFESOR', 'PERIODISTA' => 'PERIODISTA', 'BOTANICO' => 'BOTANICO', 'FISICO' => 'FISICO', 'SOCIOLOGO' => 'SOCIOLOGO', 'FARMACOLOGO' => 'FARMACOLOGO', 'QUIMICO' => 'QUIMICO', 'POLITOLOGO' => 'POLITOLOGO', 'ENFERMERO' => 'ENFERMERO', 'ELECTRICISTA' => 'ELECTRICISTA', 'BIBLIOTECOLOGO' => 'BIBLIOTECOLOGO', 'PARAMEDICO' => 'PARAMEDICO', 'TECNICO DE SONIDO' => 'TECNICO DE SONIDO', 'ARCHIVOLOGO' => 'ARCHIVOLOGO', 'MUSICO' => 'MUSICO', 'FILOSOFO' => 'FILOSOFO', 'SECRETARIA' => 'SECRETARIA', 'TRADUCTOR' => 'TRADUCTOR', 'ANTROPOLOGO' => 'ANTROPOLOGO', 'TECNICO TURISMO' => 'TECNICO TURISMO', 'ECONOMISTA' => 'ECONOMISTA', 'ADMINISTRADOR' => 'ADMINISTRADOR', 'CARPITERO' => 'CARPITERO', 'RADIOLOGO' => 'RADIOLOGO', 'COMERCIANTE' => 'COMERCIANTE', 'CERRAJERO' => 'CERRAJERO', 'COCINERO' => 'COCINERO', 'ALBAÑIL' => 'ALBAÑIL', 'PLOMERO' => 'PLOMERO', 'TORNERO' => 'TORNERO', 'EDITOR' => 'EDITOR', 'ESCULTOR' => 'ESCULTOR', 'ESCRITOR' => 'ESCRITOR', 'BARBERO' => 'BARBERO');
 
         $comuna = (new Comuna)->datos_comuna($solicitud_edit->parroquia_id);
 
@@ -600,7 +604,7 @@ class SolicitudController extends Controller
         $trabajador = array('NO' => 'NO', 'EMPLEADO' => 'EMPLEADO', 'OBRERO' => 'OBRERO');
         $edocivil = array('SOLTERO' => 'SOLTERO', 'CASADO' => 'CASADO', 'VIUDO' => 'VIUDO', 'DIVORCIADO' => 'DIVORCIADO');
         $nivelestudio = array('PRIMARIA' => 'PRIMARIA', 'SECUNDARIA' => 'SECUNDARIA', 'BACHILLERATO' => 'BACHILLERATO', 'UNIVERSITARIO' => 'UNIVERSITARIO', 'ESPECIALIZACION' => 'ESPECIALIZACION');
-        $profesion = array('JUBILADO' => 'JUBILADO','PENSIONADO' => 'PENSIONADO','OFICIOS DEL HOGAR' => 'OFICIOS DEL HOGAR','TECNICO MEDIO' => 'TECNICO MEDIO', 'TECNICO SUPERIOR' => 'TECNICO SUPERIOR', 'INGENIERO' => 'INGENIERO', 'ABOGADO' => 'ABOGADO', 'MEDICO CIRUJANO' => 'MEDICO CIRUJANO', 'HISTORIADOR' => 'HISTORIADOR', 'PALEONTOLOGO' => 'PALEONTOLOGO', 'GEOGRAFO' => 'GEOGRAFO', 'BIOLOGO' => 'BIOLOGO', 'PSICOLOGO' => 'PSICOLOGO', 'MATEMATICO' => 'MATEMATICO', 'ARQUITECTO' => 'ARQUITECTO', 'COMPUTISTA' => 'COMPUTISTA', 'PROFESOR' => 'PROFESOR', 'PERIODISTA' => 'PERIODISTA', 'BOTANICO' => 'BOTANICO', 'FISICO' => 'FISICO', 'SOCIOLOGO' => 'SOCIOLOGO', 'FARMACOLOGO' => 'FARMACOLOGO', 'QUIMICO' => 'QUIMICO', 'POLITOLOGO' => 'POLITOLOGO', 'ENFERMERO' => 'ENFERMERO', 'ELECTRICISTA' => 'ELECTRICISTA', 'BIBLIOTECOLOGO' => 'BIBLIOTECOLOGO', 'PARAMEDICO' => 'PARAMEDICO', 'TECNICO DE SONIDO' => 'TECNICO DE SONIDO', 'ARCHIVOLOGO' => 'ARCHIVOLOGO', 'MUSICO' => 'MUSICO', 'FILOSOFO' => 'FILOSOFO', 'SECRETARIA' => 'SECRETARIA', 'TRADUCTOR' => 'TRADUCTOR', 'ANTROPOLOGO' => 'ANTROPOLOGO', 'TECNICO TURISMO' => 'TECNICO TURISMO', 'ECONOMISTA' => 'ECONOMISTA', 'ADMINISTRADOR' => 'ADMINISTRADOR', 'CARPITERO' => 'CARPITERO', 'RADIOLOGO' => 'RADIOLOGO', 'COMERCIANTE' => 'COMERCIANTE', 'CERRAJERO' => 'CERRAJERO', 'COCINERO' => 'COCINERO', 'ALBAÑIL' => 'ALBAÑIL', 'PLOMERO' => 'PLOMERO', 'TORNERO' => 'TORNERO', 'EDITOR' => 'EDITOR', 'ESCULTOR' => 'ESCULTOR', 'ESCRITOR' => 'ESCRITOR', 'BARBERO' => 'BARBERO');
+        $profesion = array('OBREBRO' => 'OBREBRO','JUBILADO' => 'JUBILADO','PENSIONADO' => 'PENSIONADO','OFICIOS DEL HOGAR' => 'OFICIOS DEL HOGAR','OTRO' => 'OTRO','TECNICO MEDIO' => 'TECNICO MEDIO', 'TECNICO SUPERIOR' => 'TECNICO SUPERIOR', 'INGENIERO' => 'INGENIERO', 'ABOGADO' => 'ABOGADO', 'MEDICO CIRUJANO' => 'MEDICO CIRUJANO', 'HISTORIADOR' => 'HISTORIADOR', 'PALEONTOLOGO' => 'PALEONTOLOGO', 'GEOGRAFO' => 'GEOGRAFO', 'BIOLOGO' => 'BIOLOGO', 'PSICOLOGO' => 'PSICOLOGO', 'MATEMATICO' => 'MATEMATICO', 'ARQUITECTO' => 'ARQUITECTO', 'COMPUTISTA' => 'COMPUTISTA', 'PROFESOR' => 'PROFESOR', 'PERIODISTA' => 'PERIODISTA', 'BOTANICO' => 'BOTANICO', 'FISICO' => 'FISICO', 'SOCIOLOGO' => 'SOCIOLOGO', 'FARMACOLOGO' => 'FARMACOLOGO', 'QUIMICO' => 'QUIMICO', 'POLITOLOGO' => 'POLITOLOGO', 'ENFERMERO' => 'ENFERMERO', 'ELECTRICISTA' => 'ELECTRICISTA', 'BIBLIOTECOLOGO' => 'BIBLIOTECOLOGO', 'PARAMEDICO' => 'PARAMEDICO', 'TECNICO DE SONIDO' => 'TECNICO DE SONIDO', 'ARCHIVOLOGO' => 'ARCHIVOLOGO', 'MUSICO' => 'MUSICO', 'FILOSOFO' => 'FILOSOFO', 'SECRETARIA' => 'SECRETARIA', 'TRADUCTOR' => 'TRADUCTOR', 'ANTROPOLOGO' => 'ANTROPOLOGO', 'TECNICO TURISMO' => 'TECNICO TURISMO', 'ECONOMISTA' => 'ECONOMISTA', 'ADMINISTRADOR' => 'ADMINISTRADOR', 'CARPITERO' => 'CARPITERO', 'RADIOLOGO' => 'RADIOLOGO', 'COMERCIANTE' => 'COMERCIANTE', 'CERRAJERO' => 'CERRAJERO', 'COCINERO' => 'COCINERO', 'ALBAÑIL' => 'ALBAÑIL', 'PLOMERO' => 'PLOMERO', 'TORNERO' => 'TORNERO', 'EDITOR' => 'EDITOR', 'ESCULTOR' => 'ESCULTOR', 'ESCRITOR' => 'ESCRITOR', 'BARBERO' => 'BARBERO');
 
         $comuna = (new Comuna)->datos_comuna($solicitud_edit->parroquia_id);
 
@@ -807,14 +811,16 @@ class SolicitudController extends Controller
             ];
             $recaudos = [
                 [
-                    "cedula" => isset($input['checkcedula2']) ? $input['checkcedula2'] : NULL,
-                    "motivo" => isset($input['checkmotivo3']) ? $input['checkmotivo3'] : NULL,
-                    "informe" => isset($input['checkinforme']) ? $input['checkinforme'] : NULL,
-                    "beneficiario" => isset($input['checkcedulabeneficiario']) ? $input['checkcedulabeneficiario'] : NULL,
-                    "checkpresupuesto" => isset($input['checkpresupuesto']) ? $input['checkpresupuesto'] : NULL,
-                    "evifotobeneficiario" => isset($input['evifotobeneficiario']) ? $input['evifotobeneficiario'] : NULL,
-                    "permisoinhumacion" => isset($input['permisoinhumacion']) ? $input['permisoinhumacion'] : NULL,
-                    "certificadodefuncion" => isset($input['certificadodefuncion']) ? $input['certificadodefuncion'] : NULL
+                    "cedula" =>  isset($input['checkcedula2'])? $input['checkcedula2']:NULL ,
+                    "motivo" =>  isset($input['checkmotivo3'])? $input['checkmotivo3']:NULL ,
+                    "recipe" =>  isset($input['recipe'])? $input['recipe']:NULL,
+                    "informe" =>  isset($input['checkinforme'])? $input['checkinforme']:NULL ,
+                    "beneficiario" =>  isset($input['checkcedulabeneficiario']) ? $input['checkcedulabeneficiario']:NULL,
+                    "checkpresupuesto" =>  isset($input['checkpresupuesto']) ? $input['checkpresupuesto']:NULL,
+                    "evifotobeneficiario" =>  isset($input['evifotobeneficiario']) ? $input['evifotobeneficiario']:NULL,
+                    "permisoinhumacion" =>  isset($input['permisoinhumacion']) ? $input['permisoinhumacion']:NULL,
+                    "certificadodefuncion" =>  isset($input['certificadodefuncion']) ? $input['certificadodefuncion']:NULL,
+                    "ordenexamen" =>  isset($input['ordenexamen']) ? $input['ordenexamen']:NULL,
                 ]
             ];
 
@@ -1049,11 +1055,14 @@ class SolicitudController extends Controller
         $activarrecaudoCartaResidencia = "";
         $activarrecaudoInforme = "";
         
+        $activarrecaudoRecipe = "";
+        $activarrecaudoInforme = "";
         $activarrecaudoBeneficiario = "";
         $activarrecaudoPresupuesto = "";
         $activarevidenciafotobeneficiario = "";
         $activarpermisoinhumacion = "";
         $activarcertificadodefuncion = "";
+        $activarordenExamen = "";
 
         $quejasRelato = NULL;
         $quejasObservacion = NULL;
@@ -1067,11 +1076,11 @@ class SolicitudController extends Controller
         $solicitud = Solicitud::find($idsolicitud);
         
         $direccionAsignada = (new Direccion)->datos_direccion()[$solicitud->direccion_id];
-        $idestado = $solicitud["estado_id"];
-        $idmunicipio = $solicitud["municipio_id"];
-        $idparroquia = $solicitud["parroquia_id"];
-        $idcomuna = $solicitud["comuna_id"];
-        $idcomunidad = $solicitud["comunidad_id"];
+        $idestado = isset($solicitud["estado_id"]) ? $solicitud["estado_id"] : NULL;
+        $idmunicipio = isset($solicitud["municipio_id"]) ? $solicitud["municipio_id"] : NULL;
+        $idparroquia = isset($solicitud["parroquia_id"]) ? $solicitud["parroquia_id"] : NULL;
+        $idcomuna = isset($solicitud["comuna_id"]) ? $solicitud["comuna_id"] : NULL;
+        $idcomunidad = isset($solicitud["comunidad_id"]) ? $solicitud["comunidad_id"] : NULL;
 
         $fecha = date('d-m-Y', strtotime($solicitud->fecha));
         $dia = date('d', strtotime($solicitud->fecha));
@@ -2779,34 +2788,39 @@ class SolicitudController extends Controller
             $solicita = isset($beneficiario[0]["solicita"]) ? $beneficiario[0]["solicita"]: 'N/A';
             $recaudos = $solicitud->recaudos;
             $recaudos = json_decode($recaudos, true);
+
             $cedularecaudos = $recaudos[0]["cedula"];
             $motivorecaudos = $recaudos[0]["motivo"];
+            $reciperecaudos = $recaudos[0]["recipe"];
             $informerecaudos = $recaudos[0]["informe"];
             $beneficiariorecaudos = $recaudos[0]["beneficiario"];
             $presupuestorecaudos = $recaudos[0]["checkpresupuesto"];
             $evidenciafotobeneficiario = $recaudos[0]["evifotobeneficiario"];
             $permisoinhumacion = $recaudos[0]["permisoinhumacion"];
             $certificadodefuncion = $recaudos[0]["certificadodefuncion"];
+            $ordenexamen = $recaudos[0]["ordenexamen"];
 
             $trabajadorAlcaldia = $solicitud->trabajador;
-
+            $verificaTrabajador = isset($trabajadorAlcaldia) ? $trabajadorAlcaldia : 'NO';
+            
             $jefecomunidadID = $solicitud->jefecomunidad_id;
             $jefecomunidad = (new JefeComunidad)->getJefe2($jefecomunidadID);
             $jefe = $jefecomunidad->first();
             $municipioID = $solicitud->municipio_id;
-            $solicitud_salud_id = $solicitud->solicitud_salud_id;       
+            $solicitud_salud_id = $solicitud->solicitud_salud_id;
+
+            $estado = (new Solicitud)->nombreestado($idestado, $idmunicipio, $idparroquia, $idcomuna, $idcomunidad);
+
+            $verificaData = isset($estado) ? $estado : NULL;
 
             if($municipioID == 2){
-                $estado = (new Solicitud)->nombreestado($idestado, $idmunicipio, $idparroquia, $idcomuna, $idcomunidad);
-                foreach ($estado as $estado2);                
                 $estadoSolicitud = NULL;
                 $municipio = NULL;
                 $parroquia = NULL;
                 $comuna = NULL;
                 $comunidad = NULL;
             }else{
-                $estado = (new Solicitud)->nombreestado($idestado, $idmunicipio, $idparroquia, $idcomuna, $idcomunidad);
-                foreach ($estado as $estado2);
+                foreach ($verificaData as $estado2);
                 $estadoSolicitud = $estado2->estado2;
                 $municipio = $estado2->municipio;
                 $parroquia = $estado2->parroquia;
@@ -2840,6 +2854,9 @@ class SolicitudController extends Controller
             if($motivorecaudos === "on"){
                 $activarrecaudoMotivo = "checked";
             }
+            if($reciperecaudos === "on"){
+                $activarrecaudoRecipe = "checked";
+            }
             if($informerecaudos === "on"){
                 $activarrecaudoInforme = "checked";
             }
@@ -2857,6 +2874,9 @@ class SolicitudController extends Controller
             }
             if($certificadodefuncion === "on"){
                 $activarcertificadodefuncion = "checked";
+            }
+            if($ordenexamen === "on"){
+                $activarordenExamen = "checked";
             }
             $activarpeticiones = "checked";
             $valor = "SALUD";
@@ -3014,7 +3034,7 @@ class SolicitudController extends Controller
                         <td>$cedulabeneficiario</td>
                         <!-- <td></td> -->
                         <td>$nombrebeneficiario</td>
-                        <td>$trabajadorAlcaldia</td>
+                        <td>$verificaTrabajador</td>
                         <td>$direccionbeneficiario</td>
                         <td>$solicita</td>
                         <td>$codigovenapp</td>
@@ -3036,6 +3056,8 @@ class SolicitudController extends Controller
                     <tr>
                         <th>Copia de Cedula</th>
                         <th>Carta Exposicion de Motivo</th>
+                        <th>Recipe Medico</th>
+                        <th>Orden Examen Medico</th>
                         <th>Informe Medico</th>
                         <th>Copia de Cedula de Beneficiario</th>
                         <th>Presupuesto (BS)</th>
@@ -3046,6 +3068,8 @@ class SolicitudController extends Controller
                     <tr>
                         <td><input type='checkbox' $activarrecaudoCedula></td>
                         <td><input type='checkbox' $activarrecaudoMotivo></td>
+                        <td><input type='checkbox' $activarrecaudoRecipe></td>
+                        <td><input type="checkbox" $activarordenExamen></td>
                         <td><input type='checkbox' $activarrecaudoInforme></td>
                         <td><input type='checkbox' $activarrecaudoBeneficiario></td>
                         <td><input type='checkbox' $activarrecaudoPresupuesto></td>

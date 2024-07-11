@@ -58,7 +58,7 @@
                     </div>            
                     <div style="text-align:left;">
                      {!! Form::label('trabajador','Trabajador', ['class' => 'control-label']) !!}<span class="required" style="color:red;">*</span>
-                     {!! Form::select('trabajador',$trabajador, $solicitud_edit->trabajador, ['placeholder' => trans('message.solicitud_action.sexo'),'class' => 'form-control','id' => 'trabajador', 'disabled' => true]) !!}
+                     {!! Form::select('trabajador',$trabajador, $solicitud_edit->trabajador, ['class' => 'form-control','id' => 'trabajador', 'disabled' => true]) !!}
                     </div> 
                      
                     <div style="text-align:left;">
@@ -472,7 +472,21 @@
                                          {!! Form::checkbox('checkmotivo3', 'on', $valor) !!}
                                          {!! Form::label('checkmotivo3', 'Exposicion de Motivo') !!}
                                         
-                                 </div>
+                                    </div>
+                                    <div style="text-align:left;">
+                                    <?php 
+                                             $valor = false;
+                                             $valor2 = isset($recaudos[0]["recipe"]) ?$recaudos[0]["recipe"]: '';
+                                              if ($valor2 == "on"){
+                                                 $valor = true;
+                                    
+                                                     }   
+                                               ?>
+
+                                         {!! Form::checkbox('recipe', 'on', $valor) !!}
+                                         {!! Form::label('recipe', 'Recipe Medico') !!}
+                                        
+                                    </div>
                                  <div style="text-align:left;">
                                  <?php 
                                              $valor = false;
@@ -547,6 +561,17 @@
                                 ?>
                                 {!! Form::checkbox('certificadodefuncion', 'on', $valor) !!}
                                 {!! Form::label('certificadodefuncion', 'Certificado de Defuncion') !!}                                
+                        </div>  
+                        <div style="text-align:left;">
+                        <?php 
+                            $valor = false;
+                            $valor2 = isset($recaudos[0]["ordenexamen"]) ?$recaudos[0]["ordenexamen"]: '';
+                            if ($valor2 == "on"){
+                                $valor = true;
+                                }   
+                                ?>
+                                {!! Form::checkbox('ordenexamen', 'on', $valor) !!}
+                                {!! Form::label('ordenexamen', 'Orden de Examen') !!}                                
                         </div>  
                         </div>  
                     @if($rols_id != 10)

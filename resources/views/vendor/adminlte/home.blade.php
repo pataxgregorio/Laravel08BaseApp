@@ -13,10 +13,10 @@
  
 <div class="row">        
     <div class="col-lg-4 col-md-6 col-xs-12">            
-		<x-box titulo="Total Solicitudes Registrada" cantidad="{{$total_solicitudes_registradas2}}" name="Solitudes Registradas"  color="bg-red"></x-box>		
+		<a href="/solicitud"><x-box titulo="Total Solicitudes Registrada" cantidad="{{$total_solicitudes_registradas2}}" name="Solitudes Registradas"  color="bg-red"></x-box>		</a>
 	</div>
 	<div class="col-lg-4 col-md-6 col-xs-12">            		
-		<x-box titulo="Total Solicitudes en Proceso" cantidad="{{$total_solicitudes_procesadas2}}" name="Solitudes en Proceso" color="bg-yellow"></x-box>
+		<a href="/seguimiento"><x-box titulo="Total Solicitudes en Proceso" cantidad="{{$total_solicitudes_procesadas2}}" name="Solitudes en Proceso" color="bg-yellow"></x-box></a>
 	</div>
 	<div class="col-lg-4 col-md-6 col-xs-12">            		
 		<x-box titulo="Total Solicitudes Terminadas" cantidad="{{$total_solicitudes_finalizadas2}}" name="Solitudes Terminadas" color="bg-green"></x-box>

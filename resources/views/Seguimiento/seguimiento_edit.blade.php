@@ -277,7 +277,7 @@
                                         @foreach ($seguimientoPrueba as $data)                                                                         
                                         <tr>
                                             <td>{{$data['item']}}</td>
-                                            <td>{{$data['fecha']}}</td>
+                                            <td>{{ \Carbon\Carbon::parse($data['fecha'])->format('d-m-Y H:i') }}</td>
                                             <td>{{$data['asunto']}}</td>
                                             @if($data['imagen'] == 'Undefined')
                                             <td>Sin evidencia</td>

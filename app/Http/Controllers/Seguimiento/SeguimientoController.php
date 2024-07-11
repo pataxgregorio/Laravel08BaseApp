@@ -377,10 +377,16 @@ public function segumientoJson (){
             ];
             $recaudos = [
                 [
-                    "cedula" => isset($input['checkcedula2']) ? $input['checkcedula2'] : NULL,
-                    "motivo" => isset($input['checkmotivo3']) ? $input['checkmotivo3'] : NULL,
-                    "informe" => isset($input['checkinforme']) ? $input['checkinforme'] : NULL,
-                    "beneficiario" => isset($input['checkcedulabeneficiario']) ? $input['checkcedulabeneficiario'] : NULL
+                    "cedula" =>  isset($input['checkcedula2'])? $input['checkcedula2']:NULL ,
+                    "motivo" =>  isset($input['checkmotivo3'])? $input['checkmotivo3']:NULL ,
+                    "recipe" =>  isset($input['recipe'])? $input['recipe']:NULL,
+                    "informe" =>  isset($input['checkinforme'])? $input['checkinforme']:NULL ,
+                    "beneficiario" =>  isset($input['checkcedulabeneficiario']) ? $input['checkcedulabeneficiario']:NULL,
+                    "presupuesto" =>  isset($input['checkpresupuesto']) ? $input['checkpresupuesto']:NULL,
+                    "evifotobeneficiario" =>  isset($input['evifotobeneficiario']) ? $input['evifotobeneficiario']:NULL,
+                    "permisoinhumacion" =>  isset($input['permisoinhumacion']) ? $input['permisoinhumacion']:NULL,
+                    "certificadodefuncion" =>  isset($input['certificadodefuncion']) ? $input['certificadodefuncion']:NULL,
+                    "ordenexamen" =>  isset($input['ordenexamen']) ? $input['ordenexamen']:NULL,
                 ]
             ];
 

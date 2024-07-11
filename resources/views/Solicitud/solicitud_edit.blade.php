@@ -36,20 +36,20 @@
                 @endif
                 <?php 
                     $rols_id = auth()->user()->rols_id;
-                    $phpValue = $rols_id;
-                    $idmunicipio = $solicitud_edit->municipio_id;
-                    echo "<script> var rolsJS = '" . $phpValue . "'; </script>"; 
-                    echo "<script> var idmunicipioJS = '" . $idmunicipio . "'; </script>"
+$phpValue = $rols_id;
+$idmunicipio = $solicitud_edit->municipio_id;
+echo "<script> var rolsJS = '" . $phpValue . "'; </script>";
+echo "<script> var idmunicipioJS = '" . $idmunicipio . "'; </script>"
                     ?>
                     
                     {!! Form::open(
-                        array(
-                        'route' => array('solicitud.update', $solicitud_edit->id),
-                        'method' => 'POST',
-                        'id' => 'form_users_id',
-                        'enctype' => 'multipart/form-data'
-                    )
-                ) !!}
+    array(
+        'route' => array('solicitud.update', $solicitud_edit->id),
+        'method' => 'POST',
+        'id' => 'form_users_id',
+        'enctype' => 'multipart/form-data'
+    )
+) !!}
 
 
                 <div class="form-group">
@@ -62,7 +62,7 @@
                     <div style="text-align:left;">
                         {!! Form::label('trabajador', 'Trabajador', ['class' => 'control-label']) !!}<span
                             class="required" style="color:red;">*</span>
-                        {!! Form::select('trabajador', $trabajador, $solicitud_edit->trabajador, ['placeholder' => trans('message.solicitud_action.sexo'), 'class' => 'form-control', 'id' => 'trabajador']) !!}
+                        {!! Form::select('trabajador', $trabajador, $solicitud_edit->trabajador, ['class' => 'form-control', 'id' => 'trabajador']) !!}
                     </div>
                     <div style="text-align:left;">
                         {!! Form::label('nombre', trans('message.users_action.nombre'), ['class' => 'control-label']) !!}<span
@@ -80,13 +80,11 @@
                         {!! Form::text('telefono', $solicitud_edit->telefono, ['placeholder' => trans('message.solicitud_action.telefono'), 'class' => 'form-control', 'id' => 'telefono_user']) !!}
                     </div>
                     <div style="text-align:left;">
-                        {!! Form::label('telefono2', trans('message.solicitud_action.telefono2'), ['class' => 'control-label']) !!}<span
-                            class="required" style="color:red;">*</span>
+                        {!! Form::label('telefono2', trans('message.solicitud_action.telefono2'), ['class' => 'control-label']) !!}
                         {!! Form::text('telefono2', $solicitud_edit->telefono2, ['placeholder' => trans('message.solicitud_action.telefono2'), 'class' => 'form-control', 'id' => 'telefono2_user']) !!}
                     </div>
                     <div style="text-align:left;">
-                        {!! Form::label('email', trans('message.users_action.email_user'), ['class' => 'control-label']) !!}<span
-                            class="required" style="color:red;">*</span>
+                        {!! Form::label('email', trans('message.users_action.email_user'), ['class' => 'control-label']) !!}
                         {!! Form::email('email', $solicitud_edit->email, ['placeholder' => trans('message.users_action.mail_ejemplo'), 'class' => 'form-control', 'id' => 'email_user']) !!}
                     </div>
                     <div style="text-align:left;">
@@ -241,16 +239,16 @@
                     
                          $variable = $solicitud_edit->tipo_solicitud_id;
 
-                        if ($solicitud_edit->tipo_solicitud_id == 1) {
-                            $valores = $denuncia;
-                        }
-                        if ($solicitud_edit->tipo_solicitud_id == 2) {
+if ($solicitud_edit->tipo_solicitud_id == 1) {
+    $valores = $denuncia;
+}
+if ($solicitud_edit->tipo_solicitud_id == 2) {
 
-                            $valores = $quejas;
-                        }
-                        if ($solicitud_edit->tipo_solicitud_id == 3) {
-                            $valores = $reclamo;
-                        }
+    $valores = $quejas;
+}
+if ($solicitud_edit->tipo_solicitud_id == 3) {
+    $valores = $reclamo;
+}
                             
                          ?>
 
@@ -464,9 +462,9 @@ if ($valor2 == "on") {
                     
                         $variable = $solicitud_edit->tipo_solicitud_id;
 
-                        if ($solicitud_edit->tipo_solicitud_id == 6) {
-                            $valores = $beneficiario;
-                        }
+if ($solicitud_edit->tipo_solicitud_id == 6) {
+    $valores = $beneficiario;
+}
                         
                    
                        
@@ -501,7 +499,7 @@ if ($valor2 == "on") {
                         <h3>Recuados de la Solicitud</h3>
                         <br>
                         <div style="text-align:left;">
-                            <?php 
+                                    <?php 
                                              $valor = false;
 $valor2 = isset($recaudos[0]["cedula"]) ? $recaudos[0]["cedula"] : '';
 if ($valor2 == "on") {
@@ -509,13 +507,13 @@ if ($valor2 == "on") {
 
 }   
                                                ?>
-
-                            {!! Form::checkbox('checkcedula2', 'on', $valor) !!}
-                            {!! Form::label('checkcedula2', 'Copia Cedula') !!}
-
-                        </div>
-                        <div style="text-align:left;">
-                            <?php 
+                                    
+                                    {!! Form::checkbox('checkcedula2', 'on', $valor) !!}
+                                    {!! Form::label('checkcedula2', 'Copia Cedula') !!}
+                                    
+                                    </div>
+                                    <div style="text-align:left;">
+                                        <?php 
                                              $valor = false;
 $valor2 = isset($recaudos[0]["motivo"]) ? $recaudos[0]["motivo"] : '';
 if ($valor2 == "on") {
@@ -523,13 +521,27 @@ if ($valor2 == "on") {
 
 }   
                                                ?>
+                                    
+                                        {!! Form::checkbox('checkmotivo3', 'on', $valor) !!}
+                                        {!! Form::label('checkmotivo3', 'Exposicion de Motivo') !!}
+                                    
+                                    </div>
+                                    <div style="text-align:left;">
+                                        <?php 
+                                             $valor = false;
+$valor2 = isset($recaudos[0]["recipe"]) ? $recaudos[0]["recipe"] : '';
+if ($valor2 == "on") {
+    $valor = true;
 
-                            {!! Form::checkbox('checkmotivo3', 'on', $valor) !!}
-                            {!! Form::label('checkmotivo3', 'Exposicion de Motivo') !!}
-
-                        </div>
-                        <div style="text-align:left;">
-                            <?php 
+}   
+                                               ?>
+                                    
+                                        {!! Form::checkbox('recipe', 'on', $valor) !!}
+                                        {!! Form::label('recipe', 'Recipe Medico') !!}
+                                    
+                                    </div>
+                                    <div style="text-align:left;">
+                                        <?php 
                                              $valor = false;
 $valor2 = isset($recaudos[0]["informe"]) ? $recaudos[0]["informe"] : '';
 if ($valor2 == "on") {
@@ -537,71 +549,84 @@ if ($valor2 == "on") {
 
 }   
                                                ?>
+                                    
+                                        {!! Form::checkbox('checkinforme', 'on', $valor) !!}
+                                        {!! Form::label('checkinforme', 'Informe Medico') !!}
+                                    
+                                    
+                                    </div>
+                                    <div style="text-align:left;">
+                                        <?php 
+                                             $valor = false;
+$valor2 = isset($recaudos[0]["beneficiario"]) ? $recaudos[0]["beneficiario"] : '';
+if ($valor2 == "on") {
+    $valor = true;
 
-                            {!! Form::checkbox('checkinforme', 'on', $valor) !!}
-                            {!! Form::label('checkinforme', 'Informe Medico') !!}
+}   
+                                               ?>
+                                    
+                                        {!! Form::checkbox('checkcedulabeneficiario', 'on', $valor) !!}
+                                        {!! Form::label('checkcedulabeneficiario', 'Cedula Beneficiario') !!}
+                                    
+                                    </div>
+                                    <?php 
+                                             $valor = false;
+$valor2 = isset($recaudos[0]["checkpresupuesto"]) ? $recaudos[0]["checkpresupuesto"] : '';
+if ($valor2 == "on") {
+    $valor = true;
 
-
-                        </div>
-                        <div style="text-align:left;">
-                            <?php 
-                                $valor = false;
-                                $valor2 = isset($recaudos[0]["beneficiario"]) ? $recaudos[0]["beneficiario"] : '';
-                                if ($valor2 == "on") {
-                                    $valor = true;
-
-                                }   
-                            ?>
-
-                            {!! Form::checkbox('checkcedulabeneficiario', 'on', $valor) !!}
-                            {!! Form::label('checkcedulabeneficiario', 'Cedula Beneficiario') !!}
-
-                        </div>
-                        <div style="text-align:left;">
-                        <?php 
+}   
+                                               ?>
+                                    
+                                    {!! Form::checkbox('checkpresupuesto', 'on', $valor) !!}
+                                    {!! Form::label('checkpresupuesto', 'Presupuesto (BS)') !!}
+                                    
+                                    </div>
+                                    <div style="text-align:left;">
+                                        <?php 
                             $valor = false;
-                            $valor2 = isset($recaudos[0]["checkpresupuesto"]) ?$recaudos[0]["checkpresupuesto"]: '';
-                            if ($valor2 == "on"){
-                                $valor = true;
-                                }   
+$valor2 = isset($recaudos[0]["evifotobeneficiario"]) ? $recaudos[0]["evifotobeneficiario"] : '';
+if ($valor2 == "on") {
+    $valor = true;
+}   
                                 ?>
-                                {!! Form::checkbox('checkpresupuesto', 'on', $valor) !!}
-                                {!! Form::label('checkpresupuesto', 'Presupuesto (BS)') !!}                                
-                        </div>
-                        <div style="text-align:left;">
-                        <?php 
+                                        {!! Form::checkbox('evifotobeneficiario', 'on', $valor) !!}
+                                        {!! Form::label('evifotobeneficiario', 'Evidencia Fotografica') !!}
+                                    </div>
+                                    <div style="text-align:left;">
+                                        <?php 
                             $valor = false;
-                            $valor2 = isset($recaudos[0]["evifotobeneficiario"]) ?$recaudos[0]["evifotobeneficiario"]: '';
-                            if ($valor2 == "on"){
-                                $valor = true;
-                                }   
+$valor2 = isset($recaudos[0]["permisoinhumacion"]) ? $recaudos[0]["permisoinhumacion"] : '';
+if ($valor2 == "on") {
+    $valor = true;
+}   
                                 ?>
-                                {!! Form::checkbox('evifotobeneficiario', 'on', $valor) !!}
-                                {!! Form::label('evifotobeneficiario', 'Evidencia Fotografica') !!}                                
-                        </div> 
-                        <div style="text-align:left;">
-                        <?php 
+                                        {!! Form::checkbox('permisoinhumacion', 'on', $valor) !!}
+                                        {!! Form::label('permisoinhumacion', 'Permiso de Inhumacion') !!}
+                                    </div>
+                                    <div style="text-align:left;">
+                                        <?php 
                             $valor = false;
-                            $valor2 = isset($recaudos[0]["permisoinhumacion"]) ?$recaudos[0]["permisoinhumacion"]: '';
-                            if ($valor2 == "on"){
-                                $valor = true;
-                                }   
+$valor2 = isset($recaudos[0]["certificadodefuncion"]) ? $recaudos[0]["certificadodefuncion"] : '';
+if ($valor2 == "on") {
+    $valor = true;
+}   
                                 ?>
-                                {!! Form::checkbox('permisoinhumacion', 'on', $valor) !!}
-                                {!! Form::label('permisoinhumacion', 'Permiso de Inhumacion') !!}                                
-                        </div> 
-                        <div style="text-align:left;">
-                        <?php 
+                                        {!! Form::checkbox('certificadodefuncion', 'on', $valor) !!}
+                                        {!! Form::label('certificadodefuncion', 'Certificado de Defuncion') !!}
+                                    </div>
+                                    <div style="text-align:left;">
+                                        <?php 
                             $valor = false;
-                            $valor2 = isset($recaudos[0]["certificadodefuncion"]) ?$recaudos[0]["certificadodefuncion"]: '';
-                            if ($valor2 == "on"){
-                                $valor = true;
-                                }   
+$valor2 = isset($recaudos[0]["ordenexamen"]) ? $recaudos[0]["ordenexamen"] : '';
+if ($valor2 == "on") {
+    $valor = true;
+}   
                                 ?>
-                                {!! Form::checkbox('certificadodefuncion', 'on', $valor) !!}
-                                {!! Form::label('certificadodefuncion', 'Certificado de Defuncion') !!}                                
-                        </div> 
-                    </div>
+                                        {!! Form::checkbox('ordenexamen', 'on', $valor) !!}
+                                        {!! Form::label('ordenexamen', 'Orden de Examen') !!}
+                                    </div>
+                                    </div>
                     @if($rols_id != 10)
                         <div style="text-align:left;">
                             {!! Form::label('asignacion', 'ASIGNACION', ['class' => 'control-label']) !!}<span
@@ -626,37 +651,37 @@ if ($valor2 == "on") {
                     <?php  
 
                     $variable = $solicitud_edit->tipo_solicitud_id;
-                    $variable2 = $solicitud_edit->asignacion;
-                    if ($variable == 1) {
-                        echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
-                        echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
-                    }
-                    if ($variable == 2) {
-                        echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
-                        echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
-                    }
-                    if ($variable == 3) {
-                        echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
-                        echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
-                    }
-                    if ($variable == 4) {
-                        echo '<script>document.getElementById("denunciado").style.display = "none";</script>';
-                        echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
-                    }
-                    if ($variable == 5) {
-                        echo '<script>document.getElementById("denunciado").style.display = "none";</script>';
-                        echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
-                    }
-                    if ($variable == 6) {
-                        echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
-                        echo '<script>document.getElementById("denunciado").style.display = "none";</script>';
-                    }
-                    if ($variable2 == 'DIRECCION') {
-                        echo '<script>document.getElementById("enter_descentralizados_id").style.display = "none";</script>';
-                    }
-                    if ($variable2 == 'ENTER') {
-                        echo '<script>document.getElementById("direccion").style.display = "none";</script>';
-                    }
+$variable2 = $solicitud_edit->asignacion;
+if ($variable == 1) {
+    echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
+    echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
+}
+if ($variable == 2) {
+    echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
+    echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
+}
+if ($variable == 3) {
+    echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
+    echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
+}
+if ($variable == 4) {
+    echo '<script>document.getElementById("denunciado").style.display = "none";</script>';
+    echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
+}
+if ($variable == 5) {
+    echo '<script>document.getElementById("denunciado").style.display = "none";</script>';
+    echo '<script>document.getElementById("beneficiario").style.display = "none";</script>';
+}
+if ($variable == 6) {
+    echo '<script>document.getElementById("sugerencia").style.display = "none";</script>';
+    echo '<script>document.getElementById("denunciado").style.display = "none";</script>';
+}
+if ($variable2 == 'DIRECCION') {
+    echo '<script>document.getElementById("enter_descentralizados_id").style.display = "none";</script>';
+}
+if ($variable2 == 'ENTER') {
+    echo '<script>document.getElementById("direccion").style.display = "none";</script>';
+}
                    ?>
                     <hr>
                     {!! Form::submit('ACT. SOLIC', ['class' => 'form-control btn btn-primary', 'title' => 'ACT. SOLIC', 'data-toggle' => 'tooltip', 'style' => 'background-color:' . $array_color['group_button_color'] . ';']) !!}
